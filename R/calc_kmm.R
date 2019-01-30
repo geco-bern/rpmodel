@@ -28,24 +28,24 @@
 #' et al. (2001) and have been converted from values given therein to units of Pa
 #' by multiplication with the standard atmosphere (101325 Pa). \eqn{T} is given
 #' by the argument \code{tc}.
+#' 
+#' @references Farquhar,  G.  D.,  von  Caemmerer,  S.,  and  Berry,  J.  A.:   
+#'             A  biochemical  model  ofphotosynthetic CO2 assimilation in leaves of 
+#'             C 3 species, Planta, 149, 78–90, 1980.
+#' 
+#'             Bernacchi,  C.  J.,  Singsaas,  E.  L.,  Pimentel,  C.,  Portis,  A.  
+#'             R.  J.,  and  Long,  S.  P.:Improved temperature response functions 
+#'             for models of Rubisco-limited photosyn-thesis, Plant, Cell and 
+#'             Environment, 24, 253–259, 2001
 #'
 #' @return A numeric value for \eqn{K}
 #'
-#' @examples asdf
+#' @examples kmm <- calc_kmm(20, 100000)
 #'
 #' @export
 #'
 calc_kmm <- function( tc, patm ) {
-  #-----------------------------------------------------------------------
-  # Input:    - float, air temperature, deg C (temp)
-  #           - float, atmospheric pressure, Pa (patm)
-  # Output:   float, Pa (mmk)
-  # Features: Returns the temperature & pressure dependent Michaelis-Menten
-  #           coefficient, K (Pa).
-  # Ref:      Bernacchi et al. (2001), Improved temperature response
-  #           functions for models of Rubisco-limited photosynthesis,
-  #           Plant, Cell and Environment, 24, 253--259.
-  #-----------------------------------------------------------------------
+
   dhac   <- 79430      # (J/mol) Activation energy, Bernacchi et al. (2001)
   dhao   <- 36380      # (J/mol) Activation energy, Bernacchi et al. (2001)
   kco    <- 2.09476e5  # (ppm) O2 partial pressure, Standard Atmosphere
@@ -54,6 +54,7 @@ calc_kmm <- function( tc, patm ) {
   kc25 <- 39.97   # Pa, value based on Bernacchi et al. (2001), converted to Pa by T. Davis assuming elevation of 227.076 m.a.s.l.
   ko25 <- 27480   # Pa, value based on Bernacchi et al. (2001), converted to Pa by T. Davis assuming elevation of 227.076 m.a.s.l.
 
+  ## conversion to Kelvin
   tk <- tc + 273.15
 
   kc <- kc25 * calc_ftemp_arrh( tk, dha=dhac )

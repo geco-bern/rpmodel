@@ -586,37 +586,6 @@ co2_to_ca <- function( co2, patm ){
 }
 
 
-calc_kmm <- function( tc, patm ) {
-  #-----------------------------------------------------------------------
-  # Input:    - float, air temperature, deg C (temp)
-  #           - float, atmospheric pressure, Pa (patm)
-  # Output:   float, Pa (mmk)
-  # Features: Returns the temperature & pressure dependent Michaelis-Menten
-  #           coefficient, K (Pa).
-  # Ref:      Bernacchi et al. (2001), Improved temperature response 
-  #           functions for models of Rubisco-limited photosynthesis, 
-  #           Plant, Cell and Environment, 24, 253--259.
-  #-----------------------------------------------------------------------
-  dhac   <- 79430      # (J/mol) Activation energy, Bernacchi et al. (2001)
-  dhao   <- 36380      # (J/mol) Activation energy, Bernacchi et al. (2001)
-  kco    <- 2.09476e5  # (ppm) O2 partial pressure, Standard Atmosphere
-
-  ## k25 parameters are not dependent on atmospheric pressure
-  kc25 <- 39.97   # Pa, value based on Bernacchi et al. (2001), converted to Pa by T. Davis assuming elevation of 227.076 m.a.s.l.
-  ko25 <- 27480   # Pa, value based on Bernacchi et al. (2001), converted to Pa by T. Davis assuming elevation of 227.076 m.a.s.l.
-
-  tk <- tc + 273.15
-
-  kc <- kc25 * calc_ftemp_arrh( tk, dha=dhac )
-  ko <- ko25 * calc_ftemp_arrh( tk, dha=dhao )
-
-  po  <- kco * (1e-6) * patm         # O2 partial pressure
-  kmm <- kc * (1.0 + po/ko)
-
-  return(kmm)
-}
-
-
 calc_gammastar <- function( tc, patm ) {
   #-----------------------------------------------------------------------
   # Input:    float, air temperature, degrees C (tc)
