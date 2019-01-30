@@ -21,35 +21,45 @@ rpmodel(tc, vpd, co2, elv, kphio, beta = 146, fapar = NA, ppfd = NA,
 
 \item{beta}{Unit cost ratio. Defaults to 146.0.}
 
-\item{fapar}{(Optional) Fraction of absorbed photosynthetically active radiation (unitless, defaults to \code{NA})}
+\item{fapar}{(Optional) Fraction of absorbed photosynthetically active radiation (unitless, defaults to
+\code{NA})}
 
 \item{ppfd}{(Optional) Photosynthetic photon flux density (mol/m2, defaults to \code{NA})}
 
-\item{c4}{(Optional) A logical value specifying whether the C3 or C4 photosynthetic pathway is followed. Defaults to \code{method_optci="c4=FALSE"}. 
-If \code{method_optci="c4=TRUE"}, ci is assumed to be very large and \code{lue = kphio * fapar * ppfd}.}
+\item{c4}{(Optional) A logical value specifying whether the C3 or C4 photosynthetic pathway is followed.
+Defaults to \code{FALSE}.
+If \code{method_optci===TRUE}, ci is assumed to be very large and \code{lue = kphio * fapar * ppfd}.}
 
-\item{method_optci}{(Optional) A character string specifying which method is to be used for calculating optimal ci:ca. Defaults to \code{"prentice14"}. 
-Available also \code{"prentice14_num"} for a numerical solution to the same optimization criterium as used for \code{"prentice14"}.}
+\item{method_optci}{(Optional) A character string specifying which method is to be used for calculating
+optimal ci:ca. Defaults to \code{"prentice14"}.
+Available also \code{"prentice14_num"} for a numerical solution to the same optimization criterium as
+used for \code{"prentice14"}.}
 
-\item{method_jmaxlim}{(Optional) A character string specifying which method is to be used for factoring in Jmax limitation. Defaults to \code{"wang17"}, 
-based on Wang Han et al. 2017 Nature Plants and (Smith 1937). Available is also \code{"smith19"}, following the method by Smith et al., 2019 Ecology Letters, 
+\item{method_jmaxlim}{(Optional) A character string specifying which method is to be used for factoring in
+Jmax limitation. Defaults to \code{"wang17"},
+based on Wang Han et al. 2017 Nature Plants and (Smith 1937). Available is also \code{"smith19"}, following
+the method by Smith et al., 2019 Ecology Letters,
 and \code{"none"} for ignoring effects of Jmax limitation.}
 
-\item{do_ftemp_kphio}{(Optional) A logical specifying whether temperature-dependence of quantum yield efficiency after Bernacchi et al., 2003 PCE 
+\item{do_ftemp_kphio}{(Optional) A logical specifying whether temperature-dependence of quantum yield
+efficiency after Bernacchi et al., 2003 PCE
 is to be accounted for. Defaults to \code{TRUE}.}
 
-\item{returnvar}{(Optional) A character string of vector of character strings specifying which variables are to be returned (see return below).}
+\item{returnvar}{(Optional) A character string of vector of character strings specifying which variables
+are to be returned (see return below).}
 }
 \value{
-A named list of numeric values with 
+A named list of numeric values (including temperature and pressure dependent parameters of the
+photosynthesis model, P-model predictions, including all its corollary). This includes :
 \itemize{
-        \item \code{gammastar}: photorespiratory compensation point, (Pa). It is calculated as:
-        \item \code{kmm}: Michaelis-Menten coefficient for photosynthesis (Pa)
-        \item \code{ci}: leaf-internal partial pressure, (Pa)
+        \item \code{gammastar}: Photorespiratory compensation point, (Pa), see \link{calc_gammastar}.
+        \item \code{kmm}: Michaelis-Menten coefficient for photosynthesis (Pa), see \link{calc_kmm}.
         \item \code{chi}: = ci/ca, leaf-internal to ambient CO2 partial pressure, ci/ca (unitless)
+        \item \code{ci}: leaf-internal partial pressure, (Pa)
         \item \code{iwue}: intrinsic water use efficiency (unitless)
         \item \code{lue}: light use efficiency (mol CO2 / mol photon)
-        \item \code{gpp}: gross primary productivity (g C m-2). Calculated only if \code{fapar} and \code{ppfd} are not \code{NA}.
+        \item \code{gpp}: gross primary productivity (g C m-2). Calculated only if \code{fapar} and \code{ppfd}
+                           are not \code{NA}.
         \item \code{vcmax}: maximum carboxylation capacity per unit ground area (mol CO2 m-2 s-1)
         \item \code{vcmax25}: Vcmax25 (Vcmax normalized to 25 deg C) (mol CO2 m-2 s-1)
         \item \code{vcmax_unitfapar}: Vcmax per fAPAR (mol CO2 m-2 s-1)
@@ -60,12 +70,114 @@ A named list of numeric values with
         \item \code{actnv}: Active metabolic leaf N (canopy-level), mol N/m2-ground
         \item \code{actnv_unitfapar}: Active metabolic leaf N (leaf-level, top of canopy), mol N/m2-leaf
         \item \code{actnv_unitiabs}: Active metabolic leaf N per unit absorbed light, mol N/m2/mol
+
+         NEU:
+
+        \item \code{ca}: Ambient CO2 expressed as partial pressure (Pa)
+        \item \code{gammastar}: Photorespiratory compensation point \eqn{\Gamma*}, (Pa), see \link{calc_gammastar}.
+        \item \code{kmm}: Michaelis-Menten coefficient \eqn{K} for photosynthesis (Pa), see \link{calc_kmm}.
+        \item \code{ns_star}: Viscosity, normalised to its value at 25 degrees Celsius
+                              \eqn{\eta* = \eta(T) / \eta(25 deg C)}
+                              used to scale the unit cost of transpiration. Calculated following Huber
+                              et al. (2009).
+        \item \code{chi}: Optimal ratio of leaf internal to ambient CO2. Derived following Prentice et al.
+                         (2014) as:
+                         \deqn{
+                               \chi = \Gamma* / ca + (1- \Gamma* / ca) \xi / (\xi + \sqrt D )
+                         }
+                         with
+                         \deqn{
+                              \xi = \sqrt (\beta (K+ \Gamma*) / (1.6 \eta*))
+                         }
+                         \eqn{\beta} is given by argument \code{beta}, \eqn{K} is \code{kmm} (see \link{calc_kmm}),
+                         \eqn{\Gamma*} is \code{gammastar} (see \link{calc_gammastar}). \eqn{\eta*} is \code{ns_star}.
+                         \eqn{D} is the vapour pressure deficit (argument \code{vpd}), \eqn{ca} is the
+                         ambient CO2 partial pressure (\code{ca}).
+        \item \code{ci}: Leaf-internal CO2 partial pressure, calculated as \eqn{(\chi ca)}.
+        \item \code{lue}: Light use efficiency (g C mol-1), calculated as
+                        \deqn{
+                             LUE = \phi(T) \phi0 m' Mc
+                        }
+                        where \eqn{\phi(T)} is the temperature-dependent quantum yield efficiency modifier
+                        (\link{calc_ftemp_kphio}) if \code{do_ftemp_kphio==TRUE}, and 1 otherwise. \eqn{phi0}
+                        is given by argument \code{kphio}.
+                        \eqn{m'=m} if \code{method_jmaxlim=="none"}, or
+                        \deqn{
+                               m' = m \sqrt( 1 - (c/m)^(2/3) )
+                        }
+                        with \eqn{c=0.41} (Wang et al., 2017) if \code{method_jmaxlim=="wang17"}. \eqn{Mc} is
+                        the molecular mass of CO2 (12.0107 g mol-1). \eqn{m} is given by
+                        \deqn{
+                            (ci - \Gamma*) / (ci + 2 \Gamma*)
+                       }
+        \item \code{gpp}: Gross primary production (g C), calculated as
+                       \deqn{
+                           GPP = Iabs LUE
+                       }
+                       where \eqn{Iabs} is given by \code{fapar*ppfd} (arguments), and is
+                       \code{NA} if \code{fapar==NA} or \code{ppfd==NA}. Note that \code{gpp} scales with
+                       absorbed light. Thus, its units depend on the units in which \code{ppfd} is given.
+        \item \code{iwue}: Intrinsic water use efficiency (iWUE), calulated as
+                       \deqn{
+                             iWUE = = ca (1-\chi)/1.6
+                       }
+        \item \code{gs}: Stomatal conductance (gs), calculated as
+                       \deqn{
+                            gs = A / (ca (1-\chi))
+                       }
+                       where \eqn{A} is \code{gpp}\eqn{/Mc}.
+        \item \code{vcmax}: Maximum carboxylation capacity \eqn{Vcmax} (mol C) at growth temperature (argument
+                      \code{tc}), calculated as
+                      \deqn{
+                           Vcmax = \phi(T) \phi0 Iabs n
+                      }
+                      where \eqn{n} is given by
+                      \deqn{
+                          n = (ci + K) / (ci + 2 \Gamma*)
+                      }
+        \item \code{vcmax25}: Maximum carboxylation capacity \eqn{Vcmax} (mol C) normalised to 25 deg C
+                     following a modified Arrhenius equation, calculated as \eqn{Vcmax25 = Vcmax / fv},
+                     where \eqn{fv} is the instantaneous temperature response by Vcmax and is implemented
+                     by function \link{calc_ftemp_inst_vcmax}.
+        \item \code{rd}: Dark respiration \eqn{Rd} (mol C), calculated as
+                     \deqn{
+                         Rd = b0 Vcmax (fr / fv)
+                     }
+                     where \eqn{b0} is a constant and set to 0.015 (Atkin et al., 2015), \eqn{fv} is the
+                     instantaneous temperature response by Vcmax and is implemented by function
+                     \link{calc_ftemp_inst_vcmax}, and \eqn{fr} is the instantaneous temperature response
+                     of dark respiration following Heskel et al. (2016) and is implemented by function
+                     \link{calc_ftemp_inst_rd}.
+        \item \code{actnv}:
+
+
 }
 }
 \description{
-R implementation of the P-model and its corrolary predictions (Prentice et al., 2014; Han et al., 2017)
+R implementation of the P-model and its corrolary predictions (Prentice et al., 2014; Han et al., 2017).
 }
 \examples{
 out_rpmodel <- rpmodel( tc=10, vpd=300, co2=300, elv=300, kphio=0.06 )
 
+}
+\references{
+Huber,  M.  L.,  Perkins,  R.  A.,  Laesecke,  A.,  Friend,  D.  G.,  Sengers,  J.  V.,  Assael,M. J.,
+             Metaxa, I. N., Vogel, E., Mares, R., and Miyagawa, K.:  New internationalformulation for the viscosity
+             of H2O, Journal of Physical and Chemical ReferenceData, 38, 101–125, 2009
+
+             Prentice,  I. C.,  Dong,  N.,  Gleason,  S. M.,  Maire,  V.,  and Wright,  I. J.:  Balancingthe costs
+             of carbon gain and water transport:  testing a new theoretical frameworkfor  plant  functional  ecology,
+             Ecology  Letters,  17,  82–91,  10.1111/ele.12211,http://dx.doi.org/10.1111/ele.12211, 2014.
+
+             Wang, H., Prentice, I. C., Keenan, T. F., Davis, T. W., Wright, I. J., Cornwell, W. K.,Evans, B. J.,
+             and Peng, C.:  Towards a universal model for carbon dioxide uptake byplants, Nat Plants, 3, 734–741, 2017.
+             Atkin, O. K., et al.:  Global variability in leaf respiration in relation to climate, plant func-tional
+             types and leaf traits, New Phytologist, 206, 614–636, doi:10.1111/nph.13253,
+             https://nph.onlinelibrary.wiley.com/doi/abs/10.1111/nph.13253.
+
+             Heskel,  M.,  O’Sullivan,  O.,  Reich,  P.,  Tjoelker,  M.,  Weerasinghe,  L.,  Penillard,  A.,Egerton, J.,
+             Creek, D., Bloomfield, K., Xiang, J., Sinca, F., Stangl, Z., Martinez-De La Torre, A., Griffin, K.,
+             Huntingford, C., Hurry, V., Meir, P., Turnbull, M.,and Atkin, O.:  Convergence in the temperature response
+             of leaf respiration acrossbiomes and plant functional types, Proceedings of the National Academy of Sciences,
+             113,  3832–3837,  doi:10.1073/pnas.1520282113,2016.
 }

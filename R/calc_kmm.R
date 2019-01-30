@@ -16,7 +16,8 @@
 #' the Michaelis-Menten constant for O2 (Pa), and \eqn{pO2} is the partial
 #' pressure of oxygen (Pa), calculated as \eqn{0.209476 p}, where \eqn{p} is
 #' given by argument \code{patm}.  \eqn{Kc} and \eqn{Ko} follow a temperature
-#' dependence, given by the Arrhenius Equation \eqn{f}:
+#' dependence, given by the Arrhenius Equation \eqn{f} (implemented by
+#' \link{calc_ftemp_arrh}):
 #' \deqn{
 #'    Kc = Kc25 f(T, \Delta Hkc)
 #' }
@@ -28,14 +29,14 @@
 #' et al. (2001) and have been converted from values given therein to units of Pa
 #' by multiplication with the standard atmosphere (101325 Pa). \eqn{T} is given
 #' by the argument \code{tc}.
-#' 
-#' @references Farquhar,  G.  D.,  von  Caemmerer,  S.,  and  Berry,  J.  A.:   
-#'             A  biochemical  model  ofphotosynthetic CO2 assimilation in leaves of 
+#'
+#' @references Farquhar,  G.  D.,  von  Caemmerer,  S.,  and  Berry,  J.  A.:
+#'             A  biochemical  model  ofphotosynthetic CO2 assimilation in leaves of
 #'             C 3 species, Planta, 149, 78–90, 1980.
-#' 
-#'             Bernacchi,  C.  J.,  Singsaas,  E.  L.,  Pimentel,  C.,  Portis,  A.  
-#'             R.  J.,  and  Long,  S.  P.:Improved temperature response functions 
-#'             for models of Rubisco-limited photosyn-thesis, Plant, Cell and 
+#'
+#'             Bernacchi,  C.  J.,  Singsaas,  E.  L.,  Pimentel,  C.,  Portis,  A.
+#'             R.  J.,  and  Long,  S.  P.:Improved temperature response functions
+#'             for models of Rubisco-limited photosyn-thesis, Plant, Cell and
 #'             Environment, 24, 253–259, 2001
 #'
 #' @return A numeric value for \eqn{K}

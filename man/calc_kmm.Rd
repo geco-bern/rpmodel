@@ -29,7 +29,8 @@ where \eqn{Kc} is the Michaelis-Menten constant for CO2 (Pa), \eqn{Ko} is
 the Michaelis-Menten constant for O2 (Pa), and \eqn{pO2} is the partial
 pressure of oxygen (Pa), calculated as \eqn{0.209476 p}, where \eqn{p} is
 given by argument \code{patm}.  \eqn{Kc} and \eqn{Ko} follow a temperature
-dependence, given by the Arrhenius Equation \eqn{f}:
+dependence, given by the Arrhenius Equation \eqn{f} (implemented by
+\link{calc_ftemp_arrh}):
 \deqn{
    Kc = Kc25 f(T, \Delta Hkc)
 }
@@ -47,12 +48,12 @@ kmm <- calc_kmm(20, 100000)
 
 }
 \references{
-Farquhar,  G.  D.,  von  Caemmerer,  S.,  and  Berry,  J.  A.:   
-            A  biochemical  model  ofphotosynthetic CO2 assimilation in leaves of 
+Farquhar,  G.  D.,  von  Caemmerer,  S.,  and  Berry,  J.  A.:
+            A  biochemical  model  ofphotosynthetic CO2 assimilation in leaves of
             C 3 species, Planta, 149, 78–90, 1980.
 
-            Bernacchi,  C.  J.,  Singsaas,  E.  L.,  Pimentel,  C.,  Portis,  A.  
-            R.  J.,  and  Long,  S.  P.:Improved temperature response functions 
-            for models of Rubisco-limited photosyn-thesis, Plant, Cell and 
+            Bernacchi,  C.  J.,  Singsaas,  E.  L.,  Pimentel,  C.,  Portis,  A.
+            R.  J.,  and  Long,  S.  P.:Improved temperature response functions
+            for models of Rubisco-limited photosyn-thesis, Plant, Cell and
             Environment, 24, 253–259, 2001
 }
