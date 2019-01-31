@@ -54,9 +54,9 @@ and in Stocker et al. (2019). The basic idea was presented in Prentice et al.
 
 So much for the theory. Let's run the P-model, without $$J_{\text{max}}$$ limitation, for one set of inputs, being temperature, PPFD, VPD, CO$$_2$$, elevation, and fAPAR.
 
-To do so, run the `rpmodel()` function from the rsofun package:
+To do so, run the `rpmodel()` function from the rpmodel package in R:
 ```r
-library(rsofun)
+library(rpmodel)
 
 ## Set parameters
 beta <- 146          # unit cost ratio a/b
@@ -72,7 +72,7 @@ co2  <- 400          # ppm
 elv  <- 0            # m.a.s.l.
 fapar <- 1           # fraction  
 
-out_analytical <- rsofun::rpmodel( 
+out <- rpmodel::rpmodel( 
   tc             = tc,
   vpd            = vpd,
   co2            = co2,
@@ -93,10 +93,11 @@ $$
 c_i = c_a - A / g_s = \chi c_a
 $$
 
+Check in R:
 ```r
-print( out_analytical$ci )
-print( out_analytical$ca - (out_analytical$gpp / c_molmass) / out_analytical$gs )
-print( out_analytical$ca * out_analytical$chi )
+print( out$ci )
+print( out$ca - (out$gpp / c_molmass) / out$gs )
+print( out$ca * out$chi )
 ```
 Yes. 
 
@@ -106,12 +107,13 @@ $$
 A = V_{\text{cmax}} \frac{c_i-\Gamma^{\ast}}{c_i + K} = \phi_0 I_{\text{abs}} \frac{c_i-\Gamma^{\ast}}{c_i + 2 \Gamma^{\ast}} = g_s (c_a - c_i)
 $$
 
+Check in R:
 ```r
-print( out_analytical$gpp / c_molmass )
-print( out_analytical$vcmax * (out_analytical$ci - out_analytical$gammastar) / (out_analytical$ci + out_analytical$kmm ))
-print( out_analytical$gs * (out_analytical$ca - out_analytical$ci) )
+print( out$gpp / c_molmass )
+print( out$vcmax * (out$ci - out$gammastar) / (out$ci + out$kmm ))
+print( out$gs * (out$ca - out$ci) )
 
-print( kphio * ppfd * fapar * (out_analytical$ci - out_analytical$gammastar) / (out_analytical$ci + 2 * out_analytical$gammastar ))
+print( kphio * ppfd * fapar * (out$ci - out$gammastar) / (out$ci + 2 * out$gammastar ))
 ```
 Yes.
 
