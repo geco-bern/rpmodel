@@ -26,11 +26,12 @@ $$
 a \; \frac{\partial (E/A)}{\partial \chi} = -b \; \frac{\partial (V_{\mathrm{cmax}}/A)}{\partial \chi}  \;\;\;\;\;\;\;\;\;\;\;\;(1)
 $$
 
-The optimal $\chi$ solves the above equation and, with $E = 1.6 g_s D$, $A = g_s (1-\chi)$, and using the Rubisco-limited assimilation rate:
+The optimal $$\chi$$ solves the above equation and, with $$E = 1.6 g_s D$$, $$A = g_s (1-\chi)$$, and using the Rubisco-limited assimilation rate:
 
 $$
 A = A_C = V_{\mathrm{cmax}} \; \frac{\chi\;c_a-\Gamma^{\ast}}{\chi\;c_a + K}
 $$ 
+
 is given by:
 
 $$
@@ -54,7 +55,7 @@ and in Stocker et al. (2019). The basic idea was presented in Prentice et al.
 So much for the theory. Let's run the P-model, without $$J_{\text{max}}$$ limitation, for one set of inputs, being temperature, PPFD, VPD, CO$$_2$$, elevation, and fAPAR.
 
 To do so, run the `rpmodel()` function from the rsofun package:
-```{r, message=FALSE, warning=FALSE}
+```r
 library(rsofun)
 
 ## Set parameters
