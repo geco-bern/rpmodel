@@ -52,27 +52,6 @@ are to be returned (see return below).}
 A named list of numeric values (including temperature and pressure dependent parameters of the
 photosynthesis model, P-model predictions, including all its corollary). This includes :
 \itemize{
-        \item \code{gammastar}: Photorespiratory compensation point, (Pa), see \link{calc_gammastar}.
-        \item \code{kmm}: Michaelis-Menten coefficient for photosynthesis (Pa), see \link{calc_kmm}.
-        \item \code{chi}: = ci/ca, leaf-internal to ambient CO2 partial pressure, ci/ca (unitless)
-        \item \code{ci}: leaf-internal partial pressure, (Pa)
-        \item \code{iwue}: intrinsic water use efficiency (unitless)
-        \item \code{lue}: light use efficiency (mol CO2 / mol photon)
-        \item \code{gpp}: gross primary productivity (g C m-2). Calculated only if \code{fapar} and \code{ppfd}
-                           are not \code{NA}.
-        \item \code{vcmax}: maximum carboxylation capacity per unit ground area (mol CO2 m-2 s-1)
-        \item \code{vcmax25}: Vcmax25 (Vcmax normalized to 25 deg C) (mol CO2 m-2 s-1)
-        \item \code{vcmax_unitfapar}: Vcmax per fAPAR (mol CO2 m-2 s-1)
-        \item \code{vcmax_unitiabs}: Vcmax per unit absorbed light (xxx units)
-        \item \code{rd}: Dark respiration (mol CO2 m-2 s-1)
-        \item \code{rd_unitfapar}: Dark respiration per fAPAR (mol CO2 m-2 s-1)
-        \item \code{rd_unitiabs}: Dark respiration per unit absorbed light (mol CO2 m-2 s-1)
-        \item \code{actnv}: Active metabolic leaf N (canopy-level), mol N/m2-ground
-        \item \code{actnv_unitfapar}: Active metabolic leaf N (leaf-level, top of canopy), mol N/m2-leaf
-        \item \code{actnv_unitiabs}: Active metabolic leaf N per unit absorbed light, mol N/m2/mol
-
-         NEU:
-
         \item \code{ca}: Ambient CO2 expressed as partial pressure (Pa)
         \item \code{gammastar}: Photorespiratory compensation point \eqn{\Gamma*}, (Pa), see \link{calc_gammastar}.
         \item \code{kmm}: Michaelis-Menten coefficient \eqn{K} for photosynthesis (Pa), see \link{calc_kmm}.
@@ -80,7 +59,7 @@ photosynthesis model, P-model predictions, including all its corollary). This in
                               \eqn{\eta* = \eta(T) / \eta(25 deg C)}
                               used to scale the unit cost of transpiration. Calculated following Huber
                               et al. (2009).
-        \item \code{chi}: Optimal ratio of leaf internal to ambient CO2. Derived following Prentice et al.
+        \item \code{chi}: Optimal ratio of leaf internal to ambient CO2 (unitless). Derived following Prentice et al.
                          (2014) as:
                          \deqn{
                                \chi = \Gamma* / ca + (1- \Gamma* / ca) \xi / (\xi + \sqrt D )
@@ -93,8 +72,8 @@ photosynthesis model, P-model predictions, including all its corollary). This in
                          \eqn{\Gamma*} is \code{gammastar} (see \link{calc_gammastar}). \eqn{\eta*} is \code{ns_star}.
                          \eqn{D} is the vapour pressure deficit (argument \code{vpd}), \eqn{ca} is the
                          ambient CO2 partial pressure (\code{ca}).
-        \item \code{ci}: Leaf-internal CO2 partial pressure, calculated as \eqn{(\chi ca)}.
-        \item \code{lue}: Light use efficiency (g C mol-1), calculated as
+        \item \code{ci}: Leaf-internal CO2 partial pressure (Pa), calculated as \eqn{(\chi ca)}.
+        \item \code{lue}: Light use efficiency (g C / mol photons), calculated as
                         \deqn{
                              LUE = \phi(T) \phi0 m' Mc
                         }
@@ -110,14 +89,14 @@ photosynthesis model, P-model predictions, including all its corollary). This in
                         \deqn{
                             (ci - \Gamma*) / (ci + 2 \Gamma*)
                        }
-        \item \code{gpp}: Gross primary production (g C), calculated as
+        \item \code{gpp}: Gross primary production (g C m-2), calculated as
                        \deqn{
                            GPP = Iabs LUE
                        }
                        where \eqn{Iabs} is given by \code{fapar*ppfd} (arguments), and is
                        \code{NA} if \code{fapar==NA} or \code{ppfd==NA}. Note that \code{gpp} scales with
                        absorbed light. Thus, its units depend on the units in which \code{ppfd} is given.
-        \item \code{iwue}: Intrinsic water use efficiency (iWUE), calulated as
+        \item \code{iwue}: Intrinsic water use efficiency (iWUE, unitless), calulated as
                        \deqn{
                              iWUE = = ca (1-\chi)/1.6
                        }
@@ -126,7 +105,7 @@ photosynthesis model, P-model predictions, including all its corollary). This in
                             gs = A / (ca (1-\chi))
                        }
                        where \eqn{A} is \code{gpp}\eqn{/Mc}.
-        \item \code{vcmax}: Maximum carboxylation capacity \eqn{Vcmax} (mol C) at growth temperature (argument
+        \item \code{vcmax}: Maximum carboxylation capacity \eqn{Vcmax} (mol CO2 m-2) at growth temperature (argument
                       \code{tc}), calculated as
                       \deqn{
                            Vcmax = \phi(T) \phi0 Iabs n
@@ -135,11 +114,11 @@ photosynthesis model, P-model predictions, including all its corollary). This in
                       \deqn{
                           n = (ci + K) / (ci + 2 \Gamma*)
                       }
-        \item \code{vcmax25}: Maximum carboxylation capacity \eqn{Vcmax} (mol C) normalised to 25 deg C
+        \item \code{vcmax25}: Maximum carboxylation capacity \eqn{Vcmax} (mol CO2 m-2) normalised to 25 deg C
                      following a modified Arrhenius equation, calculated as \eqn{Vcmax25 = Vcmax / fv},
                      where \eqn{fv} is the instantaneous temperature response by Vcmax and is implemented
                      by function \link{calc_ftemp_inst_vcmax}.
-        \item \code{rd}: Dark respiration \eqn{Rd} (mol C), calculated as
+        \item \code{rd}: Dark respiration \eqn{Rd} (mol CO2 m-2), calculated as
                      \deqn{
                          Rd = b0 Vcmax (fr / fv)
                      }
@@ -148,7 +127,7 @@ photosynthesis model, P-model predictions, including all its corollary). This in
                      \link{calc_ftemp_inst_vcmax}, and \eqn{fr} is the instantaneous temperature response
                      of dark respiration following Heskel et al. (2016) and is implemented by function
                      \link{calc_ftemp_inst_rd}.
-        \item \code{actnv}:
+        \item \code{actnv}: Active metabolic leaf N (canopy-level: mol N/m2-ground)
 
 
 }
