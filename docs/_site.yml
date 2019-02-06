@@ -1,4 +1,5 @@
 name: "rpmodel"
+output_dir: "docs"
 navbar:
   title: "rpmodel"
   left:
@@ -6,5 +7,8 @@ navbar:
       href: index.html
     - text: "Usage"
       href: usage.html
-    - text: Theory
+    - text: "Theory"
       href: theory.html
+output:
+  html_document:
+      theme: cosmo
