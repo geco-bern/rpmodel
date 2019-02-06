@@ -1,0 +1,44 @@
+---
+title: "rpmodel"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 3
+---
+
+<!-- Hello, Website! -->
+
+<!-- For more information about simple R Markdown websites, please read the documentation at https://bookdown.org/yihui/rmarkdown/rmarkdown-site.html. -->
+
+<!-- Please also note that simple R Markdown sites are _not_ based on **blogdown**. They are probably good for websites with only a few Rmd documents. For larger-scale and more sophisticated websites (such as blogs), you may want to use **blogdown** instead: https://github.com/rstudio/blogdown. -->
+
+<!-- [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/stineb/rsofun?branch=master&svg=true)](https://ci.appveyor.com/project/stineb/rsofun) -->
+<a href="https://www.buymeacoffee.com/H2wlgqCLO" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" height="10px" ></a>
+<!-- [![Github All Releases](https://img.shields.io/github/downloads/atom/atom/total.svg)]() -->
+
+
+## Installation
+
+### Development release
+To install and load the rpmodel package (development release) run the following command in your R terminal: 
+```r
+if(!require(devtools)){install.packages(devtools)}
+devtools::install_github( "stineb/rpmodel" )
+library(rpmodel)
+```
+
+### Stable release
+rpmodel is not yet available on CRAN. We're working on it.
+
+
+## Author and contact
+
+Benjamin Stocker
+benjamin.stocker@gmail.com
+
+## References
+
+Prentice,  I. C.,  Dong,  N.,  Gleason,  S. M.,  Maire,  V.,  and Wright,  I. J.:  Balancingthe costs of carbon gain and water transport:  testing a new theoretical frameworkfor  plant  functional  ecology, Ecology  Letters,  17,  82–91, 10.1111/ele.12211, http://dx.doi.org/10.1111/ele.12211, 2014.
+
+Wang, H., Prentice, I. C., Keenan, T. F., Davis, T. W., Wright, I. J., Cornwell, W. K.,Evans, B. J., and Peng, C.:  Towards a universal model for carbon dioxide uptake byplants, Nat Plants, 3, 734–741, 2017.

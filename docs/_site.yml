@@ -1,0 +1,10 @@
+name: "rpmodel"
+navbar:
+  title: "rpmodel"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "Usage"
+      href: usage.html
+    - text: Theory
+      href: theory.html

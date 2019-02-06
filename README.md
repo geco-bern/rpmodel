@@ -11,7 +11,7 @@
 To install and load the rpmodel package (development release) run the following command in your R terminal: 
 ```r
 if(!require(devtools)){install.packages(devtools)}
-devtools::install_github( "stineb/rpmodel" )
+devtools::install_github( "stineb/rpmodel", build_vignettes = TRUE )
 library(rpmodel)
 ```
 
