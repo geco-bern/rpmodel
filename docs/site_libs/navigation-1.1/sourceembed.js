@@ -1,12 +1,9 @@
 
+
 window.initializeSourceEmbed = function(filename) {
   $("#rmd-download-source").click(function() {
-    var src = $("#rmd-source-code").html();
-    var a = document.createElement('a');
-    a.href = "data:text/x-r-markdown;base64," + src;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    var src = window.atob($("#rmd-source-code").html());
+    var blob = new Blob([src], {type: "text/x-r-markdown"});
+    saveAs(blob, filename);
   });
 };
