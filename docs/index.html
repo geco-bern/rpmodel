@@ -310,18 +310,42 @@ div.tocify {
 <!-- Please also note that simple R Markdown sites are _not_ based on **blogdown**. They are probably good for websites with only a few Rmd documents. For larger-scale and more sophisticated websites (such as blogs), you may want to use **blogdown** instead: https://github.com/rstudio/blogdown. -->
 <!-- [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/stineb/rsofun?branch=master&svg=true)](https://ci.appveyor.com/project/stineb/rsofun) -->
 <p><a href="https://www.buymeacoffee.com/H2wlgqCLO" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" height="10px" ></a> <!-- [![Github All Releases](https://img.shields.io/github/downloads/atom/atom/total.svg)]() --></p>
+<div id="purpose" class="section level2">
+<h2>Purpose</h2>
+<p><code>rpmodel</code> provides an implementation of the P-model (Prentice et al., 2014; Wang et al., 2017; Stocker et al., 2019), which predicts acclimated photosynthetic parameters, assimilation, and dark respiration rates as a function of the environment. The main function is <code>rpmodel()</code> which returns a list of variables that are mutually consistent within the theory of the P-model (see Theory, below). Further functions used within <code>rpmodel()</code> are also provided through the package.</p>
+</div>
+<div id="usage" class="section level2">
+<h2>Usage</h2>
+<p>This loads the <code>rpmodel</code> package and executes the <code>rpmodel()</code> function without <span class="math inline">\(J_{\text{max}}\)</span> limitation (argument <code>method_jmaxlim = &quot;none&quot;</code>), and with a temperature-independent quantum yield efficiency (argument <code>do_ftemp_kphio = FALSE</code>):</p>
+<pre class="r"><code>library(rpmodel)
+out_pmodel &lt;- rpmodel( 
+  tc             = 20           # temperature, deg C
+  vpd            = 1000         # Pa,
+  co2            = 400          # ppm,
+  elv            = 0            # m.a.s.l.,
+  kphio          = 0.05         # quantum yield efficiency,
+  beta           = 146,         # unit cost ratio a/b,
+  fapar          = 1            # fraction  ,
+  ppfd           = 300          # mol/m2/d,
+  method_optci   = &quot;prentice14&quot;,
+  method_jmaxlim = &quot;none&quot;,
+  do_ftemp_kphio = FALSE 
+  )
+print( out_pmodel )</code></pre>
+<p>For more information and examples see the <a href="https://stineb.github.io/rpmodel/usage.html">website</a>.</p>
+</div>
 <div id="installation" class="section level2">
 <h2>Installation</h2>
 <div id="development-release" class="section level3">
 <h3>Development release</h3>
 <p>To install and load the rpmodel package (development release) run the following command in your R terminal:</p>
 <pre class="r"><code>if(!require(devtools)){install.packages(devtools)}
-devtools::install_github( &quot;stineb/rpmodel&quot; )
+devtools::install_github( &quot;stineb/rpmodel&quot;, build_vignettes = TRUE )
 library(rpmodel)</code></pre>
 </div>
 <div id="stable-release" class="section level3">
 <h3>Stable release</h3>
-<p>rpmodel is not yet available on CRAN. We’re working on it.</p>
+<p><code>rpmodel</code> is not yet available on CRAN. We’re working on it.</p>
 </div>
 </div>
 <div id="author-and-contact" class="section level2">
@@ -332,6 +356,10 @@ library(rpmodel)</code></pre>
 <h2>References</h2>
 <p>Prentice, I. C., Dong, N., Gleason, S. M., Maire, V., and Wright, I. J.: Balancingthe costs of carbon gain and water transport: testing a new theoretical frameworkfor plant functional ecology, Ecology Letters, 17, 82–91, 10.1111/ele.12211, <a href="http://dx.doi.org/10.1111/ele.12211" class="uri">http://dx.doi.org/10.1111/ele.12211</a>, 2014.</p>
 <p>Wang, H., Prentice, I. C., Keenan, T. F., Davis, T. W., Wright, I. J., Cornwell, W. K.,Evans, B. J., and Peng, C.: Towards a universal model for carbon dioxide uptake byplants, Nat Plants, 3, 734–741, 2017.</p>
+</div>
+<div id="acknowledgement" class="section level2">
+<h2>Acknowledgement</h2>
+<p>This project was funded by ERC Marie Sklodowska-Curie fellowship H2020-MSCA-IF-2015, project FIBER, grant number 701329.</p>
 </div>
 
 
