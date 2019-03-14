@@ -2,7 +2,7 @@
 % Please edit documentation in R/calc_kmm.R
 \name{calc_kmm}
 \alias{calc_kmm}
-\title{Michaelis Menten coefficient}
+\title{Calculates the Michaelis Menten coefficient for Rubisco-limited photosynthesis}
 \usage{
 calc_kmm(tc, patm)
 }
@@ -12,7 +12,7 @@ calc_kmm(tc, patm)
 \item{patm}{Atmospheric pressure (Pa)}
 }
 \value{
-A numeric value for \eqn{K}
+A numeric value for \eqn{K} (in Pa)
 }
 \description{
 Calculates the Michaelis Menten coefficient of Rubisco-limited assimilation
@@ -44,7 +44,7 @@ by multiplication with the standard atmosphere (101325 Pa). \eqn{T} is given
 by the argument \code{tc}.
 }
 \examples{
-kmm <- calc_kmm(20, 100000)
+print(paste("Michaelis-Menten coefficient at 20 degrees Celsius and standard atmosphere (in Pa):", calc_kmm(20, 101325)))
 
 }
 \references{

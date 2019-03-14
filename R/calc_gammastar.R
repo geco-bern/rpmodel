@@ -1,4 +1,4 @@
-#' CO2 compensation point
+#' Calculates the CO2 compensation point
 #'
 #' Calculates the photorespiratory CO2 compensation point in absence of dark
 #' respiration, \eqn{\Gamma*} (Farquhar, 1980).
@@ -30,9 +30,9 @@
 #'             for models of Rubisco-limited photosyn-thesis, Plant, Cell and
 #'             Environment, 24, 253–259, 2001
 #'
-#' @return A numeric value for \eqn{\Gamma*}
+#' @return A numeric value for \eqn{\Gamma*} (in Pa)
 #'
-#' @examples print( calc_gammastar(20, 100000) )
+#' @examples print(paste("CO2 compensation point at 20 degrees Celsius and standard atmosphere (in Pa):", calc_gammastar(20, 101325)))
 #'
 #' @export
 #'

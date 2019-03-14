@@ -2,9 +2,9 @@
 % Please edit documentation in R/calc_ftemp_inst_vcmax.R
 \name{calc_ftemp_inst_vcmax}
 \alias{calc_ftemp_inst_vcmax}
-\title{Instantaneous temperature response of Vcmax}
+\title{Calculates the instantaneous temperature response of Vcmax}
 \usage{
-calc_ftemp_inst_vcmax(tcleaf, tcgrowth, tcref = 25)
+calc_ftemp_inst_vcmax(tcleaf, tcgrowth = tcleaf, tcref = 25)
 }
 \arguments{
 \item{tcleaf}{Leaf temperature, or in general the temperature relevant for photosynthesis
@@ -12,8 +12,8 @@ calc_ftemp_inst_vcmax(tcleaf, tcgrowth, tcref = 25)
 
 \item{tcref}{Reference temperature (degrees Celsius)}
 
-\item{tcgrowh}{Growth temperature, in the P-model, taken to be equal to tcleaf
-(degrees Celsius)}
+\item{tcgrowh}{(Optional) Growth temperature, in the P-model, taken to be equal to tcleaf
+(degrees Celsius). Defaults to \code{tcgrowth = tcleaf}.}
 }
 \value{
 A numeric value for \eqn{fv}
@@ -46,7 +46,7 @@ with \eqn{aS = 668.39} J mol-1 K-1, and \eqn{bS = 1.07} J mol-1 K-2, and \eqn{T}
 degrees Celsius (!)
 }
 \examples{
-print( calc_ftemp_inst_vcmax(20, 20) )
+print(paste("Relative change in Vcmax going (instantaneously, i.e. not acclimatedly) from 10 to 25 degrees (percent change):", (calc_ftemp_inst_vcmax(25)/calc_ftemp_inst_vcmax(10)-1)*100 ))
 
 }
 \references{

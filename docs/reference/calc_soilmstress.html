@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Calculates the instantaneous temperature response of Vcmax — calc_ftemp_inst_vcmax • rpmodel</title>
+<title>Calculates an empirical soil moisture stress factor — calc_soilmstress • rpmodel</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,11 +30,10 @@
 
 
 
-<meta property="og:title" content="Calculates the instantaneous temperature response of Vcmax — calc_ftemp_inst_vcmax" />
+<meta property="og:title" content="Calculates an empirical soil moisture stress factor — calc_soilmstress" />
 
-<meta property="og:description" content="Given Vcmax at a reference temperature (argument tkref)
-this function calculates its temperature-scaling factor following modified Arrhenius
-kinetics based on Kattge &amp;amp; Knorr (2007)." />
+<meta property="og:description" content="Calculates an empirical soil moisture stress factor as a function of relative 
+soil moisture (fraction of field capacity)." />
 
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -121,75 +120,81 @@ kinetics based on Kattge &amp;amp; Knorr (2007)." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Calculates the instantaneous temperature response of Vcmax</h1>
-    <small class="dont-index">Source: <a href='https://github.com/stineb/rpmodel/blob/master/R/calc_ftemp_inst_vcmax.R'><code>R/calc_ftemp_inst_vcmax.R</code></a></small>
-    <div class="hidden name"><code>calc_ftemp_inst_vcmax.Rd</code></div>
+    <h1>Calculates an empirical soil moisture stress factor</h1>
+    <small class="dont-index">Source: <a href='https://github.com/stineb/rpmodel/blob/master/R/calc_soilmstress.R'><code>R/calc_soilmstress.R</code></a></small>
+    <div class="hidden name"><code>calc_soilmstress.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Given Vcmax at a reference temperature (argument <code>tkref</code>)
-this function calculates its temperature-scaling factor following modified Arrhenius
-kinetics based on Kattge &amp; Knorr (2007).</p>
+    <p>Calculates an empirical soil moisture stress factor as a function of relative 
+soil moisture (fraction of field capacity).</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>calc_ftemp_inst_vcmax</span>(<span class='no'>tcleaf</span>, <span class='kw'>tcgrowth</span> <span class='kw'>=</span> <span class='no'>tcleaf</span>, <span class='kw'>tcref</span> <span class='kw'>=</span> <span class='fl'>25</span>)</pre>
+    <pre class="usage"><span class='fu'>calc_soilmstress</span>(<span class='no'>soilm</span>, <span class='kw'>meanalpha</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>apar_soilm</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>bpar_soilm</span> <span class='kw'>=</span> <span class='fl'>0.685</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>tcleaf</th>
-      <td><p>Leaf temperature, or in general the temperature relevant for photosynthesis
-(degrees Celsius)</p></td>
+      <th>soilm</th>
+      <td><p>Relative soil moisture as a fraction 
+of field capacity (unitless). Defaults to 1.0 (no soil moisture stress).</p></td>
     </tr>
     <tr>
-      <th>tcref</th>
-      <td><p>Reference temperature (degrees Celsius)</p></td>
+      <th>meanalpha</th>
+      <td><p>Local annual mean ratio of 
+actual over potential evapotranspiration, measure for average aridity. Defaults to 1.0.</p></td>
     </tr>
     <tr>
-      <th>tcgrowh</th>
-      <td><p>(Optional) Growth temperature, in the P-model, taken to be equal to tcleaf
-(degrees Celsius). Defaults to <code>tcgrowth = tcleaf</code>.</p></td>
+      <th>apar_soilm</th>
+      <td><p>(Optional, used only if <code>do_calc_soilmstress==TRUE</code>) Parameter determining the 
+sensitivity of the empirical soil moisture stress function. Defaults to 0.0, the empirically fitted value
+as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'FULL' (corresponding to a setup
+with <code>method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_calc_soilmstress=TRUE</code>).</p></td>
+    </tr>
+    <tr>
+      <th>bapar_soilm</th>
+      <td><p>(Optional, used only if <code>do_calc_soilmstress==TRUE</code>) Parameter determining the 
+sensitivity of the empirical soil moisture stress function. Defaults to 0.685, the empirically fitted value
+as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'FULL' (corresponding to a setup
+with <code>method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_calc_soilmstress=TRUE</code>).</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A numeric value for \(fv\)</p>
+    <p>A numeric value for \(\beta\)</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The function is given by Kattge &amp; Knorr (2007) as
+    <p>The soil moisture stress factor is calculated using a quadratic function that
+is 1 above <code>soilm</code> = 0.6 and has a sensitivity, given by the y-axis cutoff, 
+(zero soil moisture), determined  by average aridity (argument <code>meanalpha</code>) as:
 $$
-		fv = f(T, \Delta Hv) A/B
+    \beta = q(\theta - \theta*)^2 + 1
 $$
-where \(f(T, \Delta Hv)\) is a regular Arrhenius-type temperature response function (see
-<a href='calc_ftemp_arrh.html'>calc_ftemp_arrh</a>) with \(Hv=71513\) J mol-1,
+for \(\theta &lt; \theta*\) and \(\beta = 1.0\) otherwise. \(\theta*\) is fixed at 0.6.
+\(q\) is the sensitivity parameter and is calculated as a linear function of average aridity, 
+quantified by the local annual mean ratio of actual over potential evapotranspiration, termed 
+\(\alpha\):
 $$
-		A = 1 + exp( (T0 \Delta S -Hd) / (T0 R) )
+     q=(\beta0-1)/(\theta*-\theta0)^2
 $$
-and
+\(\theta0\) is 0.0, and 
 $$
-	    B = 1 + exp( (T \Delta S - Hd) / (TK R) )
+     \beta0 = a + b \alpha
 $$
-Here, \(T\) is in Kelvin, \(T0=293.15\) K, \(Hd = 200000\) J mol-1 is the deactivation
-energy and \(R\) is the universal gas constant and is 8.3145 J mol-1 K-1, and
-$$
-		\Delta S = aS - bS T
-$$
-with \(aS = 668.39\) J mol-1 K-1, and \(bS = 1.07\) J mol-1 K-2, and \(T\) given in
-degrees Celsius (!)</p>
+\(a\) is given by argument <code>apar</code>, \(b\) is given by argument <code>bpar</code>.</p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>Kattge, J. and Knorr, W.:  Temperature acclimation in a biochemical model of
-photosynthesis: a reanalysis of data from 36 species, Plant, Cell and Environment, 30,1176–1190, 2007.</p>
+    <p>Stocker, B. et al. Geoscientific Model Development Discussions (in prep.)</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/paste'>paste</a></span>(<span class='st'>"Relative change in Vcmax going (instantaneously, i.e. not acclimatedly) from 10 to 25 degrees (percent change):"</span>, (<span class='fu'>calc_ftemp_inst_vcmax</span>(<span class='fl'>25</span>)/<span class='fu'>calc_ftemp_inst_vcmax</span>(<span class='fl'>10</span>)-<span class='fl'>1</span>)*<span class='fl'>100</span> ))</div><div class='output co'>#&gt; [1] "Relative change in Vcmax going (instantaneously, i.e. not acclimatedly) from 10 to 25 degrees (percent change): 283.177536019302"</div><div class='input'>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/paste'>paste</a></span>(<span class='st'>"Relative change in light use efficiency due to soil moisture stress (percent change in response to a change in relative soil water content from 1.0 to 0.2):"</span>, (<span class='fu'>calc_soilmstress</span>(<span class='fl'>0.2</span>)-<span class='fl'>1</span>)*<span class='fl'>100</span> ))</div><div class='output co'>#&gt; [1] "Relative change in light use efficiency due to soil moisture stress (percent change in response to a change in relative soil water content from 1.0 to 0.2): -14"</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

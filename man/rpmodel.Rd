@@ -2,11 +2,13 @@
 % Please edit documentation in R/rpmodel.R
 \name{rpmodel}
 \alias{rpmodel}
-\title{P-model}
+\title{Invokes a P-model function call}
 \usage{
-rpmodel(tc, vpd, co2, elv, kphio, beta = 146, fapar = NA, ppfd = NA,
-  c4 = FALSE, method_optci = "prentice14", method_jmaxlim = "wang17",
-  do_ftemp_kphio = TRUE, returnvar = NULL)
+rpmodel(tc, vpd, co2, elv, patm = calc_patm(elv), kphio = 0.0817,
+  beta = 146, fapar = NA, ppfd = NA, soilm = 1, meanalpha = 1,
+  apar_soilm = 0, bpar_soilm = 0.685, c4 = FALSE,
+  method_optci = "prentice14", method_jmaxlim = "wang17",
+  do_ftemp_kphio = TRUE, do_soilmstress = TRUE, returnvar = NULL)
 }
 \arguments{
 \item{tc}{Temperature, relevant for photosynthesis (deg C)}
@@ -15,9 +17,15 @@ rpmodel(tc, vpd, co2, elv, kphio, beta = 146, fapar = NA, ppfd = NA,
 
 \item{co2}{Atmospheric CO2 concentration (ppm)}
 
-\item{elv}{Elevation above sea-level (m.a.s.l.)}
+\item{elv}{Elevation above sea-level (m.a.s.l.). Is used only for calculating atmospheric pressure, if
+argument \code{patm} is not provided.}
 
-\item{kphio}{Quantum yield efficiency parameter}
+\item{patm}{(Optional) Atmospheric pressure (Pa). Defaults to standard atmosphere (101325 Pa), corrected
+for elevation (argument \code{elv}), using \link{calc_patm}.}
+
+\item{kphio}{Apparent uantum yield efficiency (unitless). Defaults to 0.0870, the empirically fitted value
+as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'FULL' (corresponding to a setup
+with \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE}).}
 
 \item{beta}{Unit cost ratio. Defaults to 146.0.}
 
@@ -26,9 +34,28 @@ rpmodel(tc, vpd, co2, elv, kphio, beta = 146, fapar = NA, ppfd = NA,
 
 \item{ppfd}{(Optional) Photosynthetic photon flux density (mol/m2, defaults to \code{NA})}
 
+\item{soilm}{(Optional, used only if \code{do_soilmstress==TRUE}) Relative soil moisture as a fraction 
+of field capacity (unitless). Defaults to 1.0 (no soil moisture stress). This information is used to calculate 
+an empirical soil moisture stress factor (\link{calc_soilmstress}) whereby the sensitivity is determined 
+by average aridity, defined by the local annual mean ratio of actual over potential evapotranspiration, 
+supplied by argument \code{meanalpha}.}
+
+\item{meanalpha}{(Optional, used only if \code{do_soilmstress==TRUE}) Local annual mean ratio of 
+actual over potential evapotranspiration, measure for average aridity. Defaults to 1.0.}
+
+\item{apar_soilm}{(Optional, used only if \code{do_soilmstress==TRUE}) Parameter determining the 
+sensitivity of the empirical soil moisture stress function. Defaults to 0.0, the empirically fitted value
+as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'FULL' (corresponding to a setup
+with \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE}).}
+
+\item{bpar_soilm}{(Optional, used only if \code{do_soilmstress==TRUE}) Parameter determining the 
+sensitivity of the empirical soil moisture stress function. Defaults to 0.685, the empirically fitted value
+as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'FULL' (corresponding to a setup
+with \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE}).}
+
 \item{c4}{(Optional) A logical value specifying whether the C3 or C4 photosynthetic pathway is followed.
-Defaults to \code{FALSE}.
-If \code{method_optci===TRUE}, ci is assumed to be very large and \code{lue = kphio * fapar * ppfd}.}
+Defaults to \code{FALSE}. If \code{TRUE}, the leaf-internal CO2 concentration is assumed to be very large
+and \eqn{m} (returned variable \code{mj}) tends to 1, and \eqn{m'} tends to 0.669 (with \code{c = 0.41}).}
 
 \item{method_optci}{(Optional) A character string specifying which method is to be used for calculating
 optimal ci:ca. Defaults to \code{"prentice14"}.
@@ -42,8 +69,10 @@ the method by Smith et al., 2019 Ecology Letters,
 and \code{"none"} for ignoring effects of Jmax limitation.}
 
 \item{do_ftemp_kphio}{(Optional) A logical specifying whether temperature-dependence of quantum yield
-efficiency after Bernacchi et al., 2003 PCE
-is to be accounted for. Defaults to \code{TRUE}.}
+efficiency after Bernacchi et al., 2003 is to be accounted for. Defaults to \code{TRUE}.}
+
+\item{do_soilmstress}{(Optional) A logical specifying wether an empirical soil moisture stress factor
+is to be applied to down-scale light use efficiency (and only light use efficiency). Defaults to \code{TRUE}.}
 
 \item{returnvar}{(Optional) A character string of vector of character strings specifying which variables
 are to be returned (see return below).}
@@ -71,24 +100,33 @@ photosynthesis model, P-model predictions, including all its corollary). This in
                          \eqn{\beta} is given by argument \code{beta}, \eqn{K} is \code{kmm} (see \link{calc_kmm}),
                          \eqn{\Gamma*} is \code{gammastar} (see \link{calc_gammastar}). \eqn{\eta*} is \code{ns_star}.
                          \eqn{D} is the vapour pressure deficit (argument \code{vpd}), \eqn{ca} is the
-                         ambient CO2 partial pressure (\code{ca}).
+                         ambient CO2 partial pressure in Pa (\code{ca}).
         \item \code{ci}: Leaf-internal CO2 partial pressure (Pa), calculated as \eqn{(\chi ca)}.
         \item \code{lue}: Light use efficiency (g C / mol photons), calculated as
                         \deqn{
                              LUE = \phi(T) \phi0 m' Mc
                         }
                         where \eqn{\phi(T)} is the temperature-dependent quantum yield efficiency modifier
-                        (\link{calc_ftemp_kphio}) if \code{do_ftemp_kphio==TRUE}, and 1 otherwise. \eqn{phi0}
+                        (\link{calc_ftemp_kphio}) if \code{do_ftemp_kphio==TRUE}, and 1 otherwise. \code{\phi 0}
                         is given by argument \code{kphio}.
-                        \eqn{m'=m} if \code{method_jmaxlim=="none"}, or
+                        \eqn{m'=m} if \code{method_jmaxlim=="none"}, otherwise
                         \deqn{
                                m' = m \sqrt( 1 - (c/m)^(2/3) )
                         }
                         with \eqn{c=0.41} (Wang et al., 2017) if \code{method_jmaxlim=="wang17"}. \eqn{Mc} is
-                        the molecular mass of CO2 (12.0107 g mol-1). \eqn{m} is given by
+                        the molecular mass of CO2 (12.0107 g mol-1). \eqn{m} is given returned variable \code{mj}. 
+                        If \code{do_soilmstress==TRUE}, \eqn{LUE} is multiplied with a soil moisture stress factor,
+                        calculated with \link{calc_soilmstress}.
+        \item \code{mj}: Factor in the light-limited assimilation rate function, given by
                         \deqn{
-                            (ci - \Gamma*) / (ci + 2 \Gamma*)
+                            m = (ci - \Gamma*) / (ci + 2 \Gamma*)
                        }
+                       where \eqn{\Gamma*} is given by \code{gammastar}.
+        \item \code{mc}: Factor in the Rubisco-limited assimilation rate function, given by
+                        \deqn{
+                            mc = (ci - \Gamma*) / (ci + K)
+                       }
+                       where \eqn{K} is given by \code{kmm}.
         \item \code{gpp}: Gross primary production (g C m-2), calculated as
                        \deqn{
                            GPP = Iabs LUE
@@ -110,7 +148,7 @@ photosynthesis model, P-model predictions, including all its corollary). This in
                       \deqn{
                            Vcmax = \phi(T) \phi0 Iabs n
                       }
-                      where \eqn{n} is given by
+                      where \eqn{n} is given by \eqn{n=m/mc}, or
                       \deqn{
                           n = (ci + K) / (ci + 2 \Gamma*)
                       }
@@ -127,8 +165,6 @@ photosynthesis model, P-model predictions, including all its corollary). This in
                      \link{calc_ftemp_inst_vcmax}, and \eqn{fr} is the instantaneous temperature response
                      of dark respiration following Heskel et al. (2016) and is implemented by function
                      \link{calc_ftemp_inst_rd}.
-        \item \code{actnv}: Active metabolic leaf N (canopy-level: mol N/m2-ground)
-
 
 }
 }
@@ -140,7 +176,16 @@ out_rpmodel <- rpmodel( tc=10, vpd=300, co2=300, elv=300, kphio=0.06 )
 
 }
 \references{
-Huber,  M.  L.,  Perkins,  R.  A.,  Laesecke,  A.,  Friend,  D.  G.,  Sengers,  J.  V.,  Assael,M. J.,
+Bernacchi, C. J., Pimentel, C., and Long, S. P.:  In vivo temperature response func-tions  of  parameters  
+             required  to  model  RuBP-limited  photosynthesis,  Plant  CellEnviron., 26, 1419–1430, 2003
+
+             Heskel,  M.,  O’Sullivan,  O.,  Reich,  P.,  Tjoelker,  M.,  Weerasinghe,  L.,  Penillard,  A.,Egerton, J.,
+             Creek, D., Bloomfield, K., Xiang, J., Sinca, F., Stangl, Z., Martinez-De La Torre, A., Griffin, K.,
+             Huntingford, C., Hurry, V., Meir, P., Turnbull, M.,and Atkin, O.:  Convergence in the temperature response
+             of leaf respiration acrossbiomes and plant functional types, Proceedings of the National Academy of Sciences,
+             113,  3832–3837,  doi:10.1073/pnas.1520282113,2016.
+
+             Huber,  M.  L.,  Perkins,  R.  A.,  Laesecke,  A.,  Friend,  D.  G.,  Sengers,  J.  V.,  Assael,M. J.,
              Metaxa, I. N., Vogel, E., Mares, R., and Miyagawa, K.:  New internationalformulation for the viscosity
              of H2O, Journal of Physical and Chemical ReferenceData, 38, 101–125, 2009
 
@@ -153,10 +198,6 @@ Huber,  M.  L.,  Perkins,  R.  A.,  Laesecke,  A.,  Friend,  D.  G.,  Sengers,  
              Atkin, O. K., et al.:  Global variability in leaf respiration in relation to climate, plant func-tional
              types and leaf traits, New Phytologist, 206, 614–636, doi:10.1111/nph.13253,
              https://nph.onlinelibrary.wiley.com/doi/abs/10.1111/nph.13253.
-
-             Heskel,  M.,  O’Sullivan,  O.,  Reich,  P.,  Tjoelker,  M.,  Weerasinghe,  L.,  Penillard,  A.,Egerton, J.,
-             Creek, D., Bloomfield, K., Xiang, J., Sinca, F., Stangl, Z., Martinez-De La Torre, A., Griffin, K.,
-             Huntingford, C., Hurry, V., Meir, P., Turnbull, M.,and Atkin, O.:  Convergence in the temperature response
-             of leaf respiration acrossbiomes and plant functional types, Proceedings of the National Academy of Sciences,
-             113,  3832–3837,  doi:10.1073/pnas.1520282113,2016.
+             
+             Stocker, B. et al. Geoscientific Model Development Discussions (in prep.)
 }

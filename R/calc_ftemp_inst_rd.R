@@ -1,4 +1,4 @@
-#' Temperature response function of dark respiration
+#' Calculates the temperature response of dark respiration
 #'
 #' Given the dark respiration at the reference temperature 25 degress Celsius,
 #' this function calculates its temperature-scaling factor following Heskel et al. 2016.
@@ -21,7 +21,7 @@
 #'              of leaf respiration acrossbiomes and plant functional types, Proceedings of the National Academy of Sciences,
 #'              113,  3832–3837,  doi:10.1073/pnas.1520282113,2016.
 #'
-#' @examples print(calc_ftemp_arrh(20))
+#' @examples print(paste("Relative change in Rd going (instantaneously, i.e. not acclimatedly) from 10 to 25 degrees (percent change):", (calc_ftemp_inst_rd(25)/calc_ftemp_inst_rd(10)-1)*100 ))
 #'
 #' @export
 #'

@@ -1,4 +1,4 @@
-#' Instantaneous temperature response of Vcmax
+#' Calculates the instantaneous temperature response of Vcmax
 #'
 #' Given Vcmax at a reference temperature (argument \code{tkref})
 #' this function calculates its temperature-scaling factor following modified Arrhenius
@@ -6,8 +6,8 @@
 #'
 #' @param tcleaf Leaf temperature, or in general the temperature relevant for photosynthesis
 #' (degrees Celsius)
-#' @param tcgrowh Growth temperature, in the P-model, taken to be equal to tcleaf
-#' (degrees Celsius)
+#' @param tcgrowh (Optional) Growth temperature, in the P-model, taken to be equal to tcleaf
+#' (degrees Celsius). Defaults to \code{tcgrowth = tcleaf}.
 #' @param tcref Reference temperature (degrees Celsius)
 #'
 #' @details The function is given by Kattge & Knorr (2007) as
@@ -36,11 +36,11 @@
 #'
 #' @return A numeric value for \eqn{fv}
 #'
-#' @examples print( calc_ftemp_inst_vcmax(20, 20) )
+#' @examples print(paste("Relative change in Vcmax going (instantaneously, i.e. not acclimatedly) from 10 to 25 degrees (percent change):", (calc_ftemp_inst_vcmax(25)/calc_ftemp_inst_vcmax(10)-1)*100 ))
 #'
 #' @export
 #'
-calc_ftemp_inst_vcmax <- function( tcleaf, tcgrowth, tcref = 25.0 ){
+calc_ftemp_inst_vcmax <- function( tcleaf, tcgrowth = tcleaf, tcref = 25.0 ){
   
   # loal parameters
   Ha    <- 71513  # activation energy (J/mol)

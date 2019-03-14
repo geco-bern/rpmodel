@@ -76,6 +76,9 @@
   </a>
 </li>
 <li>
+  <a href="../articles/rpmodel.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -88,10 +91,10 @@
     <li>
       <a href="../articles/theory.html">Theory</a>
     </li>
-    <li>
-      <a href="../articles/usage.html">Usage</a>
-    </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       
@@ -128,8 +131,22 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
+          <h2 id="section-main-function-p-model-implementation-" class="hasAnchor"><a href="#section-main-function-p-model-implementation-" class="anchor"></a>Main function: P-model implementation.</h2>
+          <p class="section-desc"><p>An implementation of the P-model (Prentice et al., 2014; Wang et al., 2017; Stocker et al., 2019) for predicting acclimated photosynthetic parameters, assimilation, and dark respiration rates as a function of the environment.</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="rpmodel.html">rpmodel()</a></code> </p>
+        </td>
+        <td><p>Invokes a P-model function call</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-public-functions-used-inside-rpmodel-" class="hasAnchor"><a href="#section-public-functions-used-inside-rpmodel-" class="anchor"></a>Public functions used inside `rpmodel()`</h2>
+          <p class="section-desc"><p>Public functions used inside rpmodel(). Made public for documentation, visibility, and other applications by the user.</p></p>
         </th>
       </tr>
       <tr>
@@ -137,37 +154,49 @@
         <td>
           <p><code><a href="calc_ftemp_arrh.html">calc_ftemp_arrh()</a></code> </p>
         </td>
-        <td><p>Arrhenius temperature response</p></td>
+        <td><p>Calculates the Arrhenius-type temperature response</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="calc_ftemp_inst_rd.html">calc_ftemp_inst_rd()</a></code> </p>
         </td>
-        <td><p>Temperature response function of dark respiration</p></td>
+        <td><p>Calculates the temperature response of dark respiration</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="calc_ftemp_inst_vcmax.html">calc_ftemp_inst_vcmax()</a></code> </p>
         </td>
-        <td><p>Instantaneous temperature response of Vcmax</p></td>
+        <td><p>Calculates the instantaneous temperature response of Vcmax</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="calc_ftemp_kphio.html">calc_ftemp_kphio()</a></code> </p>
+        </td>
+        <td><p>Calculates the temperature dependence of the quantum yield efficiency</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="calc_gammastar.html">calc_gammastar()</a></code> </p>
         </td>
-        <td><p>CO2 compensation point</p></td>
+        <td><p>Calculates the CO2 compensation point</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="calc_kmm.html">calc_kmm()</a></code> </p>
         </td>
-        <td><p>Michaelis Menten coefficient</p></td>
+        <td><p>Calculates the Michaelis Menten coefficient for Rubisco-limited photosynthesis</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="rpmodel.html">rpmodel()</a></code> </p>
+          <p><code><a href="calc_patm.html">calc_patm()</a></code> </p>
         </td>
-        <td><p>P-model</p></td>
+        <td><p>Calculates atmospheric pressure</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="calc_soilmstress.html">calc_soilmstress()</a></code> </p>
+        </td>
+        <td><p>Calculates an empirical soil moisture stress factor</p></td>
       </tr>
     </tbody>
     </table>
@@ -176,7 +205,8 @@
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-all-functions">All functions</a></li>
+      <li><a href="#section-main-function-p-model-implementation-">Main function: P-model implementation.</a></li>
+      <li><a href="#section-public-functions-used-inside-rpmodel-">Public functions used inside `rpmodel()`</a></li>
     </ul>
   </div>
 </div>

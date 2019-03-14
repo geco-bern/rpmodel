@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Articles • rpmodel</title>
+<title>Calculates the temperature dependence of the quantum yield efficiency — calc_ftemp_kphio • rpmodel</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,7 +30,11 @@
 
 
 
-<meta property="og:title" content="Articles" />
+<meta property="og:title" content="Calculates the temperature dependence of the quantum yield efficiency — calc_ftemp_kphio" />
+
+<meta property="og:description" content="Calculates the temperature dependence of the quantum yield efficiency
+following the temperature dependence of the maximum quantum yield of photosystem II 
+in light-adapted tobacco leaves, determined by Bernacchi et al. (2003)" />
 
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -50,7 +54,7 @@
   </head>
 
   <body>
-    <div class="container template-article-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -117,18 +121,70 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Articles</h1>
+    <h1>Calculates the temperature dependence of the quantum yield efficiency</h1>
+    <small class="dont-index">Source: <a href='https://github.com/stineb/rpmodel/blob/master/R/calc_ftemp_kphio.R'><code>R/calc_ftemp_kphio.R</code></a></small>
+    <div class="hidden name"><code>calc_ftemp_kphio.Rd</code></div>
     </div>
 
-    <div class="section ">
-      <h3>All vignettes</h3>
-      <p class="section-desc"></p>
-
-      <ul>
-        <li><a href="rpmodel.html">Usage</a></li>
-        <li><a href="theory.html">Theory</a></li>
-      </ul>
+    <div class="ref-description">
+    
+    <p>Calculates the temperature dependence of the quantum yield efficiency
+following the temperature dependence of the maximum quantum yield of photosystem II 
+in light-adapted tobacco leaves, determined by Bernacchi et al. (2003)</p>
+    
     </div>
+
+    <pre class="usage"><span class='fu'>calc_ftemp_kphio</span>(<span class='no'>tc</span>)</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>tc</th>
+      <td><p>Temperature, relevant for photosynthesis (degrees Celsius)</p></td>
+    </tr>
+    </table>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A numeric value for \(\phi(T)\)</p>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>The temperature factor is calculated as 
+			$$
+				\phi(T) = 0.352 + 0.022 T - 0.00034 T^2
+$$
+The factor \(\phi(T)\) is to be multiplied with leaf absorptance and the fraction 
+of absorbed light that reaches photosystem II. In the P-model these additional factors
+are lumped into a single apparent quantum yield efficiency parameter (argument <code>kphio</code> 
+to function pmodel()).</p>
+    
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>Bernacchi, C. J., Pimentel, C., and Long, S. P.:  In vivo temperature 
+				response func-tions  of  parameters required  to  model  RuBP-limited  
+				photosynthesis,  Plant  Cell Environ., 26, 1419–1430, 2003</p>
+    
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/paste'>paste</a></span>(<span class='st'>"Relative change in the quantum yield efficiency between 5 and 25 degrees celsius (percent change):"</span>, (<span class='fu'>calc_ftemp_kphio</span>(<span class='fl'>25.0</span>)/<span class='fu'>calc_ftemp_kphio</span>(<span class='fl'>5.0</span>)-<span class='fl'>1</span>)*<span class='fl'>100</span> ))</div><div class='output co'>#&gt; [1] "Relative change in the quantum yield efficiency between 5 and 25 degrees celsius (percent change): 52.0396912899669"</div><div class='input'>
+</div></pre>
+  </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+    <h2>Contents</h2>
+    <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
+      
+      <li><a href="#value">Value</a></li>
+
+      <li><a href="#details">Details</a></li>
+
+      <li><a href="#references">References</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
+    </ul>
+
   </div>
 </div>
 

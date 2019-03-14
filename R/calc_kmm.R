@@ -1,4 +1,4 @@
-#' Michaelis Menten coefficient
+#' Calculates the Michaelis Menten coefficient for Rubisco-limited photosynthesis
 #'
 #' Calculates the Michaelis Menten coefficient of Rubisco-limited assimilation
 #' as a function of temperature and atmospheric pressure.
@@ -39,9 +39,9 @@
 #'             for models of Rubisco-limited photosyn-thesis, Plant, Cell and
 #'             Environment, 24, 253–259, 2001
 #'
-#' @return A numeric value for \eqn{K}
+#' @return A numeric value for \eqn{K} (in Pa)
 #'
-#' @examples kmm <- calc_kmm(20, 100000)
+#' @examples print(paste("Michaelis-Menten coefficient at 20 degrees Celsius and standard atmosphere (in Pa):", calc_kmm(20, 101325)))
 #'
 #' @export
 #'

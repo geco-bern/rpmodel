@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Michaelis Menten coefficient — calc_kmm • rpmodel</title>
+<title>Calculates the Michaelis Menten coefficient for Rubisco-limited photosynthesis — calc_kmm • rpmodel</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,7 +30,7 @@
 
 
 
-<meta property="og:title" content="Michaelis Menten coefficient — calc_kmm" />
+<meta property="og:title" content="Calculates the Michaelis Menten coefficient for Rubisco-limited photosynthesis — calc_kmm" />
 
 <meta property="og:description" content="Calculates the Michaelis Menten coefficient of Rubisco-limited assimilation
 as a function of temperature and atmospheric pressure." />
@@ -79,6 +79,9 @@ as a function of temperature and atmospheric pressure." />
   </a>
 </li>
 <li>
+  <a href="../articles/rpmodel.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -91,10 +94,10 @@ as a function of temperature and atmospheric pressure." />
     <li>
       <a href="../articles/theory.html">Theory</a>
     </li>
-    <li>
-      <a href="../articles/usage.html">Usage</a>
-    </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       
@@ -117,7 +120,7 @@ as a function of temperature and atmospheric pressure." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Michaelis Menten coefficient</h1>
+    <h1>Calculates the Michaelis Menten coefficient for Rubisco-limited photosynthesis</h1>
     <small class="dont-index">Source: <a href='https://github.com/stineb/rpmodel/blob/master/R/calc_kmm.R'><code>R/calc_kmm.R</code></a></small>
     <div class="hidden name"><code>calc_kmm.Rd</code></div>
     </div>
@@ -146,7 +149,7 @@ as a function of temperature and atmospheric pressure.</p>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A numeric value for \(K\)</p>
+    <p>A numeric value for \(K\) (in Pa)</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
@@ -186,7 +189,8 @@ by the argument <code>tc</code>.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>kmm</span> <span class='kw'>&lt;-</span> <span class='fu'>calc_kmm</span>(<span class='fl'>20</span>, <span class='fl'>100000</span>)</div></pre>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/paste'>paste</a></span>(<span class='st'>"Michaelis-Menten coefficient at 20 degrees Celsius and standard atmosphere (in Pa):"</span>, <span class='fu'>calc_kmm</span>(<span class='fl'>20</span>, <span class='fl'>101325</span>)))</div><div class='output co'>#&gt; [1] "Michaelis-Menten coefficient at 20 degrees Celsius and standard atmosphere (in Pa): 46.0992778683436"</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

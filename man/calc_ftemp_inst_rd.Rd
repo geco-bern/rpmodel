@@ -2,7 +2,7 @@
 % Please edit documentation in R/calc_ftemp_inst_rd.R
 \name{calc_ftemp_inst_rd}
 \alias{calc_ftemp_inst_rd}
-\title{Temperature response function of dark respiration}
+\title{Calculates the temperature response of dark respiration}
 \usage{
 calc_ftemp_inst_rd(tc)
 }
@@ -26,7 +26,7 @@ scaling factor to calculate dark respiration at temperature \eqn{T} (argument \c
 where \eqn{T} is given in degrees Celsius.
 }
 \examples{
-print(calc_ftemp_arrh(20))
+print(paste("Relative change in Rd going (instantaneously, i.e. not acclimatedly) from 10 to 25 degrees (percent change):", (calc_ftemp_inst_rd(25)/calc_ftemp_inst_rd(10)-1)*100 ))
 
 }
 \references{

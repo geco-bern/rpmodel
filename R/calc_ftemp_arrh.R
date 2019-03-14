@@ -1,4 +1,4 @@
-#' Arrhenius temperature response
+#' Calculates the Arrhenius-type temperature response
 #'
 #' Given a kinetic rate at a reference temperature (argument \code{tkref})
 #' this function calculates its temperature-scaling factor following Arrhenius kinetics.
@@ -24,7 +24,7 @@
 #'
 #' @return A numeric value for \eqn{f}
 #'
-#' @examples ftemp <- calc_ftemp_arrh(283.15, 100000, tkref = 298.15)
+#' @examples print( paste( "Relative rate change from 25 to 10 degrees Celsius (percent change):", (1.0-calc_ftemp_arrh( 283.15, 100000, tkref = 298.15))*100 ))
 #'
 #' @export
 #'

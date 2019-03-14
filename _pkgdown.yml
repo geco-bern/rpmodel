@@ -1,0 +1,10 @@
+reference:
+  - title: "Main function: P-model implementation."
+    desc: >
+      An implementation of the P-model (Prentice et al., 2014; Wang et al., 2017; Stocker et al., 2019) for predicting acclimated photosynthetic parameters, assimilation, and dark respiration rates as a function of the environment.
+    contents:
+      - rpmodel
+  - title: "Public functions used inside `rpmodel()`"
+    desc: "Public functions used inside rpmodel(). Made public for documentation, visibility, and other applications by the user."
+    contents:
+      - -matches("rpmodel")

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Temperature response function of dark respiration — calc_ftemp_inst_rd • rpmodel</title>
+<title>Calculates the temperature response of dark respiration — calc_ftemp_inst_rd • rpmodel</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,7 +30,7 @@
 
 
 
-<meta property="og:title" content="Temperature response function of dark respiration — calc_ftemp_inst_rd" />
+<meta property="og:title" content="Calculates the temperature response of dark respiration — calc_ftemp_inst_rd" />
 
 <meta property="og:description" content="Given the dark respiration at the reference temperature 25 degress Celsius,
 this function calculates its temperature-scaling factor following Heskel et al. 2016." />
@@ -79,6 +79,9 @@ this function calculates its temperature-scaling factor following Heskel et al. 
   </a>
 </li>
 <li>
+  <a href="../articles/rpmodel.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -91,10 +94,10 @@ this function calculates its temperature-scaling factor following Heskel et al. 
     <li>
       <a href="../articles/theory.html">Theory</a>
     </li>
-    <li>
-      <a href="../articles/usage.html">Usage</a>
-    </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       
@@ -117,7 +120,7 @@ this function calculates its temperature-scaling factor following Heskel et al. 
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Temperature response function of dark respiration</h1>
+    <h1>Calculates the temperature response of dark respiration</h1>
     <small class="dont-index">Source: <a href='https://github.com/stineb/rpmodel/blob/master/R/calc_ftemp_inst_rd.R'><code>R/calc_ftemp_inst_rd.R</code></a></small>
     <div class="hidden name"><code>calc_ftemp_inst_rd.Rd</code></div>
     </div>
@@ -164,7 +167,7 @@ where \(T\) is given in degrees Celsius.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='fu'><a href='calc_ftemp_arrh.html'>calc_ftemp_arrh</a></span>(<span class='fl'>20</span>))</div><div class='output co'>#&gt; <span class='error'>Error in calc_ftemp_arrh(20): argument "dha" is missing, with no default</span></div><div class='input'>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/paste'>paste</a></span>(<span class='st'>"Relative change in Rd going (instantaneously, i.e. not acclimatedly) from 10 to 25 degrees (percent change):"</span>, (<span class='fu'>calc_ftemp_inst_rd</span>(<span class='fl'>25</span>)/<span class='fu'>calc_ftemp_inst_rd</span>(<span class='fl'>10</span>)-<span class='fl'>1</span>)*<span class='fl'>100</span> ))</div><div class='output co'>#&gt; [1] "Relative change in Rd going (instantaneously, i.e. not acclimatedly) from 10 to 25 degrees (percent change): 250.959273208264"</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

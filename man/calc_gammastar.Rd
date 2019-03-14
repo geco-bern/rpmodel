@@ -2,7 +2,7 @@
 % Please edit documentation in R/calc_gammastar.R
 \name{calc_gammastar}
 \alias{calc_gammastar}
-\title{CO2 compensation point}
+\title{Calculates the CO2 compensation point}
 \usage{
 calc_gammastar(tc, patm)
 }
@@ -12,7 +12,7 @@ calc_gammastar(tc, patm)
 \item{patm}{Atmospheric pressure (Pa)}
 }
 \value{
-A numeric value for \eqn{\Gamma*}
+A numeric value for \eqn{\Gamma*} (in Pa)
 }
 \description{
 Calculates the photorespiratory CO2 compensation point in absence of dark
@@ -35,7 +35,7 @@ atmospheric pressure \eqn{p(z)} (see \link{calc_patm}) at elevation \eqn{z}.
 \eqn{p(z)} is given by argument \code{patm}.
 }
 \examples{
-print( calc_gammastar(20, 100000) )
+print(paste("CO2 compensation point at 20 degrees Celsius and standard atmosphere (in Pa):", calc_gammastar(20, 101325)))
 
 }
 \references{
