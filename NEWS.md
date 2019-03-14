@@ -1,3 +1,3 @@
-# rpmodel 0.1.0
+# rpmodel 1.0.0
 
 * First version for submission to Geoscientific Model Development.
