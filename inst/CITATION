@@ -1,0 +1,20 @@
+citHeader("To cite rpmodel in publications use:")
+
+citEntry(entry = "Article",
+  title        = "P-model evaluation",
+  author       = personList(as.person("Benjamin Stocker"),
+                   as.person("Wang Han"),
+                   as.person("Colin Prentice")),
+  journal      = "Geoscientific Model Development Discussions",
+  year         = "2019",
+  volume       = "",
+  number       = "",
+  pages        = "",
+  url          = "",
+
+  textVersion  =
+  paste("Stocker et al. (2019).",
+        "P-model evaluation",
+        "Geoscientific Model Development Discussions, 40(3), 1-25.",
+        "URL http://www.XXX")
+)
