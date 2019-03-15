@@ -79,7 +79,7 @@
 #'                              LUE = \phi(T) \phi0 m' Mc
 #'                         }
 #'                         where \eqn{\phi(T)} is the temperature-dependent quantum yield efficiency modifier
-#'                         (\link{calc_ftemp_kphio}) if \code{do_ftemp_kphio==TRUE}, and 1 otherwise. \code{\phi 0}
+#'                         (\link{calc_ftemp_kphio}) if \code{do_ftemp_kphio==TRUE}, and 1 otherwise. \eqn{\phi 0}
 #'                         is given by argument \code{kphio}.
 #'                         \eqn{m'=m} if \code{method_jmaxlim=="none"}, otherwise
 #'                         \deqn{
