@@ -124,8 +124,8 @@ out_pmodel &lt;-<span class="st"> </span><span class="kw"><a href="reference/rpm
 <h3 class="hasAnchor">
 <a href="#development-release" class="anchor"></a>Development release</h3>
 <p>To install and load the rpmodel package (development release) run the following command in your R terminal:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">if(!<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">require</a></span>(devtools)){<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(devtools)}
-devtools::<span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>( <span class="st">"stineb/rpmodel"</span>, <span class="dt">build_vignettes =</span> <span class="ot">TRUE</span> )
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span>(<span class="op">!</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">require</a></span>(devtools)){<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(devtools)}
+devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>( <span class="st">"stineb/rpmodel"</span>, <span class="dt">build_vignettes =</span> <span class="ot">TRUE</span> )
 <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(rpmodel)</code></pre></div>
 </div>
 <div id="stable-release" class="section level3">
@@ -180,7 +180,7 @@ devtools::<span class="kw"><a href="https://www.rdocumentation.org/packages/devt
       <div class="dev-status">
 <h2>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://ci.appveyor.com/project/stineb/rsofun"><img src="https://ci.appveyor.com/api/projects/status/github/stineb/rsofun?branch=master&amp;svg=true" alt="AppVeyor build status"></a></li>
+<li><a href="https://ci.appveyor.com/project/stineb/rpmodel"><img src="https://ci.appveyor.com/api/projects/status/3v3ky8tm7n0atiop?svg=true" alt="Build status"></a></li>
 <li><a href="https://www.buymeacoffee.com/H2wlgqCLO" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" height="21px"></a></li>
 <li><a href=""><img src="https://img.shields.io/github/downloads/atom/atom/total.svg" alt="Github All Releases"></a></li>
 </ul>
