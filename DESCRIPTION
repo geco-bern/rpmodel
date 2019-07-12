@@ -8,6 +8,6 @@ Description: An R implementation of the P-model (Prentice et al., 2014; Wang et 
 License: GNU General Public License v3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1
 URL: https://github.com/stineb/rpmodel
 BugReports: https://github.com/stineb/rpmodel/issues

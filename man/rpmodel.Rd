@@ -32,7 +32,10 @@ with \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE}).}
 \item{fapar}{(Optional) Fraction of absorbed photosynthetically active radiation (unitless, defaults to
 \code{NA})}
 
-\item{ppfd}{(Optional) Photosynthetic photon flux density (mol/m2, defaults to \code{NA})}
+\item{ppfd}{(Optional) Photosynthetic photon flux density (mol m-2 d-1, defaults to \code{NA}). Note that
+the units of \code{ppfd} (per area and per time) determine the units of outputs \code{lue}, \code{gpp}, 
+\code{vcmax}, and \code{rd}. For example, if \code{ppfd} is provided in units of mol m-2 month-1, then 
+respective output variables are returned as per unit months.}
 
 \item{soilm}{(Optional, used only if \code{do_soilmstress==TRUE}) Relative soil moisture as a fraction 
 of field capacity (unitless). Defaults to 1.0 (no soil moisture stress). This information is used to calculate 
@@ -84,9 +87,9 @@ photosynthesis model, P-model predictions, including all its corollary). This in
         \item \code{ca}: Ambient CO2 expressed as partial pressure (Pa)
         \item \code{gammastar}: Photorespiratory compensation point \eqn{\Gamma*}, (Pa), see \link{calc_gammastar}.
         \item \code{kmm}: Michaelis-Menten coefficient \eqn{K} for photosynthesis (Pa), see \link{calc_kmm}.
-        \item \code{ns_star}: Viscosity, normalised to its value at 25 degrees Celsius
-                              \eqn{\eta* = \eta(T) / \eta(25 deg C)}
-                              used to scale the unit cost of transpiration. Calculated following Huber
+        \item \code{ns_star}: Change in the viscosity of water, relative to its value at 25 deg C (unitless).
+                              \deqn{\eta* = \eta(T) / \eta(25 deg C)}
+                              This is used to scale the unit cost of transpiration. Calculated following Huber
                               et al. (2009).
         \item \code{chi}: Optimal ratio of leaf internal to ambient CO2 (unitless). Derived following Prentice et al.
                          (2014) as:
@@ -134,16 +137,16 @@ photosynthesis model, P-model predictions, including all its corollary). This in
                        where \eqn{Iabs} is given by \code{fapar*ppfd} (arguments), and is
                        \code{NA} if \code{fapar==NA} or \code{ppfd==NA}. Note that \code{gpp} scales with
                        absorbed light. Thus, its units depend on the units in which \code{ppfd} is given.
-        \item \code{iwue}: Intrinsic water use efficiency (iWUE, unitless), calulated as
+        \item \code{iwue}: Intrinsic water use efficiency (iWUE, Pa), calulated as
                        \deqn{
-                             iWUE = = ca (1-\chi)/1.6
+                             iWUE = ca (1-\chi)/(1.6)
                        }
-        \item \code{gs}: Stomatal conductance (gs), calculated as
+        \item \code{gs}: Stomatal conductance (gs, in mol C m−2 Pa−1), calculated as
                        \deqn{
                             gs = A / (ca (1-\chi))
                        }
                        where \eqn{A} is \code{gpp}\eqn{/Mc}.
-        \item \code{vcmax}: Maximum carboxylation capacity \eqn{Vcmax} (mol CO2 m-2) at growth temperature (argument
+        \item \code{vcmax}: Maximum carboxylation capacity \eqn{Vcmax} (mol C m-2) at growth temperature (argument
                       \code{tc}), calculated as
                       \deqn{
                            Vcmax = \phi(T) \phi0 Iabs n
@@ -152,11 +155,11 @@ photosynthesis model, P-model predictions, including all its corollary). This in
                       \deqn{
                           n = (ci + K) / (ci + 2 \Gamma*)
                       }
-        \item \code{vcmax25}: Maximum carboxylation capacity \eqn{Vcmax} (mol CO2 m-2) normalised to 25 deg C
+        \item \code{vcmax25}: Maximum carboxylation capacity \eqn{Vcmax} (mol C m-2) normalised to 25 deg C
                      following a modified Arrhenius equation, calculated as \eqn{Vcmax25 = Vcmax / fv},
                      where \eqn{fv} is the instantaneous temperature response by Vcmax and is implemented
                      by function \link{calc_ftemp_inst_vcmax}.
-        \item \code{rd}: Dark respiration \eqn{Rd} (mol CO2 m-2), calculated as
+        \item \code{rd}: Dark respiration \eqn{Rd} (mol C m-2), calculated as
                      \deqn{
                          Rd = b0 Vcmax (fr / fv)
                      }

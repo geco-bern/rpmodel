@@ -1,14 +1,17 @@
 #' Calculates the instantaneous temperature response of Vcmax
 #'
-#' Given Vcmax at a reference temperature (argument \code{tkref})
+#' Given Vcmax at a reference temperature (argument \code{tcref})
 #' this function calculates its temperature-scaling factor following modified Arrhenius
-#' kinetics based on Kattge & Knorr (2007).
+#' kinetics based on Kattge & Knorr (2007). Calculates \eqn{f} for the conversion
+#' \deqn{
+#'    V = f Vref
+#' }
 #'
 #' @param tcleaf Leaf temperature, or in general the temperature relevant for photosynthesis
 #' (degrees Celsius)
-#' @param tcgrowh (Optional) Growth temperature, in the P-model, taken to be equal to tcleaf
-#' (degrees Celsius). Defaults to \code{tcgrowth = tcleaf}.
-#' @param tcref Reference temperature (degrees Celsius)
+#' @param tcgrowth (Optional) Growth temperature, in the P-model, taken to be equal to \code{tcleaf}
+#' (in degrees Celsius). Defaults to \code{tcgrowth = tcleaf}.
+#' @param tcref Reference temperature (in degrees Celsius)
 #'
 #' @details The function is given by Kattge & Knorr (2007) as
 #' \deqn{

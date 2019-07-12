@@ -5,17 +5,23 @@
 #' @param tc Temperature, relevant for photosynthesis (deg C)
 #' @param vpd Vapour pressure deficit (Pa)
 #' @param co2 Atmospheric CO2 concentration (ppm)
-#' @param elv Elevation above sea-level (m.a.s.l.). Is used only for calculating atmospheric pressure, if
-#' argument \code{patm} is not provided.
-#' @param patm (Optional) Atmospheric pressure (Pa). Defaults to standard atmosphere (101325 Pa), corrected
-#' for elevation (argument \code{elv}), using \link{calc_patm}.
+#' @param elv Elevation above sea-level (m.a.s.l.). Is used only for calculating atmospheric pressure (using 
+#' standard atmosphere (101325 Pa), corrected for elevation (argument \code{elv}), using the function 
+#' \link{calc_patm()}), if argument \code{patm} is not provided. If argument \code{patm} is provided, 
+#' \code{elv} is overriden. 
+#' @param patm (Optional) Atmospheric pressure (Pa). When provided, overrides \code{elv}, otherwise \code{patm} 
+#' is calculated using standard atmosphere (101325 Pa), corrected for elevation (argument \code{elv}), 
+#' using the function \link{calc_patm()}.
 #' @param kphio Apparent uantum yield efficiency (unitless). Defaults to 0.0870, the empirically fitted value
 #' as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'FULL' (corresponding to a setup
 #' with \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE}). 
 #' @param beta Unit cost ratio. Defaults to 146.0.
 #' @param fapar (Optional) Fraction of absorbed photosynthetically active radiation (unitless, defaults to
 #' \code{NA})
-#' @param ppfd (Optional) Photosynthetic photon flux density (mol/m2, defaults to \code{NA})
+#' @param ppfd (Optional) Photosynthetic photon flux density (mol m-2 d-1, defaults to \code{NA}). Note that
+#' the units of \code{ppfd} (per area and per time) determine the units of outputs \code{lue}, \code{gpp}, 
+#' \code{vcmax}, and \code{rd}. For example, if \code{ppfd} is provided in units of mol m-2 month-1, then 
+#' respective output variables are returned as per unit months.
 #' @param soilm (Optional, used only if \code{do_soilmstress==TRUE}) Relative soil moisture as a fraction 
 #' of field capacity (unitless). Defaults to 1.0 (no soil moisture stress). This information is used to calculate 
 #' an empirical soil moisture stress factor (\link{calc_soilmstress}) whereby the sensitivity is determined 
@@ -56,9 +62,9 @@
 #'         \item \code{ca}: Ambient CO2 expressed as partial pressure (Pa)
 #'         \item \code{gammastar}: Photorespiratory compensation point \eqn{\Gamma*}, (Pa), see \link{calc_gammastar}.
 #'         \item \code{kmm}: Michaelis-Menten coefficient \eqn{K} for photosynthesis (Pa), see \link{calc_kmm}.
-#'         \item \code{ns_star}: Viscosity, normalised to its value at 25 degrees Celsius
-#'                               \eqn{\eta* = \eta(T) / \eta(25 deg C)}
-#'                               used to scale the unit cost of transpiration. Calculated following Huber
+#'         \item \code{ns_star}: Change in the viscosity of water, relative to its value at 25 deg C (unitless).
+#'                               \deqn{\eta* = \eta(T) / \eta(25 deg C)}
+#'                               This is used to scale the unit cost of transpiration. Calculated following Huber
 #'                               et al. (2009).
 #'         \item \code{chi}: Optimal ratio of leaf internal to ambient CO2 (unitless). Derived following Prentice et al.
 #'                          (2014) as:
@@ -106,16 +112,16 @@
 #'                        where \eqn{Iabs} is given by \code{fapar*ppfd} (arguments), and is
 #'                        \code{NA} if \code{fapar==NA} or \code{ppfd==NA}. Note that \code{gpp} scales with
 #'                        absorbed light. Thus, its units depend on the units in which \code{ppfd} is given.
-#'         \item \code{iwue}: Intrinsic water use efficiency (iWUE, unitless), calulated as
+#'         \item \code{iwue}: Intrinsic water use efficiency (iWUE, Pa), calulated as
 #'                        \deqn{
-#'                              iWUE = = ca (1-\chi)/1.6
+#'                              iWUE = ca (1-\chi)/(1.6)
 #'                        }
-#'         \item \code{gs}: Stomatal conductance (gs), calculated as
+#'         \item \code{gs}: Stomatal conductance (gs, in mol C m−2 Pa−1), calculated as
 #'                        \deqn{
 #'                             gs = A / (ca (1-\chi))
 #'                        }
 #'                        where \eqn{A} is \code{gpp}\eqn{/Mc}.
-#'         \item \code{vcmax}: Maximum carboxylation capacity \eqn{Vcmax} (mol CO2 m-2) at growth temperature (argument
+#'         \item \code{vcmax}: Maximum carboxylation capacity \eqn{Vcmax} (mol C m-2) at growth temperature (argument
 #'                       \code{tc}), calculated as
 #'                       \deqn{
 #'                            Vcmax = \phi(T) \phi0 Iabs n
@@ -124,11 +130,11 @@
 #'                       \deqn{
 #'                           n = (ci + K) / (ci + 2 \Gamma*)
 #'                       }
-#'         \item \code{vcmax25}: Maximum carboxylation capacity \eqn{Vcmax} (mol CO2 m-2) normalised to 25 deg C
+#'         \item \code{vcmax25}: Maximum carboxylation capacity \eqn{Vcmax} (mol C m-2) normalised to 25 deg C
 #'                      following a modified Arrhenius equation, calculated as \eqn{Vcmax25 = Vcmax / fv},
 #'                      where \eqn{fv} is the instantaneous temperature response by Vcmax and is implemented
 #'                      by function \link{calc_ftemp_inst_vcmax}.
-#'         \item \code{rd}: Dark respiration \eqn{Rd} (mol CO2 m-2), calculated as
+#'         \item \code{rd}: Dark respiration \eqn{Rd} (mol C m-2), calculated as
 #'                      \deqn{
 #'                          Rd = b0 Vcmax (fr / fv)
 #'                      }
@@ -283,8 +289,8 @@ rpmodel <- function( tc, vpd, co2, elv, patm = calc_patm(elv), kphio = 0.0817, b
   # ## stomatal conductance
   # gs <- gpp  / ( ca - ci )
 
-  ## intrinsic water use efficiency
-  iwue = ( ca - ci ) / ( 1.6 * patm )
+  ## intrinsic water use efficiency (in Pa)
+  iwue = ( ca - ci ) / 1.6
 
   ##-----------------------------------------------------------------------
   ## Vcmax and light use efficiency
@@ -297,17 +303,15 @@ rpmodel <- function( tc, vpd, co2, elv, patm = calc_patm(elv), kphio = 0.0817, b
     ## Vcmax normalised per unit absorbed PPFD (assuming iabs=1), with Jmax limitation
     vcmax_unitiabs <- kphio * ftemp_kphio
 
-    ## xxx test
-    omega       <- NA
-    m           <- NA
-    mc          <- NA
-    omega_star  <- NA
+    ## complement for non-smith19 
+    omega               <- NA
+    omega_star          <- NA
     vcmax_unitiabs_star <- NA
-    vcmax_star  <- NA
-    vcmax_prime <- NA
-    jvrat       <- NA
-    jmax_prime  <- NA
-    ftemp_inst_vcmax <- NA
+    vcmax_star          <- NA
+    vcmax_prime         <- NA
+    jvrat               <- NA
+    jmax_prime          <- NA
+    ftemp_inst_vcmax    <- NA    
 
 
   } else if (method_jmaxlim=="wang17"){
@@ -323,58 +327,72 @@ rpmodel <- function( tc, vpd, co2, elv, patm = calc_patm(elv), kphio = 0.0817, b
 
     # print(paste("Jmax limit factor", mprime / out_optchi$mj))
 
-    ## xxx test
-    omega       <- NA
-    m           <- NA
-    mc          <- NA
-    omega_star  <- NA
+    ## complement for non-smith19 
+    omega               <- NA
+    omega_star          <- NA
     vcmax_unitiabs_star <- NA
-    vcmax_star  <- NA
-    vcmax_prime <- NA
-    jvrat       <- NA
-    jmax_prime  <- NA
-    ftemp_inst_vcmax <- NA
+    vcmax_star          <- NA
+    vcmax_prime         <- NA
+    jvrat               <- NA
+    jmax_prime          <- NA
+    ftemp_inst_vcmax    <- NA    
 
 
   } else if (method_jmaxlim=="smith19"){
+
+    # Adopted from Nick Smith's code:
+    # Calculate omega, see Smith et al., 2019 Ecology Letters
+    calc_omega <- function( theta, c_cost, m ){
+
+      cm <- 4 * c_cost / m                        # simplification term for omega calculation
+      v  <- 1/(cm * (1 - theta * cm)) - 4 * theta # simplification term for omega calculation
+
+      # account for non-linearities at low m values
+      capP <- (((1/1.4) - 0.7)^2 / (1-theta)) + 3.4
+      aquad <- -1
+      bquad <- capP
+      cquad <- -(capP * theta)
+      m_star <- (4 * c_cost) / polyroot(c(aquad, bquad, cquad))
+
+      omega <- ifelse(  m < Re(m_star[1]),
+                        -( 1 - (2 * theta) ) - sqrt( (1 - theta) * v),
+                        -( 1 - (2 * theta))  + sqrt( (1 - theta) * v)
+                        )
+      return(omega)
+    }
 
     ## constants
     theta <- 0.85    # should be calibratable?
     c_cost <- 0.05336251
 
-    # mc <- (ci - gammastar) / (ci + kmm)                       # Eq. 6
-    # print(paste("mc should be equal: ", mc, out_optchi$mc ) )
+    # ## override?
+    # kphio <- 0.257
 
-    # mj <- (ci - gammastar) / (ci + 2.0 * gammastar)           # Eq. 8
-    # print(paste("mj should be equal: ", mj, out_optchi$mj ) )
-
-    # mjoc <- (ci + kmm) / (ci + 2.0 * gammastar)               # mj/mc, used in several instances below
-    # print(paste("mjoc should be equal: ", mjoc, out_optchi$mjoc ) )
-
-    omega <- calc_omega( theta = theta, c_cost = c_cost, m = out_optchi$mj )             # Eq. S4
+    ## factors derived as in Smith et al., 2019
+    omega <- calc_omega( theta = theta, c_cost = c_cost, m = out_optchi$mj )          # Eq. S4
     omega_star <- 1.0 + omega - sqrt( (1.0 + omega)^2 - (4.0 * theta * omega) )       # Eq. 18
+
+    ## Effect of Jmax limitation
+    mprime <- out_optchi$mj * omega_star / (8.0 * theta)
+
+    ## Light use efficiency (gpp per unit absorbed light)
+    lue <- kphio * ftemp_kphio * mprime * c_molmass * soilmstress
 
     # calculate Vcmax-star, which corresponds to Vcmax at a reference temperature 'tcref'
     vcmax_unitiabs_star  <- kphio * ftemp_kphio * out_optchi$mjoc * omega_star / (8.0 * theta)               # Eq. 19
 
-    ## tcref is the optimum temperature in K, assumed to be the temperature at which Vcmax* is operating.
-    ## tcref is estimated based on its relationship to growth temperature following Kattge & Knorr 2007
-    tcref <- 0.44 * tc + 24.92
+    ## temp_opt is the optimum temperature in K, assumed to be the temperature at which Vcmax* is operating.
+    ## temp_opt is estimated based on its relationship to growth temperature following Kattge & Knorr 2007
+    temp_opt <- 0.44 * tc + 24.92      # Eq. 21, note: intercept differs due to use of deg C
 
     ## calculated acclimated Vcmax at prevailing growth temperatures
-    ftemp_inst_vcmax <- calc_ftemp_inst_vcmax( tc, tc, tcref = tcref )
+    ftemp_inst_vcmax <- calc_ftemp_inst_vcmax( tc, tc, tcref = temp_opt )
     vcmax_unitiabs <- vcmax_unitiabs_star * ftemp_inst_vcmax   # Eq. 20
 
     ## calculate Jmax
     jmax_over_vcmax <- (8.0 * theta * omega) / (out_optchi$mjoc * omega_star)             # Eq. 15 / Eq. 19
     jmax_prime <- jmax_over_vcmax * vcmax_unitiabs
 
-    ## light use efficiency
-    lue <- c_molmass * kphio * ftemp_kphio * out_optchi$mj * omega_star / (8.0 * theta) * soilmstress  # * calc_ftemp_inst_vcmax( tc, tc, tcref = tcref )     # treat theta as a calibratable parameter
-
-    ## xxx test
-    m     <- out_optchi$mj
-    mc    <- out_optchi$mc
     jvrat <- jmax_over_vcmax
 
 
@@ -388,17 +406,15 @@ rpmodel <- function( tc, vpd, co2, elv, patm = calc_patm(elv), kphio = 0.0817, b
 
     # print(paste("Jmax limit factor", mprime / out_optchi$mj))
 
-    ## xxx test
-    omega       <- NA
-    m           <- NA
-    mc          <- NA
-    omega_star  <- NA
+    ## complement for non-smith19 
+    omega               <- NA
+    omega_star          <- NA
     vcmax_unitiabs_star <- NA
-    vcmax_star  <- NA
-    vcmax_prime <- NA
-    jvrat       <- NA
-    jmax_prime  <- NA
-    ftemp_inst_vcmax <- NA
+    vcmax_star          <- NA
+    vcmax_prime         <- NA
+    jvrat               <- NA
+    jmax_prime          <- NA
+    ftemp_inst_vcmax    <- NA    
 
 
   } else {
@@ -511,15 +527,15 @@ rpmodel <- function( tc, vpd, co2, elv, patm = calc_patm(elv), kphio = 0.0817, b
               iwue            = iwue,
               gs              = (gpp / c_molmass) / (ca - ci),
 
-              # ## additional for testing:----------------
-              # ftemp_inst_vcmax = ftemp_inst_vcmax,
-              # omega           = omega,
-              # omega_star      = omega_star,
-              # vcmax_star      = vcmax_star,
-              # vcmax_unitiabs_star = vcmax_unitiabs_star,
-              # jvrat           = jvrat,
-              # jmax_prime      = jmax_prime,
-              # ##-----------------------------------------
+              ## for smith19 only: ---------------------
+              ftemp_inst_vcmax    = ftemp_inst_vcmax,
+              omega               = omega,
+              omega_star          = omega_star,
+              vcmax_star          = vcmax_star,
+              vcmax_unitiabs_star = vcmax_unitiabs_star,
+              jvrat               = jvrat,
+              jmax_prime          = jmax_prime,
+              ##-----------------------------------------
 
               vcmax           = vcmax,
               vcmax25         = vcmax25,
@@ -530,29 +546,6 @@ rpmodel <- function( tc, vpd, co2, elv, patm = calc_patm(elv), kphio = 0.0817, b
   if (!is.null(returnvar)) out <- out[returnvar]
 
   return( out )
-
-}
-
-# Adopted from Nick Smith's code:
-# Calculate omega, see Smith et al., 2019 Ecology Letters
-calc_omega <- function( theta, c_cost, m ){
-
-  cm <- 4 * c_cost / m                        # simplification term for omega calculation
-  v  <- 1/(cm * (1 - theta * cm)) - 4 * theta # simplification term for omega calculation
-
-  # account for non-linearities at low m values
-  capP <- (((1/1.4) - 0.7)^2 / (1-theta)) + 3.4
-  aquad <- -1
-  bquad <- capP
-  cquad <- -(capP * theta)
-  m_star <- (4 * c_cost) / polyroot(c(aquad, bquad, cquad))
-
-  omega <- ifelse(  m < Re(m_star[1]),
-                    -( 1 - (2 * theta) ) - sqrt( (1 - theta) * v),
-                    -( 1 - (2 * theta))  + sqrt( (1 - theta) * v)
-                    )
-
-  return(omega)
 
 }
 

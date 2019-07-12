@@ -10,18 +10,21 @@ calc_ftemp_inst_vcmax(tcleaf, tcgrowth = tcleaf, tcref = 25)
 \item{tcleaf}{Leaf temperature, or in general the temperature relevant for photosynthesis
 (degrees Celsius)}
 
-\item{tcref}{Reference temperature (degrees Celsius)}
+\item{tcgrowth}{(Optional) Growth temperature, in the P-model, taken to be equal to \code{tcleaf}
+(in degrees Celsius). Defaults to \code{tcgrowth = tcleaf}.}
 
-\item{tcgrowh}{(Optional) Growth temperature, in the P-model, taken to be equal to tcleaf
-(degrees Celsius). Defaults to \code{tcgrowth = tcleaf}.}
+\item{tcref}{Reference temperature (in degrees Celsius)}
 }
 \value{
 A numeric value for \eqn{fv}
 }
 \description{
-Given Vcmax at a reference temperature (argument \code{tkref})
+Given Vcmax at a reference temperature (argument \code{tcref})
 this function calculates its temperature-scaling factor following modified Arrhenius
-kinetics based on Kattge & Knorr (2007).
+kinetics based on Kattge & Knorr (2007). Calculates \eqn{f} for the conversion
+\deqn{
+   V = f Vref
+}
 }
 \details{
 The function is given by Kattge & Knorr (2007) as

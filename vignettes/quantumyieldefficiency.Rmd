@@ -21,7 +21,7 @@ ci_conc <- 303 # ppm or micro-mol/mol
 patm <- 101325 # ASSUME: standard atmospheric pressure at sea-level
 ci   <-  1.0e-6 * ci_conc * patm 
 
-factor_loci <- calc_factor_loci(ci, temp=25, patm=patm)
+factor_loci <- calc_factor_loci(ci, temp=15, patm=patm)
 qye_calib <- 0.0492
 print(paste("Corrected calibrated quantum yield efficiency in rpmodel:", format(qye_calib * factor_loci, digits = 2)))
 ```

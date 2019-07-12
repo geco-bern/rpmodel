@@ -8,18 +8,18 @@
 #' @param tkref Reference temperature (Kelvin)
 #'
 #' @details To correct for effects by temperature following Arrhenius kinetics,
-#' and given a reference temperature \eqn{T0}, \eqn{f} calculates the temperature
+#' and given a reference temperature \eqn{T_0}, \eqn{f} calculates the temperature
 #' scaling. Arrhenius kinetics are described by an equation of form
-#' \eqn{x(T)= exp(c - \Delta Ha / (T R))}. The temperature-correction
-#' function \eqn{f(T, \Delta Ha)} is thus given by \eqn{f=x(T)/x(T0)} which is:
+#' \eqn{x(T)= exp(c - \Delta H_a / (T R))}. The temperature-correction
+#' function \eqn{f(T, \Delta H_a)} is thus given by \eqn{f=x(T)/x(T_0)} which is:
 #' \deqn{
-#'      f = exp( \Delta Ha (T - T0) / (T0 R T_K) )
+#'      f = exp( \Delta H_a (T - T_0) / (T_0 R T_K) )
 #' }
-#' \eqn{\Delta Ha} is given by argument \code{dha}. \eqn{T} is given by argument
+#' \eqn{\Delta H_a} is given by argument \code{dha}. \eqn{T} is given by argument
 #' \code{tk} and has to be provided in Kelvin. \eqn{R} is the universal gas constant
 #' and is 8.3145 J mol-1 K-1. Note that this is equivalent to 
 #' \deqn{
-#'      f = exp( (\Delta Ha/R) (1/T0 - 1/T) )  
+#'      f = exp( (\Delta H_a/R) (1/T_0 - 1/T) )  
 #' }
 #'
 #' @return A numeric value for \eqn{f}
