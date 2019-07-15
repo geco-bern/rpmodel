@@ -78,9 +78,6 @@
   </a>
 </li>
 <li>
-  <a href="../articles/rpmodel.html">Get started</a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -91,7 +88,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/theory.html">Theory</a>
+      <a href="../articles/usage.html">Usage</a>
     </li>
   </ul>
 </li>
@@ -130,11 +127,12 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>rpmodel</span>(<span class='no'>tc</span>, <span class='no'>vpd</span>, <span class='no'>co2</span>, <span class='no'>elv</span>, <span class='kw'>patm</span> <span class='kw'>=</span> <span class='fu'><a href='calc_patm.html'>calc_patm</a></span>(<span class='no'>elv</span>), <span class='kw'>kphio</span> <span class='kw'>=</span> <span class='fl'>0.0817</span>,
-  <span class='kw'>beta</span> <span class='kw'>=</span> <span class='fl'>146</span>, <span class='kw'>fapar</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>ppfd</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>soilm</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>meanalpha</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+    <pre class="usage"><span class='fu'>rpmodel</span>(<span class='no'>tc</span>, <span class='no'>vpd</span>, <span class='no'>co2</span>, <span class='no'>fapar</span>, <span class='no'>ppfd</span>, <span class='kw'>patm</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>elv</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
+  <span class='kw'>kphio</span> <span class='kw'>=</span> <span class='fl'>0.0817</span>, <span class='kw'>beta</span> <span class='kw'>=</span> <span class='fl'>146</span>, <span class='kw'>soilm</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>meanalpha</span> <span class='kw'>=</span> <span class='fl'>1</span>,
   <span class='kw'>apar_soilm</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>bpar_soilm</span> <span class='kw'>=</span> <span class='fl'>0.685</span>, <span class='kw'>c4</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>method_optci</span> <span class='kw'>=</span> <span class='st'>"prentice14"</span>, <span class='kw'>method_jmaxlim</span> <span class='kw'>=</span> <span class='st'>"wang17"</span>,
-  <span class='kw'>do_ftemp_kphio</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>do_soilmstress</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>returnvar</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+  <span class='kw'>do_ftemp_kphio</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>do_soilmstress</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>returnvar</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -152,14 +150,29 @@
       <td><p>Atmospheric CO2 concentration (ppm)</p></td>
     </tr>
     <tr>
-      <th>elv</th>
-      <td><p>Elevation above sea-level (m.a.s.l.). Is used only for calculating atmospheric pressure, if
-argument <code>patm</code> is not provided.</p></td>
+      <th>fapar</th>
+      <td><p>(Optional) Fraction of absorbed photosynthetically active radiation (unitless, defaults to
+<code>NA</code>)</p></td>
+    </tr>
+    <tr>
+      <th>ppfd</th>
+      <td><p>(Optional) Photosynthetic photon flux density (mol m-2 d-1, defaults to <code>NA</code>). Note that
+the units of <code>ppfd</code> (per area and per time) determine the units of outputs <code>lue</code>, <code>gpp</code>, 
+<code>vcmax</code>, and <code>rd</code>. For example, if <code>ppfd</code> is provided in units of mol m-2 month-1, then 
+respective output variables are returned as per unit months.</p></td>
     </tr>
     <tr>
       <th>patm</th>
-      <td><p>(Optional) Atmospheric pressure (Pa). Defaults to standard atmosphere (101325 Pa), corrected
-for elevation (argument <code>elv</code>), using <a href='calc_patm.html'>calc_patm</a>.</p></td>
+      <td><p>Atmospheric pressure (Pa). When provided, overrides <code>elv</code>, otherwise <code>patm</code> 
+is calculated using standard atmosphere (101325 Pa), corrected for elevation (argument <code>elv</code>), 
+using the function calc_patm().</p></td>
+    </tr>
+    <tr>
+      <th>elv</th>
+      <td><p>Elevation above sea-level (m.a.s.l.). Is used only for calculating atmospheric pressure (using 
+standard atmosphere (101325 Pa), corrected for elevation (argument <code>elv</code>), using the function 
+calc_patm()), if argument <code>patm</code> is not provided. If argument <code>patm</code> is provided, 
+<code>elv</code> is overriden.</p></td>
     </tr>
     <tr>
       <th>kphio</th>
@@ -170,15 +183,6 @@ with <code>method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE</co
     <tr>
       <th>beta</th>
       <td><p>Unit cost ratio. Defaults to 146.0.</p></td>
-    </tr>
-    <tr>
-      <th>fapar</th>
-      <td><p>(Optional) Fraction of absorbed photosynthetically active radiation (unitless, defaults to
-<code>NA</code>)</p></td>
-    </tr>
-    <tr>
-      <th>ppfd</th>
-      <td><p>(Optional) Photosynthetic photon flux density (mol/m2, defaults to <code>NA</code>)</p></td>
     </tr>
     <tr>
       <th>soilm</th>
@@ -236,12 +240,16 @@ efficiency after Bernacchi et al., 2003 is to be accounted for. Defaults to <cod
     <tr>
       <th>do_soilmstress</th>
       <td><p>(Optional) A logical specifying wether an empirical soil moisture stress factor
-is to be applied to down-scale light use efficiency (and only light use efficiency). Defaults to <code>TRUE</code>.</p></td>
+is to be applied to down-scale light use efficiency (and only light use efficiency). Defaults to <code>FALSE</code>.</p></td>
     </tr>
     <tr>
       <th>returnvar</th>
       <td><p>(Optional) A character string of vector of character strings specifying which variables
 are to be returned (see return below).</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>Logical, defines whether verbose messages are printed. Defaults to <code>FALSE</code>.</p></td>
     </tr>
     </table>
     
@@ -252,9 +260,9 @@ photosynthesis model, P-model predictions, including all its corollary). This in
 <li><p><code>ca</code>: Ambient CO2 expressed as partial pressure (Pa)</p></li>
 <li><p><code>gammastar</code>: Photorespiratory compensation point \(\Gamma*\), (Pa), see <a href='calc_gammastar.html'>calc_gammastar</a>.</p></li>
 <li><p><code>kmm</code>: Michaelis-Menten coefficient \(K\) for photosynthesis (Pa), see <a href='calc_kmm.html'>calc_kmm</a>.</p></li>
-<li><p><code>ns_star</code>: Viscosity, normalised to its value at 25 degrees Celsius
-                              \(\eta* = \eta(T) / \eta(25 deg C)\)
-                              used to scale the unit cost of transpiration. Calculated following Huber
+<li><p><code>ns_star</code>: Change in the viscosity of water, relative to its value at 25 deg C (unitless).
+                              $$\eta* = \eta(T) / \eta(25 deg C)$$
+                              This is used to scale the unit cost of transpiration. Calculated following Huber
                               et al. (2009).</p></li>
 <li><p><code>chi</code>: Optimal ratio of leaf internal to ambient CO2 (unitless). Derived following Prentice et al.
                          (2014) as:
@@ -302,16 +310,16 @@ photosynthesis model, P-model predictions, including all its corollary). This in
                        where \(Iabs\) is given by <code>fapar*ppfd</code> (arguments), and is
                        <code>NA</code> if <code>fapar==NA</code> or <code>ppfd==NA</code>. Note that <code>gpp</code> scales with
                        absorbed light. Thus, its units depend on the units in which <code>ppfd</code> is given.</p></li>
-<li><p><code>iwue</code>: Intrinsic water use efficiency (iWUE, unitless), calulated as
+<li><p><code>iwue</code>: Intrinsic water use efficiency (iWUE, Pa), calulated as
                        $$
-                             iWUE = = ca (1-\chi)/1.6
+                             iWUE = ca (1-\chi)/(1.6)
                        $$</p></li>
-<li><p><code>gs</code>: Stomatal conductance (gs), calculated as
+<li><p><code>gs</code>: Stomatal conductance (gs, in mol C m−2 Pa−1), calculated as
                        $$
                             gs = A / (ca (1-\chi))
                        $$
                        where \(A\) is <code>gpp</code>\(/Mc\).</p></li>
-<li><p><code>vcmax</code>: Maximum carboxylation capacity \(Vcmax\) (mol CO2 m-2) at growth temperature (argument
+<li><p><code>vcmax</code>: Maximum carboxylation capacity \(Vcmax\) (mol C m-2) at growth temperature (argument
                       <code>tc</code>), calculated as
                       $$
                            Vcmax = \phi(T) \phi0 Iabs n
@@ -320,11 +328,11 @@ photosynthesis model, P-model predictions, including all its corollary). This in
                       $$
                           n = (ci + K) / (ci + 2 \Gamma*)
                       $$</p></li>
-<li><p><code>vcmax25</code>: Maximum carboxylation capacity \(Vcmax\) (mol CO2 m-2) normalised to 25 deg C
+<li><p><code>vcmax25</code>: Maximum carboxylation capacity \(Vcmax\) (mol C m-2) normalised to 25 deg C
                      following a modified Arrhenius equation, calculated as \(Vcmax25 = Vcmax / fv\),
                      where \(fv\) is the instantaneous temperature response by Vcmax and is implemented
                      by function <a href='calc_ftemp_inst_vcmax.html'>calc_ftemp_inst_vcmax</a>.</p></li>
-<li><p><code>rd</code>: Dark respiration \(Rd\) (mol CO2 m-2), calculated as
+<li><p><code>rd</code>: Dark respiration \(Rd\) (mol C m-2), calculated as
                      $$
                          Rd = b0 Vcmax (fr / fv)
                      $$
@@ -333,6 +341,13 @@ photosynthesis model, P-model predictions, including all its corollary). This in
                      <a href='calc_ftemp_inst_vcmax.html'>calc_ftemp_inst_vcmax</a>, and \(fr\) is the instantaneous temperature response
                      of dark respiration following Heskel et al. (2016) and is implemented by function
                      <a href='calc_ftemp_inst_rd.html'>calc_ftemp_inst_rd</a>.</p></li>
+</ul>
+
+<p>Additional variables are contained in the returned list if argument <code>method_jmaxlim=="smith19"</code></p><ul>
+<li><p><code>omega</code>: Term corresponding to \(\omega\), defined by Eq. 16 in Smith et al. (2019), 
+        and Eq. E19 in Stocker et al. (2019).</p></li>
+<li><p><code>omega_star</code>: Term corresponding to \(\omega^\ast\), defined by Eq. 18 in Smith et al. 
+        (2019), and Eq. E21 in Stocker et al. (2019).</p></li>
 </ul>
 
     
@@ -356,11 +371,17 @@ photosynthesis model, P-model predictions, including all its corollary). This in
              Atkin, O. K., et al.:  Global variability in leaf respiration in relation to climate, plant func-tional
              types and leaf traits, New Phytologist, 206, 614–636, doi:10.1111/nph.13253,
              https://nph.onlinelibrary.wiley.com/doi/abs/10.1111/nph.13253.</p>             
+<p>Smith, N. G., Keenan, T. F., Colin Prentice, I. , Wang, H. , Wright, I. J., Niinemets, Ü. , Crous, K. Y., 
+             Domingues, T. F., Guerrieri, R. , Yoko Ishida, F. , Kattge, J. , Kruger, E. L., Maire, V. , Rogers, A. , 
+             Serbin, S. P., Tarvainen, L. , Togashi, H. F., Townsend, P. A., Wang, M. , Weerasinghe, L. K. and Zhou, S. 
+             (2019), Global photosynthetic capacity is optimized to the environment. Ecol Lett, 22: 506-517. 
+             doi:10.1111/ele.13210</p>             
 <p>Stocker, B. et al. Geoscientific Model Development Discussions (in prep.)</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>out_rpmodel</span> <span class='kw'>&lt;-</span> <span class='fu'>rpmodel</span>( <span class='kw'>tc</span><span class='kw'>=</span><span class='fl'>10</span>, <span class='kw'>vpd</span><span class='kw'>=</span><span class='fl'>300</span>, <span class='kw'>co2</span><span class='kw'>=</span><span class='fl'>300</span>, <span class='kw'>elv</span><span class='kw'>=</span><span class='fl'>300</span>, <span class='kw'>kphio</span><span class='kw'>=</span><span class='fl'>0.06</span> )</div></pre>
+    <pre class="examples"><div class='input'><span class='no'>out_rpmodel</span> <span class='kw'>&lt;-</span> <span class='fu'>rpmodel</span>( <span class='kw'>tc</span><span class='kw'>=</span><span class='fl'>10</span>, <span class='kw'>vpd</span><span class='kw'>=</span><span class='fl'>300</span>, <span class='kw'>co2</span><span class='kw'>=</span><span class='fl'>300</span>, <span class='kw'>elv</span><span class='kw'>=</span><span class='fl'>300</span>, <span class='kw'>kphio</span><span class='kw'>=</span><span class='fl'>0.06</span> )</div><div class='output co'>#&gt; <span class='error'>Error in rpmodel(tc = 10, vpd = 300, co2 = 300, elv = 300, kphio = 0.06): argument "ppfd" is missing, with no default</span></div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

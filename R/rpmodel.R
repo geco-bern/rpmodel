@@ -5,23 +5,23 @@
 #' @param tc Temperature, relevant for photosynthesis (deg C)
 #' @param vpd Vapour pressure deficit (Pa)
 #' @param co2 Atmospheric CO2 concentration (ppm)
-#' @param elv Elevation above sea-level (m.a.s.l.). Is used only for calculating atmospheric pressure (using 
-#' standard atmosphere (101325 Pa), corrected for elevation (argument \code{elv}), using the function 
-#' \link{calc_patm()}), if argument \code{patm} is not provided. If argument \code{patm} is provided, 
-#' \code{elv} is overriden. 
-#' @param patm (Optional) Atmospheric pressure (Pa). When provided, overrides \code{elv}, otherwise \code{patm} 
-#' is calculated using standard atmosphere (101325 Pa), corrected for elevation (argument \code{elv}), 
-#' using the function \link{calc_patm()}.
-#' @param kphio Apparent uantum yield efficiency (unitless). Defaults to 0.0870, the empirically fitted value
-#' as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'FULL' (corresponding to a setup
-#' with \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE}). 
-#' @param beta Unit cost ratio. Defaults to 146.0.
 #' @param fapar (Optional) Fraction of absorbed photosynthetically active radiation (unitless, defaults to
 #' \code{NA})
 #' @param ppfd (Optional) Photosynthetic photon flux density (mol m-2 d-1, defaults to \code{NA}). Note that
 #' the units of \code{ppfd} (per area and per time) determine the units of outputs \code{lue}, \code{gpp}, 
 #' \code{vcmax}, and \code{rd}. For example, if \code{ppfd} is provided in units of mol m-2 month-1, then 
 #' respective output variables are returned as per unit months.
+#' @param patm Atmospheric pressure (Pa). When provided, overrides \code{elv}, otherwise \code{patm} 
+#' is calculated using standard atmosphere (101325 Pa), corrected for elevation (argument \code{elv}), 
+#' using the function \link{calc_patm()}.
+#' @param elv Elevation above sea-level (m.a.s.l.). Is used only for calculating atmospheric pressure (using 
+#' standard atmosphere (101325 Pa), corrected for elevation (argument \code{elv}), using the function 
+#' \link{calc_patm()}), if argument \code{patm} is not provided. If argument \code{patm} is provided, 
+#' \code{elv} is overriden. 
+#' @param kphio Apparent uantum yield efficiency (unitless). Defaults to 0.0870, the empirically fitted value
+#' as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'FULL' (corresponding to a setup
+#' with \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE}). 
+#' @param beta Unit cost ratio. Defaults to 146.0.
 #' @param soilm (Optional, used only if \code{do_soilmstress==TRUE}) Relative soil moisture as a fraction 
 #' of field capacity (unitless). Defaults to 1.0 (no soil moisture stress). This information is used to calculate 
 #' an empirical soil moisture stress factor (\link{calc_soilmstress}) whereby the sensitivity is determined 
@@ -52,9 +52,10 @@
 #' @param do_ftemp_kphio (Optional) A logical specifying whether temperature-dependence of quantum yield
 #' efficiency after Bernacchi et al., 2003 is to be accounted for. Defaults to \code{TRUE}.
 #' @param do_soilmstress (Optional) A logical specifying wether an empirical soil moisture stress factor
-#' is to be applied to down-scale light use efficiency (and only light use efficiency). Defaults to \code{TRUE}.
+#' is to be applied to down-scale light use efficiency (and only light use efficiency). Defaults to \code{FALSE}.
 #' @param returnvar (Optional) A character string of vector of character strings specifying which variables
 #' are to be returned (see return below).
+#' @param verbose Logical, defines whether verbose messages are printed. Defaults to \code{FALSE}.
 #'
 #' @return A named list of numeric values (including temperature and pressure dependent parameters of the
 #' photosynthesis model, P-model predictions, including all its corollary). This includes :
@@ -143,8 +144,15 @@
 #'                      \link{calc_ftemp_inst_vcmax}, and \eqn{fr} is the instantaneous temperature response
 #'                      of dark respiration following Heskel et al. (2016) and is implemented by function
 #'                      \link{calc_ftemp_inst_rd}.
-#'
 #' }
+#' 
+#' Additional variables are contained in the returned list if argument \code{method_jmaxlim=="smith19"}
+#' \itemize{
+#'         \item \code{omega}: Term corresponding to \eqn{\omega}, defined by Eq. 16 in Smith et al. (2019), 
+#'         and Eq. E19 in Stocker et al. (2019). 
+#'         \item \code{omega_star}: Term corresponding to \eqn{\omega^\ast}, defined by Eq. 18 in Smith et al. 
+#'         (2019), and Eq. E21 in Stocker et al. (2019). 
+#'         }
 #'
 #' @references  Bernacchi, C. J., Pimentel, C., and Long, S. P.:  In vivo temperature response func-tions  of  parameters  
 #'              required  to  model  RuBP-limited  photosynthesis,  Plant  CellEnviron., 26, 1419–1430, 2003
@@ -169,16 +177,30 @@
 #'              types and leaf traits, New Phytologist, 206, 614–636, doi:10.1111/nph.13253,
 #'              https://nph.onlinelibrary.wiley.com/doi/abs/10.1111/nph.13253.
 #'              
+#'              Smith, N. G., Keenan, T. F., Colin Prentice, I. , Wang, H. , Wright, I. J., Niinemets, Ü. , Crous, K. Y., 
+#'              Domingues, T. F., Guerrieri, R. , Yoko Ishida, F. , Kattge, J. , Kruger, E. L., Maire, V. , Rogers, A. , 
+#'              Serbin, S. P., Tarvainen, L. , Togashi, H. F., Townsend, P. A., Wang, M. , Weerasinghe, L. K. and Zhou, S. 
+#'              (2019), Global photosynthetic capacity is optimized to the environment. Ecol Lett, 22: 506-517. 
+#'              doi:10.1111/ele.13210
+#'              
 #'              Stocker, B. et al. Geoscientific Model Development Discussions (in prep.)
 #'
 #' @export
 #'
 #' @examples out_rpmodel <- rpmodel( tc=10, vpd=300, co2=300, elv=300, kphio=0.06 )
 #'
-rpmodel <- function( tc, vpd, co2, elv, patm = calc_patm(elv), kphio = 0.0817, beta = 146.0, fapar = NA, 
-  ppfd = NA, soilm = 1.0, meanalpha = 1.0, apar_soilm = 0.0, bpar_soilm = 0.685, c4 = FALSE, 
-  method_optci = "prentice14", method_jmaxlim = "wang17", do_ftemp_kphio = TRUE, do_soilmstress = TRUE, 
-  returnvar = NULL ){
+rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA, kphio = 0.0817, beta = 146.0, 
+                     soilm = 1.0, meanalpha = 1.0, apar_soilm = 0.0, bpar_soilm = 0.685, c4 = FALSE, 
+                     method_optci = "prentice14", method_jmaxlim = "wang17", do_ftemp_kphio = TRUE, 
+                     do_soilmstress = FALSE, returnvar = NULL, verbose = FALSE ){
+  
+  # Check arguments
+  if (identical(NA, elv) && identical(NA, patm)){
+    rlang::abort("Aborted. Provide either elevation (arugment elv) or atmospheric pressure (argument patm).")
+  } else if (!identical(NA, elv) && identical(NA, patm)){
+    if (verbose) rlang::warn("Atmospheric pressure (patm) not provided. Calculating it as a function of elevation (elv), assuming standard atmosphere (101325 Pa at sea level).")
+    patm <- calc_patm(elv)
+  }
   
   #-----------------------------------------------------------------------
   # Fixed parameters
@@ -235,9 +257,6 @@ rpmodel <- function( tc, vpd, co2, elv, patm = calc_patm(elv), kphio = 0.0817, b
   #-----------------------------------------------------------------------
   # Photosynthesis model parameters depending on temperature, pressure, and CO2.
   #-----------------------------------------------------------------------
-  # ## atmospheric pressure as a function of elevation (Pa)
-  # patm <- calc_patm( elv )
-
   ## ambient CO2 partial pression (Pa)
   ca <- co2_to_ca( co2, patm )
 
@@ -301,7 +320,7 @@ rpmodel <- function( tc, vpd, co2, elv, patm = calc_patm(elv), kphio = 0.0817, b
     lue <- kphio * ftemp_kphio * c_molmass * soilmstress
 
     ## Vcmax normalised per unit absorbed PPFD (assuming iabs=1), with Jmax limitation
-    vcmax_unitiabs <- kphio * ftemp_kphio
+    vcmax_unitiabs <- kphio * ftemp_kphio * soilmstress
 
     ## complement for non-smith19 
     omega               <- NA
@@ -323,7 +342,7 @@ rpmodel <- function( tc, vpd, co2, elv, patm = calc_patm(elv), kphio = 0.0817, b
     lue <- kphio * ftemp_kphio * mprime * c_molmass * soilmstress
 
     ## Vcmax normalised per unit absorbed PPFD (assuming iabs=1), with Jmax limitation
-    vcmax_unitiabs <- kphio * ftemp_kphio * out_optchi$mjoc * mprime / out_optchi$mj
+    vcmax_unitiabs <- kphio * ftemp_kphio * out_optchi$mjoc * mprime / out_optchi$mj * soilmstress
 
     # print(paste("Jmax limit factor", mprime / out_optchi$mj))
 
@@ -378,22 +397,22 @@ rpmodel <- function( tc, vpd, co2, elv, patm = calc_patm(elv), kphio = 0.0817, b
     ## Light use efficiency (gpp per unit absorbed light)
     lue <- kphio * ftemp_kphio * mprime * c_molmass * soilmstress
 
-    # calculate Vcmax-star, which corresponds to Vcmax at a reference temperature 'tcref'
-    vcmax_unitiabs_star  <- kphio * ftemp_kphio * out_optchi$mjoc * omega_star / (8.0 * theta)               # Eq. 19
+    # calculate Vcmax per unit aborbed light
+    vcmax_unitiabs  <- kphio * ftemp_kphio * out_optchi$mjoc * omega_star / (8.0 * theta) * soilmstress   # Eq. 19
 
-    ## temp_opt is the optimum temperature in K, assumed to be the temperature at which Vcmax* is operating.
-    ## temp_opt is estimated based on its relationship to growth temperature following Kattge & Knorr 2007
-    temp_opt <- 0.44 * tc + 24.92      # Eq. 21, note: intercept differs due to use of deg C
-
-    ## calculated acclimated Vcmax at prevailing growth temperatures
-    ftemp_inst_vcmax <- calc_ftemp_inst_vcmax( tc, tc, tcref = temp_opt )
-    vcmax_unitiabs <- vcmax_unitiabs_star * ftemp_inst_vcmax   # Eq. 20
-
-    ## calculate Jmax
-    jmax_over_vcmax <- (8.0 * theta * omega) / (out_optchi$mjoc * omega_star)             # Eq. 15 / Eq. 19
-    jmax_prime <- jmax_over_vcmax * vcmax_unitiabs
-
-    jvrat <- jmax_over_vcmax
+    # ## temp_opt is the optimum temperature in K, assumed to be the temperature at which Vcmax* is operating.
+    # ## temp_opt is estimated based on its relationship to growth temperature following Kattge & Knorr 2007
+    # temp_opt <- 0.44 * tc + 24.92      # Eq. 21, note: intercept differs due to use of deg C
+    # 
+    # ## calculated acclimated Vcmax at prevailing growth temperatures
+    # ftemp_inst_vcmax <- calc_ftemp_inst_vcmax( tc, tc, tcref = temp_opt )
+    # vcmax_unitiabs <- vcmax_unitiabs_star * ftemp_inst_vcmax   # Eq. 20
+    # 
+    # ## calculate Jmax
+    # jmax_over_vcmax <- (8.0 * theta * omega) / (out_optchi$mjoc * omega_star)             # Eq. 15 / Eq. 19
+    # jmax_prime <- jmax_over_vcmax * vcmax_unitiabs
+    # 
+    # jvrat <- jmax_over_vcmax
 
 
   } else if (method_jmaxlim=="none"){
@@ -402,7 +421,7 @@ rpmodel <- function( tc, vpd, co2, elv, patm = calc_patm(elv), kphio = 0.0817, b
     lue <- kphio * ftemp_kphio * out_optchi$mj * c_molmass * soilmstress
 
     ## Vcmax normalised per unit absorbed PPFD (assuming iabs=1), with Jmax limitation
-    vcmax_unitiabs <- kphio * ftemp_kphio * out_optchi$mjoc
+    vcmax_unitiabs <- kphio * ftemp_kphio * out_optchi$mjoc * soilmstress
 
     # print(paste("Jmax limit factor", mprime / out_optchi$mj))
 
@@ -436,8 +455,8 @@ rpmodel <- function( tc, vpd, co2, elv, patm = calc_patm(elv), kphio = 0.0817, b
   ftemp_inst_rd <- calc_ftemp_inst_rd( tc )
   rd_unitiabs  <- rd_to_vcmax * (ftemp_inst_rd / ftemp25_inst_vcmax) * vcmax_unitiabs
 
-  ## active metabolic leaf N (canopy-level), mol N/m2-ground (same equations as for nitrogen content per unit leaf area, gN/m2-leaf)
-  actnv_unitiabs  <- vcmax25_unitiabs  * n_v
+  # ## active metabolic leaf N (canopy-level), mol N/m2-ground (same equations as for nitrogen content per unit leaf area, gN/m2-leaf)
+  # actnv_unitiabs  <- vcmax25_unitiabs  * n_v
 
 
   if (!is.na(ppfd)){
@@ -454,8 +473,8 @@ rpmodel <- function( tc, vpd, co2, elv, patm = calc_patm(elv), kphio = 0.0817, b
     ## Dark respiration per unit fAPAR (assuming fAPAR=1)
     rd_unitfapar <- ppfd * rd_unitiabs
 
-    ## active metabolic leaf N (canopy-level), mol N/m2-ground (same equations as for nitrogen content per unit leaf area, gN/m2-leaf)
-    actnv_unitfapar <- ppfd * actnv_unitiabs
+    # ## active metabolic leaf N (canopy-level), mol N/m2-ground (same equations as for nitrogen content per unit leaf area, gN/m2-leaf)
+    # actnv_unitfapar <- ppfd * actnv_unitiabs
 
 
     if (!is.na(fapar)){
@@ -481,11 +500,8 @@ rpmodel <- function( tc, vpd, co2, elv, patm = calc_patm(elv), kphio = 0.0817, b
       ## Dark respiration
       rd <- iabs * rd_unitiabs
 
-      ## active metabolic leaf N (canopy-level), mol N/m2-ground (same equations as for nitrogen content per unit leaf area, gN/m2-leaf)
-      actnv <- iabs * actnv_unitiabs
-
-      ## xxx test
-      vcmax_star  <- iabs * vcmax_unitiabs_star
+      # ## active metabolic leaf N (canopy-level), mol N/m2-ground (same equations as for nitrogen content per unit leaf area, gN/m2-leaf)
+      # actnv <- iabs * actnv_unitiabs
 
     } else {
 
@@ -526,22 +542,24 @@ rpmodel <- function( tc, vpd, co2, elv, patm = calc_patm(elv), kphio = 0.0817, b
               gpp             = gpp,
               iwue            = iwue,
               gs              = (gpp / c_molmass) / (ca - ci),
-
-              ## for smith19 only: ---------------------
-              ftemp_inst_vcmax    = ftemp_inst_vcmax,
-              omega               = omega,
-              omega_star          = omega_star,
-              vcmax_star          = vcmax_star,
-              vcmax_unitiabs_star = vcmax_unitiabs_star,
-              jvrat               = jvrat,
-              jmax_prime          = jmax_prime,
-              ##-----------------------------------------
-
               vcmax           = vcmax,
               vcmax25         = vcmax25,
               rd              = rd
-              # actnv           = actnv
               )
+
+  # additional outputs returned only for Smith 2019 method  
+  if (method_jmaxlim=="smith19"){
+    add_list <- list(
+      omega               = omega,
+      omega_star          = omega_star
+      # ftemp_inst_vcmax    = ftemp_inst_vcmax,
+      # vcmax_star          = vcmax_star,
+      # vcmax_unitiabs_star = vcmax_unitiabs_star,
+      # jvrat               = jvrat,
+      # jmax_prime          = jmax_prime
+      )
+    out <- c(out, add_list)
+  }
 
   if (!is.null(returnvar)) out <- out[returnvar]
 

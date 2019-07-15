@@ -2,6 +2,5 @@ pandoc: 1.19.2.1
 pkgdown: 1.3.0
 pkgdown_sha: ~
 articles:
-  rpmodel: rpmodel.html
-  theory: theory.html
+  usage: usage.html
 

@@ -4,11 +4,12 @@
 \alias{rpmodel}
 \title{Invokes a P-model function call}
 \usage{
-rpmodel(tc, vpd, co2, elv, patm = calc_patm(elv), kphio = 0.0817,
-  beta = 146, fapar = NA, ppfd = NA, soilm = 1, meanalpha = 1,
+rpmodel(tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
+  kphio = 0.0817, beta = 146, soilm = 1, meanalpha = 1,
   apar_soilm = 0, bpar_soilm = 0.685, c4 = FALSE,
   method_optci = "prentice14", method_jmaxlim = "wang17",
-  do_ftemp_kphio = TRUE, do_soilmstress = TRUE, returnvar = NULL)
+  do_ftemp_kphio = TRUE, do_soilmstress = FALSE, returnvar = NULL,
+  verbose = FALSE)
 }
 \arguments{
 \item{tc}{Temperature, relevant for photosynthesis (deg C)}
@@ -17,18 +18,6 @@ rpmodel(tc, vpd, co2, elv, patm = calc_patm(elv), kphio = 0.0817,
 
 \item{co2}{Atmospheric CO2 concentration (ppm)}
 
-\item{elv}{Elevation above sea-level (m.a.s.l.). Is used only for calculating atmospheric pressure, if
-argument \code{patm} is not provided.}
-
-\item{patm}{(Optional) Atmospheric pressure (Pa). Defaults to standard atmosphere (101325 Pa), corrected
-for elevation (argument \code{elv}), using \link{calc_patm}.}
-
-\item{kphio}{Apparent uantum yield efficiency (unitless). Defaults to 0.0870, the empirically fitted value
-as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'FULL' (corresponding to a setup
-with \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE}).}
-
-\item{beta}{Unit cost ratio. Defaults to 146.0.}
-
 \item{fapar}{(Optional) Fraction of absorbed photosynthetically active radiation (unitless, defaults to
 \code{NA})}
 
@@ -36,6 +25,21 @@ with \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE}).}
 the units of \code{ppfd} (per area and per time) determine the units of outputs \code{lue}, \code{gpp}, 
 \code{vcmax}, and \code{rd}. For example, if \code{ppfd} is provided in units of mol m-2 month-1, then 
 respective output variables are returned as per unit months.}
+
+\item{patm}{Atmospheric pressure (Pa). When provided, overrides \code{elv}, otherwise \code{patm} 
+is calculated using standard atmosphere (101325 Pa), corrected for elevation (argument \code{elv}), 
+using the function \link{calc_patm()}.}
+
+\item{elv}{Elevation above sea-level (m.a.s.l.). Is used only for calculating atmospheric pressure (using 
+standard atmosphere (101325 Pa), corrected for elevation (argument \code{elv}), using the function 
+\link{calc_patm()}), if argument \code{patm} is not provided. If argument \code{patm} is provided, 
+\code{elv} is overriden.}
+
+\item{kphio}{Apparent uantum yield efficiency (unitless). Defaults to 0.0870, the empirically fitted value
+as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'FULL' (corresponding to a setup
+with \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE}).}
+
+\item{beta}{Unit cost ratio. Defaults to 146.0.}
 
 \item{soilm}{(Optional, used only if \code{do_soilmstress==TRUE}) Relative soil moisture as a fraction 
 of field capacity (unitless). Defaults to 1.0 (no soil moisture stress). This information is used to calculate 
@@ -75,10 +79,12 @@ and \code{"none"} for ignoring effects of Jmax limitation.}
 efficiency after Bernacchi et al., 2003 is to be accounted for. Defaults to \code{TRUE}.}
 
 \item{do_soilmstress}{(Optional) A logical specifying wether an empirical soil moisture stress factor
-is to be applied to down-scale light use efficiency (and only light use efficiency). Defaults to \code{TRUE}.}
+is to be applied to down-scale light use efficiency (and only light use efficiency). Defaults to \code{FALSE}.}
 
 \item{returnvar}{(Optional) A character string of vector of character strings specifying which variables
 are to be returned (see return below).}
+
+\item{verbose}{Logical, defines whether verbose messages are printed. Defaults to \code{FALSE}.}
 }
 \value{
 A named list of numeric values (including temperature and pressure dependent parameters of the
@@ -168,8 +174,15 @@ photosynthesis model, P-model predictions, including all its corollary). This in
                      \link{calc_ftemp_inst_vcmax}, and \eqn{fr} is the instantaneous temperature response
                      of dark respiration following Heskel et al. (2016) and is implemented by function
                      \link{calc_ftemp_inst_rd}.
-
 }
+
+Additional variables are contained in the returned list if argument \code{method_jmaxlim=="smith19"}
+\itemize{
+        \item \code{omega}: Term corresponding to \eqn{\omega}, defined by Eq. 16 in Smith et al. (2019), 
+        and Eq. E19 in Stocker et al. (2019). 
+        \item \code{omega_star}: Term corresponding to \eqn{\omega^\ast}, defined by Eq. 18 in Smith et al. 
+        (2019), and Eq. E21 in Stocker et al. (2019). 
+        }
 }
 \description{
 R implementation of the P-model and its corrolary predictions (Prentice et al., 2014; Han et al., 2017).
@@ -201,6 +214,12 @@ Bernacchi, C. J., Pimentel, C., and Long, S. P.:  In vivo temperature response f
              Atkin, O. K., et al.:  Global variability in leaf respiration in relation to climate, plant func-tional
              types and leaf traits, New Phytologist, 206, 614–636, doi:10.1111/nph.13253,
              https://nph.onlinelibrary.wiley.com/doi/abs/10.1111/nph.13253.
+             
+             Smith, N. G., Keenan, T. F., Colin Prentice, I. , Wang, H. , Wright, I. J., Niinemets, Ü. , Crous, K. Y., 
+             Domingues, T. F., Guerrieri, R. , Yoko Ishida, F. , Kattge, J. , Kruger, E. L., Maire, V. , Rogers, A. , 
+             Serbin, S. P., Tarvainen, L. , Togashi, H. F., Townsend, P. A., Wang, M. , Weerasinghe, L. K. and Zhou, S. 
+             (2019), Global photosynthetic capacity is optimized to the environment. Ecol Lett, 22: 506-517. 
+             doi:10.1111/ele.13210
              
              Stocker, B. et al. Geoscientific Model Development Discussions (in prep.)
 }

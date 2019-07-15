@@ -32,9 +32,12 @@
 
 <meta property="og:title" content="Calculates the instantaneous temperature response of Vcmax — calc_ftemp_inst_vcmax" />
 
-<meta property="og:description" content="Given Vcmax at a reference temperature (argument tkref)
+<meta property="og:description" content="Given Vcmax at a reference temperature (argument tcref)
 this function calculates its temperature-scaling factor following modified Arrhenius
-kinetics based on Kattge &amp;amp; Knorr (2007)." />
+kinetics based on Kattge &amp;amp; Knorr (2007). Calculates \(f\) for the conversion
+$$
+   V = f Vref
+$$" />
 
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
@@ -80,9 +83,6 @@ kinetics based on Kattge &amp;amp; Knorr (2007)." />
   </a>
 </li>
 <li>
-  <a href="../articles/rpmodel.html">Get started</a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -93,7 +93,7 @@ kinetics based on Kattge &amp;amp; Knorr (2007)." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/theory.html">Theory</a>
+      <a href="../articles/usage.html">Usage</a>
     </li>
   </ul>
 </li>
@@ -128,9 +128,12 @@ kinetics based on Kattge &amp;amp; Knorr (2007)." />
 
     <div class="ref-description">
     
-    <p>Given Vcmax at a reference temperature (argument <code>tkref</code>)
+    <p>Given Vcmax at a reference temperature (argument <code>tcref</code>)
 this function calculates its temperature-scaling factor following modified Arrhenius
-kinetics based on Kattge &amp; Knorr (2007).</p>
+kinetics based on Kattge &amp; Knorr (2007). Calculates \(f\) for the conversion
+$$
+   V = f Vref
+$$</p>
     
     </div>
 
@@ -145,13 +148,13 @@ kinetics based on Kattge &amp; Knorr (2007).</p>
 (degrees Celsius)</p></td>
     </tr>
     <tr>
-      <th>tcref</th>
-      <td><p>Reference temperature (degrees Celsius)</p></td>
+      <th>tcgrowth</th>
+      <td><p>(Optional) Growth temperature, in the P-model, taken to be equal to <code>tcleaf</code>
+(in degrees Celsius). Defaults to <code>tcgrowth = tcleaf</code>.</p></td>
     </tr>
     <tr>
-      <th>tcgrowh</th>
-      <td><p>(Optional) Growth temperature, in the P-model, taken to be equal to tcleaf
-(degrees Celsius). Defaults to <code>tcgrowth = tcleaf</code>.</p></td>
+      <th>tcref</th>
+      <td><p>Reference temperature (in degrees Celsius)</p></td>
     </tr>
     </table>
     
