@@ -123,7 +123,7 @@ photosynthesis model, P-model predictions, including all its corollary). This in
                                m' = m \sqrt( 1 - (c/m)^(2/3) )
                         }
                         with \eqn{c=0.41} (Wang et al., 2017) if \code{method_jmaxlim=="wang17"}. \eqn{Mc} is
-                        the molecular mass of CO2 (12.0107 g mol-1). \eqn{m} is given returned variable \code{mj}. 
+                        the molecular mass of C (12.0107 g mol-1). \eqn{m} is given returned variable \code{mj}. 
                         If \code{do_soilmstress==TRUE}, \eqn{LUE} is multiplied with a soil moisture stress factor,
                         calculated with \link{calc_soilmstress}.
         \item \code{mj}: Factor in the light-limited assimilation rate function, given by
