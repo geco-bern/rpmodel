@@ -239,3 +239,43 @@ print(paste("calc_soilmstress(0.2, apar_soilm = 0.1, bpar_soilm = 0.7, meanalpha
 
 `calc_ftemp_arrh()` Calculates the Arrhenius-type temperature response. 
 
+<!-- ## Response to CO2 -->
+
+<!-- ```{r} -->
+<!-- library(ggplot) -->
+<!-- df <- tibble( -->
+<!--   tc             = rep(20, 100), -->
+<!--   vpd            = rep(1000, 100), -->
+<!--   co2            = seq(360, 1000, length.out = 100), -->
+<!--   fapar          = rep(1, 100), -->
+<!--   ppfd           = rep(100, 100) -->
+<!--   ) %>% -->
+<!--   dplyr::mutate( out_pmodel_simpl = purrr::pmap(., rpmodel, -->
+<!--     elv            = 0, -->
+<!--     kphio          = 0.05, -->
+<!--     beta           = 146, -->
+<!--     method_optci   = "prentice14", -->
+<!--     method_jmaxlim = "none", -->
+<!--     do_ftemp_kphio = FALSE -->
+<!--     ) ) %>% -->
+<!--   dplyr::mutate( out_pmodel_full = purrr::pmap(dplyr::select(., 1:5), rpmodel,  -->
+<!--     elv            = 0,          -->
+<!--     kphio          = 0.05,          -->
+<!--     beta           = 146, -->
+<!--     method_optci   = "prentice14", -->
+<!--     method_jmaxlim = "wang17", -->
+<!--     do_ftemp_kphio = FALSE -->
+<!--     ) ) %>%  -->
+<!--   dplyr::mutate( out_pmodel_simpl = purrr::map(out_pmodel_simpl, ~as_tibble(.))) %>% -->
+<!--   dplyr::mutate( out_pmodel_full  = purrr::map(out_pmodel_full,  ~as_tibble(.))) -->
+
+<!-- df %>%  -->
+<!--   tidyr::unnest(out_pmodel_full) %>%  -->
+<!--   dplyr::select(co2, out_pmodel_simpl, gpp_full = gpp) %>%  -->
+<!--   tidyr::unnest(out_pmodel_simpl) %>%  -->
+<!--   dplyr::select(co2, gpp_full, gpp_simpl = gpp) %>%  -->
+<!--   tidyr::gather(method, gpp, c(gpp_full, gpp_simpl)) %>%  -->
+<!--   ggplot(aes(x = co2, y = gpp, color = method)) + -->
+<!--   geom_line() -->
+
+<!-- ``` -->

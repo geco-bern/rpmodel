@@ -5,11 +5,11 @@
 \title{Invokes a P-model function call}
 \usage{
 rpmodel(tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
-  kphio = 0.0817, beta = 146, soilm = 1, meanalpha = 1,
-  apar_soilm = 0, bpar_soilm = 0.685, c4 = FALSE,
-  method_optci = "prentice14", method_jmaxlim = "wang17",
-  do_ftemp_kphio = TRUE, do_soilmstress = FALSE, returnvar = NULL,
-  verbose = FALSE)
+  kphio = ifelse(do_ftemp_kphio, ifelse(do_soilmstress, 0.087, 0.0817),
+  0.0492), beta = 146, soilm = 1, meanalpha = 1, apar_soilm = 0,
+  bpar_soilm = 0.685, c4 = FALSE, method_optci = "prentice14",
+  method_jmaxlim = "wang17", do_ftemp_kphio = TRUE,
+  do_soilmstress = FALSE, returnvar = NULL, verbose = FALSE)
 }
 \arguments{
 \item{tc}{Temperature, relevant for photosynthesis (deg C)}
@@ -35,11 +35,14 @@ standard atmosphere (101325 Pa), corrected for elevation (argument \code{elv}), 
 \link{calc_patm()}), if argument \code{patm} is not provided. If argument \code{patm} is provided, 
 \code{elv} is overriden.}
 
-\item{kphio}{Apparent uantum yield efficiency (unitless). Defaults to 0.0870, the empirically fitted value
-as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'FULL' (corresponding to a setup
-with \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE}).}
+\item{kphio}{Apparent quantum yield efficiency (unitless). Defaults to 0.0817 for
+\code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=FALSE}, 0.0870 for 
+\code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE}, and 0.0492 for 
+\code{method_jmaxlim="wang17", do_ftemp_kphio=FALSE, do_soilmstress=FALSE}, corresponding to the empirically 
+fitted value as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'BRC', 'FULL', and 'ORG'
+respectively.}
 
-\item{beta}{Unit cost ratio. Defaults to 146.0.}
+\item{beta}{Unit cost ratio. Defaults to 146.0 (see Stocker et al., 2019).}
 
 \item{soilm}{(Optional, used only if \code{do_soilmstress==TRUE}) Relative soil moisture as a fraction 
 of field capacity (unitless). Defaults to 1.0 (no soil moisture stress). This information is used to calculate 
@@ -65,9 +68,7 @@ Defaults to \code{FALSE}. If \code{TRUE}, the leaf-internal CO2 concentration is
 and \eqn{m} (returned variable \code{mj}) tends to 1, and \eqn{m'} tends to 0.669 (with \code{c = 0.41}).}
 
 \item{method_optci}{(Optional) A character string specifying which method is to be used for calculating
-optimal ci:ca. Defaults to \code{"prentice14"}.
-Available also \code{"prentice14_num"} for a numerical solution to the same optimization criterium as
-used for \code{"prentice14"}.}
+optimal ci:ca. Defaults to \code{"prentice14"}.}
 
 \item{method_jmaxlim}{(Optional) A character string specifying which method is to be used for factoring in
 Jmax limitation. Defaults to \code{"wang17"},

@@ -128,11 +128,11 @@
     </div>
 
     <pre class="usage"><span class='fu'>rpmodel</span>(<span class='no'>tc</span>, <span class='no'>vpd</span>, <span class='no'>co2</span>, <span class='no'>fapar</span>, <span class='no'>ppfd</span>, <span class='kw'>patm</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>elv</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
-  <span class='kw'>kphio</span> <span class='kw'>=</span> <span class='fl'>0.0817</span>, <span class='kw'>beta</span> <span class='kw'>=</span> <span class='fl'>146</span>, <span class='kw'>soilm</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>meanalpha</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>apar_soilm</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>bpar_soilm</span> <span class='kw'>=</span> <span class='fl'>0.685</span>, <span class='kw'>c4</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>method_optci</span> <span class='kw'>=</span> <span class='st'>"prentice14"</span>, <span class='kw'>method_jmaxlim</span> <span class='kw'>=</span> <span class='st'>"wang17"</span>,
-  <span class='kw'>do_ftemp_kphio</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>do_soilmstress</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>returnvar</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+  <span class='kw'>kphio</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/ifelse'>ifelse</a></span>(<span class='no'>do_ftemp_kphio</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/ifelse'>ifelse</a></span>(<span class='no'>do_soilmstress</span>, <span class='fl'>0.087</span>, <span class='fl'>0.0817</span>),
+  <span class='fl'>0.0492</span>), <span class='kw'>beta</span> <span class='kw'>=</span> <span class='fl'>146</span>, <span class='kw'>soilm</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>meanalpha</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>apar_soilm</span> <span class='kw'>=</span> <span class='fl'>0</span>,
+  <span class='kw'>bpar_soilm</span> <span class='kw'>=</span> <span class='fl'>0.685</span>, <span class='kw'>c4</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>method_optci</span> <span class='kw'>=</span> <span class='st'>"prentice14"</span>,
+  <span class='kw'>method_jmaxlim</span> <span class='kw'>=</span> <span class='st'>"wang17"</span>, <span class='kw'>do_ftemp_kphio</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>do_soilmstress</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>returnvar</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -176,13 +176,16 @@ calc_patm()), if argument <code>patm</code> is not provided. If argument <code>p
     </tr>
     <tr>
       <th>kphio</th>
-      <td><p>Apparent uantum yield efficiency (unitless). Defaults to 0.0870, the empirically fitted value
-as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'FULL' (corresponding to a setup
-with <code>method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE</code>).</p></td>
+      <td><p>Apparent quantum yield efficiency (unitless). Defaults to 0.0817 for
+<code>method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=FALSE</code>, 0.0870 for 
+<code>method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE</code>, and 0.0492 for 
+<code>method_jmaxlim="wang17", do_ftemp_kphio=FALSE, do_soilmstress=FALSE</code>, corresponding to the empirically 
+fitted value as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'BRC', 'FULL', and 'ORG'
+respectively.</p></td>
     </tr>
     <tr>
       <th>beta</th>
-      <td><p>Unit cost ratio. Defaults to 146.0.</p></td>
+      <td><p>Unit cost ratio. Defaults to 146.0 (see Stocker et al., 2019).</p></td>
     </tr>
     <tr>
       <th>soilm</th>
@@ -220,9 +223,7 @@ and \(m\) (returned variable <code>mj</code>) tends to 1, and \(m'\) tends to 0.
     <tr>
       <th>method_optci</th>
       <td><p>(Optional) A character string specifying which method is to be used for calculating
-optimal ci:ca. Defaults to <code>"prentice14"</code>.
-Available also <code>"prentice14_num"</code> for a numerical solution to the same optimization criterium as
-used for <code>"prentice14"</code>.</p></td>
+optimal ci:ca. Defaults to <code>"prentice14"</code>.</p></td>
     </tr>
     <tr>
       <th>method_jmaxlim</th>

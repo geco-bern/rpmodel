@@ -84,7 +84,7 @@
       <h1>Usage</h1>
                         <h4 class="author">Beni Stocker</h4>
             
-            <h4 class="date">2019-07-15</h4>
+            <h4 class="date">2019-07-22</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/stineb/rpmodel/blob/master/vignettes/usage.Rmd"><code>vignettes/usage.Rmd</code></a></small>
       <div class="hidden name"><code>usage.Rmd</code></div>
@@ -218,7 +218,7 @@ A = V_{\text{cmax}} \frac{c_i-\Gamma^{\ast}}{c_i + K} = \phi_0 I_{\text{abs}} \f
 <pre><code>## Warning in if (!is.na(fapar)) {: the condition has length &gt; 1 and only the
 ## first element will be used</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(out_ts_pmodel<span class="op">$</span>gpp)</code></pre></div>
-<pre><code>## [1] 102.0087 132.7901 122.0262 138.1931 112.6729</code></pre>
+<pre><code>## [1] 122.3455 135.3955 138.4834 123.8763 105.1358</code></pre>
 <p>Note that <code>gpp</code> (as well as all other returned variables) are now vectors of the same length as the vectors provided as inputs.</p>
 </div>
 <div id="p-model-in-the-tidyverse" class="section level3">
@@ -254,11 +254,11 @@ df &lt;-<span class="st"> </span><span class="kw"><a href="https://dplyr.tidyver
 <pre><code>## # A tibble: 5 x 6
 ##      tc   vpd   co2 fapar  ppfd out_pmodel 
 ##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;list&gt;     
-## 1  17.9 1058.   400     1  299. &lt;list [15]&gt;
-## 2  17.9  983.   400     1  320. &lt;list [15]&gt;
-## 3  12.2 1035.   400     1  319. &lt;list [15]&gt;
-## 4  17.6 1044.   400     1  301. &lt;list [15]&gt;
-## 5  20.9  936.   400     1  324. &lt;list [15]&gt;</code></pre>
+## 1  22.0  907.   400     1  268. &lt;list [15]&gt;
+## 2  21.8 1072.   400     1  285. &lt;list [15]&gt;
+## 3  20.4  961.   400     1  273. &lt;list [15]&gt;
+## 4  23.6  883.   400     1  302. &lt;list [15]&gt;
+## 5  22.0  994.   400     1  310. &lt;list [15]&gt;</code></pre>
 <p>Note that the new column <code>out_pmodel</code> now contains the list returned as output of the <code><a href="../reference/rpmodel.html">rpmodel()</a></code> function applied to each row separately. Additional (constant) arguments are just passed to <code><a href="https://purrr.tidyverse.org/reference/map2.html">purrr::pmap</a></code> as arguments.</p>
 <p>If you prefer the elements of these lists to be in separate columns of <code>df</code>, use tidyr to do:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(tidyr)
@@ -269,11 +269,11 @@ df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="s
 <pre><code>## # A tibble: 5 x 20
 ##      tc   vpd   co2 fapar  ppfd    ca gammastar   kmm ns_star   chi    mj
 ##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1  17.9 1058.   400     1  299.  40.5      2.99  38.5    1.19 0.662 0.727
-## 2  17.9  983.   400     1  320.  40.5      2.99  38.6    1.18 0.670 0.729
-## 3  12.2 1035.   400     1  319.  40.5      2.19  23.7    1.38 0.587 0.767
-## 4  17.6 1044.   400     1  301.  40.5      2.94  37.5    1.20 0.659 0.730
-## 5  20.9  936.   400     1  324.  40.5      3.50  49.7    1.10 0.712 0.707
+## 1  22.0  907.   400     1  268.  40.5      3.72  54.9    1.07 0.728 0.698
+## 2  21.8 1072.   400     1  285.  40.5      3.66  53.6    1.08 0.709 0.695
+## 3  20.4  961.   400     1  273.  40.5      3.42  47.9    1.11 0.704 0.710
+## 4  23.6  883.   400     1  302.  40.5      4.04  63.0    1.03 0.749 0.685
+## 5  22.0  994.   400     1  310.  40.5      3.71  54.8    1.07 0.720 0.696
 ## # … with 9 more variables: mc &lt;dbl&gt;, ci &lt;dbl&gt;, lue &lt;dbl&gt;, gpp &lt;dbl&gt;,
 ## #   iwue &lt;dbl&gt;, gs &lt;dbl&gt;, vcmax &lt;dbl&gt;, vcmax25 &lt;dbl&gt;, rd &lt;dbl&gt;</code></pre>
 </div>
@@ -361,11 +361,11 @@ out_pmodel_ftemp_kphio_OFF &lt;-<span class="st"> </span><span class="kw"><a hre
   <span class="dt">do_ftemp_kphio =</span> <span class="ot">FALSE</span>
   )
 <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(<span class="st">"LUE ftemp_ON /LUE ftemp_OFF ="</span>, out_pmodel_ftemp_kphio_ON<span class="op">$</span>lue <span class="op">/</span><span class="st"> </span>out_pmodel_ftemp_kphio_OFF<span class="op">$</span>lue))</code></pre></div>
-<pre><code>## [1] "LUE ftemp_ON /LUE ftemp_OFF = 0.656"</code></pre>
+<pre><code>## [1] "LUE ftemp_ON /LUE ftemp_OFF = 1.08933333333333"</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(<span class="st">"GPP ftemp_ON /GPP ftemp_OFF ="</span>, out_pmodel_ftemp_kphio_ON<span class="op">$</span>gpp <span class="op">/</span><span class="st"> </span>out_pmodel_ftemp_kphio_OFF<span class="op">$</span>gpp))</code></pre></div>
-<pre><code>## [1] "GPP ftemp_ON /GPP ftemp_OFF = 0.656"</code></pre>
+<pre><code>## [1] "GPP ftemp_ON /GPP ftemp_OFF = 1.08933333333333"</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(<span class="st">"Vcmax ftemp_ON /Vcmax ftemp_OFF ="</span>, out_pmodel_ftemp_kphio_ON<span class="op">$</span>vcmax <span class="op">/</span><span class="st"> </span>out_pmodel_ftemp_kphio_OFF<span class="op">$</span>vcmax))</code></pre></div>
-<pre><code>## [1] "Vcmax ftemp_ON /Vcmax ftemp_OFF = 0.656"</code></pre>
+<pre><code>## [1] "Vcmax ftemp_ON /Vcmax ftemp_OFF = 1.08933333333333"</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(<span class="st">"calc_ftemp_kphio(20) ="</span>, <span class="kw"><a href="../reference/calc_ftemp_kphio.html">calc_ftemp_kphio</a></span>(<span class="dv">20</span>)))</code></pre></div>
 <pre><code>## [1] "calc_ftemp_kphio(20) = 0.656"</code></pre>
 </div>
@@ -406,6 +406,43 @@ out_pmodel_soilmstress_ON &lt;-<span class="st"> </span><span class="kw"><a href
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(<span class="st">"calc_soilmstress(0.2, apar_soilm = 0.1, bpar_soilm = 0.7, meanalpha = 0.2) ="</span>, <span class="kw"><a href="../reference/calc_soilmstress.html">calc_soilmstress</a></span>(<span class="fl">0.2</span>, <span class="dt">apar_soilm =</span> <span class="fl">0.1</span>, <span class="dt">bpar_soilm =</span> <span class="fl">0.7</span>, <span class="dt">meanalpha =</span> <span class="fl">0.2</span>)))</code></pre></div>
 <pre><code>## [1] "calc_soilmstress(0.2, apar_soilm = 0.1, bpar_soilm = 0.7, meanalpha = 0.2) = 0.662222222222222"</code></pre>
 <p><code><a href="../reference/calc_ftemp_arrh.html">calc_ftemp_arrh()</a></code> Calculates the Arrhenius-type temperature response.</p>
+<!-- ## Response to CO2 -->
+<!-- ```{r} -->
+<!-- library(ggplot) -->
+<!-- df <- tibble( -->
+<!--   tc             = rep(20, 100), -->
+<!--   vpd            = rep(1000, 100), -->
+<!--   co2            = seq(360, 1000, length.out = 100), -->
+<!--   fapar          = rep(1, 100), -->
+<!--   ppfd           = rep(100, 100) -->
+<!--   ) %>% -->
+<!--   dplyr::mutate( out_pmodel_simpl = purrr::pmap(., rpmodel, -->
+<!--     elv            = 0, -->
+<!--     kphio          = 0.05, -->
+<!--     beta           = 146, -->
+<!--     method_optci   = "prentice14", -->
+<!--     method_jmaxlim = "none", -->
+<!--     do_ftemp_kphio = FALSE -->
+<!--     ) ) %>% -->
+<!--   dplyr::mutate( out_pmodel_full = purrr::pmap(dplyr::select(., 1:5), rpmodel,  -->
+<!--     elv            = 0,          -->
+<!--     kphio          = 0.05,          -->
+<!--     beta           = 146, -->
+<!--     method_optci   = "prentice14", -->
+<!--     method_jmaxlim = "wang17", -->
+<!--     do_ftemp_kphio = FALSE -->
+<!--     ) ) %>%  -->
+<!--   dplyr::mutate( out_pmodel_simpl = purrr::map(out_pmodel_simpl, ~as_tibble(.))) %>% -->
+<!--   dplyr::mutate( out_pmodel_full  = purrr::map(out_pmodel_full,  ~as_tibble(.))) -->
+<!-- df %>%  -->
+<!--   tidyr::unnest(out_pmodel_full) %>%  -->
+<!--   dplyr::select(co2, out_pmodel_simpl, gpp_full = gpp) %>%  -->
+<!--   tidyr::unnest(out_pmodel_simpl) %>%  -->
+<!--   dplyr::select(co2, gpp_full, gpp_simpl = gpp) %>%  -->
+<!--   tidyr::gather(method, gpp, c(gpp_full, gpp_simpl)) %>%  -->
+<!--   ggplot(aes(x = co2, y = gpp, color = method)) + -->
+<!--   geom_line() -->
+<!-- ``` -->
 </div>
 </div>
   </div>

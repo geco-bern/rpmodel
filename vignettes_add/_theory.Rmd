@@ -748,6 +748,7 @@ calc_optimal_gs_vcmax_jmax <- function( par, args, iabs, kphio, cost_scalar, max
   } else {
 
     ## take only real part of the root
+    print(root_ci_j)
     ci_j <- Re(root_ci_j)
     ci_c <- Re(root_ci_c)
 
@@ -854,4 +855,23 @@ chi_vec_jmax <- out_opt_jmax_list %>% purrr::map_dbl("chi")
 
 plot( ppfd_vec, chi_vec_ll, type="l", xlab="PPFD", ylab="chi", ylim=c(0,1))
 lines( ppfd_vec, chi_vec_jmax, col="blue" )
+```
+
+For a set of VPD levels
+```{r}
+vpd_vec <- seq(from=0, to=8000, length.out=200)
+out_opt_ll_list <- purrr::map(
+  as.list( vpd_vec ),
+  ~wrap_calc_optimal_gs_vcmax_ll( 300, fapar, kphio, out_analytical$kmm, out_analytical$gammastar, out_analytical$ns_star, out_analytical$ca, ., beta, out_analytical$vcmax, out_analytical$gs )
+  )
+chi_vec_ll <- out_opt_ll_list %>% purrr::map_dbl("chi")
+
+out_opt_jmax_list <- purrr::map(
+  as.list( vpd_vec ),
+  ~wrap_calc_optimal_gs_vcmax_jmax( 300, fapar, kphio, out_analytical$kmm, out_analytical$gammastar, out_analytical$ns_star, out_analytical$ca, ., beta, gamma, unitcost_root$par, out_analytical$vcmax, out_analytical$gs, out_analytical$vcmax )
+  )
+chi_vec_jmax <- out_opt_jmax_list %>% purrr::map_dbl("chi")
+
+plot( vpd_vec, chi_vec_ll, type="l", xlab="VPD", ylab="chi", ylim=c(0,1))
+lines( vpd_vec, chi_vec_jmax, col="blue" )
 ```

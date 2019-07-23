@@ -18,10 +18,13 @@
 #' standard atmosphere (101325 Pa), corrected for elevation (argument \code{elv}), using the function 
 #' \link{calc_patm()}), if argument \code{patm} is not provided. If argument \code{patm} is provided, 
 #' \code{elv} is overriden. 
-#' @param kphio Apparent uantum yield efficiency (unitless). Defaults to 0.0870, the empirically fitted value
-#' as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'FULL' (corresponding to a setup
-#' with \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE}). 
-#' @param beta Unit cost ratio. Defaults to 146.0.
+#' @param kphio Apparent quantum yield efficiency (unitless). Defaults to 0.0817 for
+#' \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=FALSE}, 0.0870 for 
+#' \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE}, and 0.0492 for 
+#' \code{method_jmaxlim="wang17", do_ftemp_kphio=FALSE, do_soilmstress=FALSE}, corresponding to the empirically 
+#' fitted value as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'BRC', 'FULL', and 'ORG'
+#' respectively. 
+#' @param beta Unit cost ratio. Defaults to 146.0 (see Stocker et al., 2019).
 #' @param soilm (Optional, used only if \code{do_soilmstress==TRUE}) Relative soil moisture as a fraction 
 #' of field capacity (unitless). Defaults to 1.0 (no soil moisture stress). This information is used to calculate 
 #' an empirical soil moisture stress factor (\link{calc_soilmstress}) whereby the sensitivity is determined 
@@ -42,8 +45,8 @@
 #' and \eqn{m} (returned variable \code{mj}) tends to 1, and \eqn{m'} tends to 0.669 (with \code{c = 0.41}).
 #' @param method_optci (Optional) A character string specifying which method is to be used for calculating
 #' optimal ci:ca. Defaults to \code{"prentice14"}.
-#' Available also \code{"prentice14_num"} for a numerical solution to the same optimization criterium as
-#' used for \code{"prentice14"}.
+# Available also \code{"prentice14_num"} for a numerical solution to the same optimization criterium as
+# used for \code{"prentice14"}.
 #' @param method_jmaxlim (Optional) A character string specifying which method is to be used for factoring in
 #' Jmax limitation. Defaults to \code{"wang17"},
 #' based on Wang Han et al. 2017 Nature Plants and (Smith 1937). Available is also \code{"smith19"}, following
@@ -189,10 +192,11 @@
 #'
 #' @examples out_rpmodel <- rpmodel( tc=10, vpd=300, co2=300, elv=300, kphio=0.06 )
 #'
-rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA, kphio = 0.0817, beta = 146.0, 
-                     soilm = 1.0, meanalpha = 1.0, apar_soilm = 0.0, bpar_soilm = 0.685, c4 = FALSE, 
-                     method_optci = "prentice14", method_jmaxlim = "wang17", do_ftemp_kphio = TRUE, 
-                     do_soilmstress = FALSE, returnvar = NULL, verbose = FALSE ){
+rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA, 
+                     kphio = ifelse(do_ftemp_kphio, ifelse(do_soilmstress, 0.0870, 0.0817), 0.0492), 
+                     beta = 146.0, soilm = 1.0, meanalpha = 1.0, apar_soilm = 0.0, bpar_soilm = 0.685, 
+                     c4 = FALSE, method_optci = "prentice14", method_jmaxlim = "wang17", 
+                     do_ftemp_kphio = TRUE, do_soilmstress = FALSE, returnvar = NULL, verbose = FALSE ){
   
   # Check arguments
   if (identical(NA, elv) && identical(NA, patm)){
@@ -286,11 +290,11 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA, kphio = 0.0
     ##-----------------------------------------------------------------------
     out_optchi <- calc_optimal_chi( kmm, gammastar, ns_star, ca, vpd, beta )
 
-  } else if (method_optci=="prentice14_num"){
-
-    ## Full formualation (Gamma-star not zero), numerical solution
-    ##-----------------------------------------------------------------------
-    out_optchi_num <- calc_optimal_chi_num( kmm, gammastar, ns_star, ca, vpd, beta ) # numerical solution
+  # } else if (method_optci=="prentice14_num"){
+  # 
+  #   ## Full formualation (Gamma-star not zero), numerical solution
+  #   ##-----------------------------------------------------------------------
+  #   out_optchi_num <- calc_optimal_chi_num( kmm, gammastar, ns_star, ca, vpd, beta ) # numerical solution
 
   } else {
 
@@ -623,52 +627,52 @@ calc_optimal_chi <- function( kmm, gammastar, ns_star, ca, vpd, beta ){
 }
 
 
-calc_optimal_chi_num <- function( kmm, gammastar, ns_star, ca, vpd, beta ){
-  #-----------------------------------------------------------------------
-  # Input:    - float, 'kmm' : Pa, Michaelis-Menten coeff.
-  #           - float, 'ns_star'  : (unitless) viscosity correction factor for water
-  #           - float, 'vpd' : Pa, vapor pressure deficit
-  # Output:   float, ratio of ci/ca (chi)
-  # Features: Returns an estimate of leaf internal to ambient CO2
-  #           partial pressure following the "simple formulation".
-  # Depends:  - kc
-  #           - ns
-  #           - vpd
-  #-----------------------------------------------------------------------
-  maximise_this <- function( chi, kmm, gammastar, ns_star, ca, vpd, beta ){
-    out <- 1.6 * ns_star * vpd / (ca * (1.0 - chi)) + beta * (chi * ca + kmm)/(chi * ca - gammastar)
-    return(out)
-  }
-
-  out_optim <- optimr::optimr(
-    par       = 0.7,
-    lower     = 0.01,
-    upper     = 0.99,
-    fn        = maximise_this,
-    kmm       = kmm,
-    gammastar = gammastar,
-    ns_star   = ns_star,
-    ca        = ca,
-    vpd       = vpd,
-    beta      = beta,
-    method    = "L-BFGS-B",
-    control   = list( maxit = 100, maximize = TRUE )
-    )
-
-  chi <- out_optim$par
-
-  ## mj
-  mj <- (ca * chi - gammastar) / (ca * chi + 2 * gammastar)
-
-  ## mc
-  mc <- (ca * chi - gammastar) / (ca * chi + kmm)
-
-  ## mj:mv
-  mjoc <- (ca * chi + kmm) / (ca * chi + 2 * gammastar)
-
-  out <- list( chi=chi, mc=mc, mj=mj, mjoc=mjoc )
-  return(out)
-}
+# calc_optimal_chi_num <- function( kmm, gammastar, ns_star, ca, vpd, beta ){
+#   #-----------------------------------------------------------------------
+#   # Input:    - float, 'kmm' : Pa, Michaelis-Menten coeff.
+#   #           - float, 'ns_star'  : (unitless) viscosity correction factor for water
+#   #           - float, 'vpd' : Pa, vapor pressure deficit
+#   # Output:   float, ratio of ci/ca (chi)
+#   # Features: Returns an estimate of leaf internal to ambient CO2
+#   #           partial pressure following the "simple formulation".
+#   # Depends:  - kc
+#   #           - ns
+#   #           - vpd
+#   #-----------------------------------------------------------------------
+#   maximise_this <- function( chi, kmm, gammastar, ns_star, ca, vpd, beta ){
+#     out <- 1.6 * ns_star * vpd / (ca * (1.0 - chi)) + beta * (chi * ca + kmm)/(chi * ca - gammastar)
+#     return(out)
+#   }
+# 
+#   out_optim <- optimr::optimr(
+#     par       = 0.7,
+#     lower     = 0.01,
+#     upper     = 0.99,
+#     fn        = maximise_this,
+#     kmm       = kmm,
+#     gammastar = gammastar,
+#     ns_star   = ns_star,
+#     ca        = ca,
+#     vpd       = vpd,
+#     beta      = beta,
+#     method    = "L-BFGS-B",
+#     control   = list( maxit = 100, maximize = TRUE )
+#     )
+# 
+#   chi <- out_optim$par
+# 
+#   ## mj
+#   mj <- (ca * chi - gammastar) / (ca * chi + 2 * gammastar)
+# 
+#   ## mc
+#   mc <- (ca * chi - gammastar) / (ca * chi + kmm)
+# 
+#   ## mj:mv
+#   mjoc <- (ca * chi + kmm) / (ca * chi + 2 * gammastar)
+# 
+#   out <- list( chi=chi, mc=mc, mj=mj, mjoc=mjoc )
+#   return(out)
+# }
 
 
 calc_chi_c4 <- function(){
