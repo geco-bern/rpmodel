@@ -190,7 +190,7 @@
 #'
 #' @export
 #'
-#' @examples out_rpmodel <- rpmodel( tc=10, vpd=300, co2=300, elv=300, kphio=0.06 )
+#' @examples rpmodel( tc = 20, vpd = 1000, co2 = 400, fapar = 1, ppfd = 300, elv = 0)
 #'
 rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA, 
                      kphio = ifelse(do_ftemp_kphio, ifelse(do_soilmstress, 0.0870, 0.0817), 0.0492), 
