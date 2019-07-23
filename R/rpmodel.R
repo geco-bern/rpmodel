@@ -186,7 +186,7 @@
 #'              (2019), Global photosynthetic capacity is optimized to the environment. Ecol Lett, 22: 506-517. 
 #'              doi:10.1111/ele.13210
 #'              
-#'              Stocker, B. et al. Geoscientific Model Development Discussions (in prep.)
+#'              Stocker, B. et al. Geoscientific Model Development Discussions (in prep.) 
 #'
 #' @export
 #'
