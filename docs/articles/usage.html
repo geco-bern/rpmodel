@@ -84,7 +84,7 @@
       <h1>Usage</h1>
                         <h4 class="author">Beni Stocker</h4>
             
-            <h4 class="date">2019-07-22</h4>
+            <h4 class="date">2019-08-04</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/stineb/rpmodel/blob/master/vignettes/usage.Rmd"><code>vignettes/usage.Rmd</code></a></small>
       <div class="hidden name"><code>usage.Rmd</code></div>
@@ -218,7 +218,7 @@ A = V_{\text{cmax}} \frac{c_i-\Gamma^{\ast}}{c_i + K} = \phi_0 I_{\text{abs}} \f
 <pre><code>## Warning in if (!is.na(fapar)) {: the condition has length &gt; 1 and only the
 ## first element will be used</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(out_ts_pmodel<span class="op">$</span>gpp)</code></pre></div>
-<pre><code>## [1] 115.9069 144.5833 114.6913 154.4292 139.4310</code></pre>
+<pre><code>## [1] 132.07267 131.76429 135.50067  95.96466 146.20291</code></pre>
 <p>Note that <code>gpp</code> (as well as all other returned variables) are now vectors of the same length as the vectors provided as inputs.</p>
 </div>
 <div id="p-model-in-the-tidyverse" class="section level3">
@@ -254,11 +254,11 @@ df &lt;-<span class="st"> </span><span class="kw"><a href="https://dplyr.tidyver
 <pre><code>## # A tibble: 5 x 6
 ##      tc   vpd   co2 fapar  ppfd out_pmodel 
 ##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;list&gt;     
-## 1  18.7 1000.   400     1  303. &lt;list [15]&gt;
-## 2  18.5 1000.   400     1  364. &lt;list [15]&gt;
-## 3  21.5 1020.   400     1  277. &lt;list [15]&gt;
-## 4  27.6 1045.   400     1  334. &lt;list [15]&gt;
-## 5  17.6 1068.   400     1  261. &lt;list [15]&gt;</code></pre>
+## 1  22.8 1021.   400     1  286. &lt;list [15]&gt;
+## 2  19.7 1010.   400     1  314. &lt;list [15]&gt;
+## 3  21.6 1066.   400     1  330. &lt;list [15]&gt;
+## 4  20.7  971.   400     1  298. &lt;list [15]&gt;
+## 5  24.9 1005.   400     1  261. &lt;list [15]&gt;</code></pre>
 <p>Note that the new column <code>out_pmodel</code> now contains the list returned as output of the <code><a href="../reference/rpmodel.html">rpmodel()</a></code> function applied to each row separately. Additional (constant) arguments are just passed to <code><a href="https://purrr.tidyverse.org/reference/map2.html">purrr::pmap</a></code> as arguments.</p>
 <p>If you prefer the elements of these lists to be in separate columns of <code>df</code>, use tidyr to do:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(tidyr)
@@ -269,11 +269,11 @@ df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="s
 <pre><code>## # A tibble: 5 x 20
 ##      tc   vpd   co2 fapar  ppfd    ca gammastar   kmm ns_star   chi    mj
 ##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1  18.7 1000.   400     1  303.  40.5      3.12  41.4   1.16  0.678 0.722
-## 2  18.5 1000.   400     1  364.  40.5      3.09  40.6   1.17  0.676 0.724
-## 3  21.5 1020.   400     1  277.  40.5      3.61  52.3   1.09  0.710 0.699
-## 4  27.6 1045.   400     1  334.  40.5      4.95  88.8   0.943 0.778 0.641
-## 5  17.6 1068.   400     1  261.  40.5      2.94  37.6   1.19  0.657 0.728
+## 1  22.8 1021.   400     1  286.  40.5      3.88  58.8    1.05 0.727 0.687
+## 2  19.7 1010.   400     1  314.  40.5      3.29  45.1    1.13 0.690 0.714
+## 3  21.6 1066.   400     1  330.  40.5      3.63  52.8    1.08 0.707 0.697
+## 4  20.7  971.   400     1  298.  40.5      3.47  49.1    1.11 0.706 0.707
+## 5  24.9 1005.   400     1  261.  40.5      4.32  70.5    1.00 0.752 0.669
 ## # … with 9 more variables: mc &lt;dbl&gt;, ci &lt;dbl&gt;, lue &lt;dbl&gt;, gpp &lt;dbl&gt;,
 ## #   iwue &lt;dbl&gt;, gs &lt;dbl&gt;, vcmax &lt;dbl&gt;, vcmax25 &lt;dbl&gt;, rd &lt;dbl&gt;</code></pre>
 </div>
