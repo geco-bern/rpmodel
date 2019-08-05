@@ -9,7 +9,7 @@
 
 ## Purpose
 
-`rpmodel` provides an implementation of the P-model (Prentice et al., 2014; Wang et al., 2017; Stocker et al., 2019) for predicting acclimated photosynthetic parameters, assimilation, and dark respiration rates as a function of the environment. The main function is `rpmodel()` which returns a list of variables that are mutually consistent within the theory of the P-model (see [Theory](./articles/theory.html) ). Further functions used within `rpmodel()` are also provided through the package.
+`rpmodel` provides an implementation of the P-model (Prentice et al., 2014; Wang et al., 2017; Stocker et al., 2019) for predicting acclimated photosynthetic parameters, assimilation, and dark respiration rates as a function of the environment. The main function is `rpmodel()` which returns a list of variables that are mutually consistent within the theory of the P-model (see [Usage](./articles/usage.html) ). Further functions used within `rpmodel()` are also provided through the package.
 
 ## Usage
 
@@ -31,7 +31,7 @@ out_pmodel <- rpmodel(
   )
 ```
 
-For more information and examples see [Get Started](./articles/rpmodel.html).
+For more information and examples see [Usage](./articles/usage.html).
 
 ## Installation
 
