@@ -602,21 +602,16 @@ calc_optimal_chi <- function( kmm, gammastar, ns_star, ca, vpd, beta ){
 
   ## wrap if condition in a function to allow vectorization
   calc_mj <- function(ns_star, vpd, vbkg){
-    if (ns_star>0 && vpd>0 && vbkg>0){
-      vsr <- sqrt( 1.6 * ns_star * vpd / vbkg )
+    vsr <- sqrt( 1.6 * ns_star * vpd / vbkg ) 
+
+    # Based on the mc' formulation (see Regressing_LUE.pdf)
+    mj <- vdcg / ( vacg + 3.0 * gammastar * vsr )
       
-      # Based on the mc' formulation (see Regressing_LUE.pdf)
-      mj <- vdcg / ( vacg + 3.0 * gammastar * vsr )
-      
-    } else {
-      mj <- NA
-    }
-    
     return(mj)
   }
   
-  # Check for negatives:
-  mj <- calc_mj(ns_star, vpd, vbkg)
+  # Check for negatives, vectorized
+  mj <- ifelse(ns_star>0 & vpd>0 & vbkg>0, calc_mj(ns_star, vpd, vbkg), rep(NA, length(vpd)))
   
   ## alternative variables
   gamma <- gammastar / ca
