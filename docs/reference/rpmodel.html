@@ -15,11 +15,13 @@
 <link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png" />
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png" />
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -39,12 +41,12 @@
 
 
 
+
 <meta property="og:title" content="Invokes a P-model function call — rpmodel" />
-
 <meta property="og:description" content="R implementation of the P-model and its corrolary predictions (Prentice et al., 2014; Han et al., 2017)." />
-
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -106,7 +108,6 @@
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/stineb/rpmodel">
@@ -133,9 +134,7 @@
     </div>
 
     <div class="ref-description">
-    
     <p>R implementation of the P-model and its corrolary predictions (Prentice et al., 2014; Han et al., 2017).</p>
-    
     </div>
 
     <pre class="usage"><span class='fu'>rpmodel</span>(<span class='no'>tc</span>, <span class='no'>vpd</span>, <span class='no'>co2</span>, <span class='no'>fapar</span>, <span class='no'>ppfd</span>, <span class='kw'>patm</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>elv</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
@@ -144,7 +143,7 @@
   <span class='kw'>bpar_soilm</span> <span class='kw'>=</span> <span class='fl'>0.685</span>, <span class='kw'>c4</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>method_optci</span> <span class='kw'>=</span> <span class='st'>"prentice14"</span>,
   <span class='kw'>method_jmaxlim</span> <span class='kw'>=</span> <span class='st'>"wang17"</span>, <span class='kw'>do_ftemp_kphio</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>do_soilmstress</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>returnvar</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -264,7 +263,7 @@ are to be returned (see return below).</p></td>
       <td><p>Logical, defines whether verbose messages are printed. Defaults to <code>FALSE</code>.</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A named list of numeric values (including temperature and pressure dependent parameters of the
@@ -362,7 +361,6 @@ photosynthesis model, P-model predictions, including all its corollary). This in
         (2019), and Eq. E21 in Stocker et al. (2019).</p></li>
 </ul>
 
-    
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Bernacchi, C. J., Pimentel, C., and Long, S. P.:  In vivo temperature response func-tions  of  parameters  
@@ -389,7 +387,6 @@ photosynthesis model, P-model predictions, including all its corollary). This in
              (2019), Global photosynthetic capacity is optimized to the environment. Ecol Lett, 22: 506-517. 
              doi:10.1111/ele.13210</p>             
 <p>Stocker, B. et al. Geoscientific Model Development Discussions (in prep.)</p>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>rpmodel</span>( <span class='kw'>tc</span> <span class='kw'>=</span> <span class='fl'>20</span>, <span class='kw'>vpd</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='kw'>co2</span> <span class='kw'>=</span> <span class='fl'>400</span>, <span class='kw'>fapar</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>ppfd</span> <span class='kw'>=</span> <span class='fl'>300</span>, <span class='kw'>elv</span> <span class='kw'>=</span> <span class='fl'>0</span>)</div><div class='output co'>#&gt; $ca
@@ -443,11 +440,8 @@ photosynthesis model, P-model predictions, including all its corollary). This in
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-
       <li><a href="#references">References</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 

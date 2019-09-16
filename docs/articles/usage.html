@@ -220,7 +220,7 @@ A = V_{\text{cmax}} \frac{c_i-\Gamma^{\ast}}{c_i + K} = \phi_0 I_{\text{abs}} \f
   <span class="dt">verbose        =</span> <span class="ot">FALSE</span>
   )
 <span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(out_ts_pmodel<span class="op">$</span>gpp)</code></pre></div>
-<pre><code>## [1] 116.1896 133.0937 140.5581 127.5810 154.4996</code></pre>
+<pre><code>## [1] 120.3650 115.5663 127.0930 100.2310 145.3148</code></pre>
 <p>Note that <code>gpp</code> (as well as all other returned variables) are now vectors of the same length as the vectors provided as inputs.</p>
 </div>
 <div id="p-model-in-the-tidyverse" class="section level3">
@@ -256,11 +256,11 @@ df &lt;-<span class="st"> </span><span class="kw"><a href="https://dplyr.tidyver
 <pre><code>## # A tibble: 5 x 6
 ##      tc   vpd   co2 fapar  ppfd out_pmodel       
 ##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;list&gt;           
-## 1  22.4 1007.   400     1  335. &lt;named list [15]&gt;
-## 2  21.7 1064.   400     1  288. &lt;named list [15]&gt;
-## 3  18.4 1054.   400     1  292. &lt;named list [15]&gt;
-## 4  15.8  983.   400     1  325. &lt;named list [15]&gt;
-## 5  20.8 1029.   400     1  248. &lt;named list [15]&gt;</code></pre>
+## 1  21.3  885.   400     1  308. &lt;named list [15]&gt;
+## 2  26.8 1085.   400     1  321. &lt;named list [15]&gt;
+## 3  12.8  947.   400     1  315. &lt;named list [15]&gt;
+## 4  14.5 1006.   400     1  321. &lt;named list [15]&gt;
+## 5  28.2 1045.   400     1  301. &lt;named list [15]&gt;</code></pre>
 <p>Note that the new column <code>out_pmodel</code> now contains the list returned as output of the <code><a href="../reference/rpmodel.html">rpmodel()</a></code> function applied to each row separately. Additional (constant) arguments are just passed to <code><a href="https://purrr.tidyverse.org/reference/map2.html">purrr::pmap</a></code> as arguments.</p>
 <p>If you prefer the elements of these lists to be in separate columns of <code>df</code>, use tidyr to do:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(tidyr)
@@ -271,11 +271,11 @@ df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="s
 <pre><code>## # A tibble: 5 x 20
 ##      tc   vpd   co2 fapar  ppfd    ca gammastar   kmm ns_star   chi    mj
 ##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1  22.4 1007.   400     1  335.  40.5      3.79  56.8    1.06 0.723 0.692
-## 2  21.7 1064.   400     1  288.  40.5      3.66  53.6    1.08 0.710 0.696
-## 3  18.4 1054.   400     1  292.  40.5      3.07  40.2    1.17 0.669 0.723
-## 4  15.8  983.   400     1  325.  40.5      2.67  32.3    1.25 0.642 0.745
-## 5  20.8 1029.   400     1  248.  40.5      3.49  49.5    1.10 0.702 0.704
+## 1  21.3  885.   400     1  308.  40.5      3.58  51.5   1.09  0.722 0.706
+## 2  26.8 1085.   400     1  321.  40.5      4.74  82.6   0.961 0.766 0.649
+## 3  12.8  947.   400     1  315.  40.5      2.25  24.8   1.36  0.604 0.767
+## 4  14.5 1006.   400     1  321.  40.5      2.48  28.8   1.29  0.622 0.753
+## 5  28.2 1045.   400     1  301.  40.5      5.09  93.2   0.931 0.783 0.636
 ## # … with 9 more variables: mc &lt;dbl&gt;, ci &lt;dbl&gt;, lue &lt;dbl&gt;, gpp &lt;dbl&gt;,
 ## #   iwue &lt;dbl&gt;, gs &lt;dbl&gt;, vcmax &lt;dbl&gt;, vcmax25 &lt;dbl&gt;, rd &lt;dbl&gt;</code></pre>
 </div>
@@ -450,6 +450,7 @@ out_pmodel_soilmstress_ON &lt;-<span class="st"> </span><span class="kw"><a href
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+
         <div id="tocnav">
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>

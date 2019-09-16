@@ -6,5 +6,6 @@
 ^_pkgdown\.yml$
 ^docs$
 ^vignettes_add$
-
+^docs_save$
 ^revdep$
+^pkgdown$
