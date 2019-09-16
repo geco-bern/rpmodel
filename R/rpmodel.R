@@ -320,124 +320,25 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
   ##-----------------------------------------------------------------------
   if (c4){
 
-    ## Light use efficiency (gpp per unit absorbed light)
-    lue <- kphio * ftemp_kphio * c_molmass * soilmstress
-
-    ## Vcmax normalised per unit absorbed PPFD (assuming iabs=1), with Jmax limitation
-    vcmax_unitiabs <- kphio * ftemp_kphio * soilmstress
-
-    ## complement for non-smith19 
-    omega               <- NA
-    omega_star          <- NA
-    vcmax_unitiabs_star <- NA
-    vcmax_star          <- NA
-    vcmax_prime         <- NA
-    jvrat               <- NA
-    jmax_prime          <- NA
-    ftemp_inst_vcmax    <- NA    
+    out_lue_vcmax <- calc_lue_vcmax_c4(kphio, ftemp_kphio, c_molmass, soilmstress)
 
 
   } else if (method_jmaxlim=="wang17"){
 
-    ## Include effect of Jmax limitation
-    mprime <- calc_mprime( out_optchi$mj )
 
-    ## Light use efficiency (gpp per unit absorbed light)
-    lue <- kphio * ftemp_kphio * mprime * c_molmass * soilmstress
-
-    ## Vcmax normalised per unit absorbed PPFD (assuming iabs=1), with Jmax limitation
-    vcmax_unitiabs <- kphio * ftemp_kphio * out_optchi$mjoc * mprime / out_optchi$mj * soilmstress
-
-    # print(paste("Jmax limit factor", mprime / out_optchi$mj))
-
-    ## complement for non-smith19 
-    omega               <- NA
-    omega_star          <- NA
-    vcmax_unitiabs_star <- NA
-    vcmax_star          <- NA
-    vcmax_prime         <- NA
-    jvrat               <- NA
-    jmax_prime          <- NA
-    ftemp_inst_vcmax    <- NA    
+    out_lue_vcmax <- calc_lue_vcmax_wang17(out_optchi, kphio, ftemp_kphio, c_molmass, soilmstress)
 
 
   } else if (method_jmaxlim=="smith19"){
 
-    # Adopted from Nick Smith's code:
-    # Calculate omega, see Smith et al., 2019 Ecology Letters
-    calc_omega <- function( theta, c_cost, m ){
 
-      cm <- 4 * c_cost / m                        # simplification term for omega calculation
-      v  <- 1/(cm * (1 - theta * cm)) - 4 * theta # simplification term for omega calculation
-
-      # account for non-linearities at low m values
-      capP <- (((1/1.4) - 0.7)^2 / (1-theta)) + 3.4
-      aquad <- -1
-      bquad <- capP
-      cquad <- -(capP * theta)
-      m_star <- (4 * c_cost) / polyroot(c(aquad, bquad, cquad))
-
-      omega <- ifelse(  m < Re(m_star[1]),
-                        -( 1 - (2 * theta) ) - sqrt( (1 - theta) * v),
-                        -( 1 - (2 * theta))  + sqrt( (1 - theta) * v)
-                        )
-      return(omega)
-    }
-
-    ## constants
-    theta <- 0.85    # should be calibratable?
-    c_cost <- 0.05336251
-
-    # ## override?
-    # kphio <- 0.257
-
-    ## factors derived as in Smith et al., 2019
-    omega <- calc_omega( theta = theta, c_cost = c_cost, m = out_optchi$mj )          # Eq. S4
-    omega_star <- 1.0 + omega - sqrt( (1.0 + omega)^2 - (4.0 * theta * omega) )       # Eq. 18
-
-    ## Effect of Jmax limitation
-    mprime <- out_optchi$mj * omega_star / (8.0 * theta)
-
-    ## Light use efficiency (gpp per unit absorbed light)
-    lue <- kphio * ftemp_kphio * mprime * c_molmass * soilmstress
-
-    # calculate Vcmax per unit aborbed light
-    vcmax_unitiabs  <- kphio * ftemp_kphio * out_optchi$mjoc * omega_star / (8.0 * theta) * soilmstress   # Eq. 19
-
-    # ## temp_opt is the optimum temperature in K, assumed to be the temperature at which Vcmax* is operating.
-    # ## temp_opt is estimated based on its relationship to growth temperature following Kattge & Knorr 2007
-    # temp_opt <- 0.44 * tc + 24.92      # Eq. 21, note: intercept differs due to use of deg C
-    # 
-    # ## calculated acclimated Vcmax at prevailing growth temperatures
-    # ftemp_inst_vcmax <- calc_ftemp_inst_vcmax( tc, tc, tcref = temp_opt )
-    # vcmax_unitiabs <- vcmax_unitiabs_star * ftemp_inst_vcmax   # Eq. 20
-    # 
-    # ## calculate Jmax
-    # jmax_over_vcmax <- (8.0 * theta * omega) / (out_optchi$mjoc * omega_star)             # Eq. 15 / Eq. 19
-    # jmax_prime <- jmax_over_vcmax * vcmax_unitiabs
-    # 
-    # jvrat <- jmax_over_vcmax
+    out_lue_vcmax <- calc_lue_vcmax_smith19(out_optchi, kphio, ftemp_kphio, c_molmass, soilmstress)
 
 
   } else if (method_jmaxlim=="none"){
 
-    ## Light use efficiency (gpp per unit absorbed light)
-    lue <- kphio * ftemp_kphio * out_optchi$mj * c_molmass * soilmstress
 
-    ## Vcmax normalised per unit absorbed PPFD (assuming iabs=1), with Jmax limitation
-    vcmax_unitiabs <- kphio * ftemp_kphio * out_optchi$mjoc * soilmstress
-
-    # print(paste("Jmax limit factor", mprime / out_optchi$mj))
-
-    ## complement for non-smith19 
-    omega               <- NA
-    omega_star          <- NA
-    vcmax_unitiabs_star <- NA
-    vcmax_star          <- NA
-    vcmax_prime         <- NA
-    jvrat               <- NA
-    jmax_prime          <- NA
-    ftemp_inst_vcmax    <- NA    
+    out_lue_vcmax <- calc_lue_vcmax_none(out_optchi, kphio, ftemp_kphio, c_molmass, soilmstress)
 
 
   } else {
@@ -453,84 +354,37 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
 
   ## Vcmax25 (vcmax normalized to 25 deg C)
   ftemp25_inst_vcmax  <- calc_ftemp_inst_vcmax( tc, tc, tcref = 25.0 )
-  vcmax25_unitiabs  <- vcmax_unitiabs  / ftemp25_inst_vcmax
+  vcmax25_unitiabs  <- out_lue_vcmax$vcmax_unitiabs  / ftemp25_inst_vcmax
 
   ## Dark respiration at growth temperature
   ftemp_inst_rd <- calc_ftemp_inst_rd( tc )
-  rd_unitiabs  <- rd_to_vcmax * (ftemp_inst_rd / ftemp25_inst_vcmax) * vcmax_unitiabs
+  rd_unitiabs  <- rd_to_vcmax * (ftemp_inst_rd / ftemp25_inst_vcmax) * out_lue_vcmax$vcmax_unitiabs
 
   # ## active metabolic leaf N (canopy-level), mol N/m2-ground (same equations as for nitrogen content per unit leaf area, gN/m2-leaf)
   # actnv_unitiabs  <- vcmax25_unitiabs  * n_v
 
 
-  if (!is.na(ppfd)){
-    ##-----------------------------------------------------------------------
-    ## Calculate quantities scaling with light assuming fAPAR = 1
-    ## representing leaf-level at the top of the canopy.
-    ##-----------------------------------------------------------------------
-    ## Vcmax normalised per unit fAPAR (assuming fAPAR=1)
-    vcmax_unitfapar <- ppfd * vcmax_unitiabs
+  ##-----------------------------------------------------------------------
+  ## Quantities that scale linearly with absorbed light
+  ##-----------------------------------------------------------------------
+  len <- length(out_lue_vcmax[[1]])
+  iabs <- fapar * ppfd
 
-    ## Vcmax25 (vcmax normalized to 25 deg C)
-    vcmax25_unitfapar <- ppfd * vcmax25_unitiabs
+  ## Gross primary productivity
+  gpp <- ifelse(!is.na(iabs), iabs * out_lue_vcmax$lue, rep(NA, len))   # in g C m-2 s-1
 
-    ## Dark respiration per unit fAPAR (assuming fAPAR=1)
-    rd_unitfapar <- ppfd * rd_unitiabs
+  ## Vcmax per unit ground area is the product of the intrinsic quantum
+  ## efficiency, the absorbed PAR, and 'n'
+  vcmax <- ifelse(!is.na(iabs), iabs * out_lue_vcmax$vcmax_unitiabs, rep(NA, len))
 
-    # ## active metabolic leaf N (canopy-level), mol N/m2-ground (same equations as for nitrogen content per unit leaf area, gN/m2-leaf)
-    # actnv_unitfapar <- ppfd * actnv_unitiabs
+  ## (vcmax normalized to 25 deg C)
+  vcmax25 <- ifelse(!is.na(iabs), iabs * vcmax25_unitiabs, rep(NA, len))
 
+  ## Dark respiration
+  rd <- ifelse(!is.na(iabs), iabs * rd_unitiabs, rep(NA, len))
 
-    if (!is.na(fapar)){
-      ##-----------------------------------------------------------------------
-      ## Calculate quantities scaling with absorbed light
-      ##-----------------------------------------------------------------------
-      ## absorbed photosynthetically active radiation (mol/m2)
-      iabs <- fapar * ppfd
-
-      ## Canopy-level quantities
-      ## Defined per unit ground level -> scaling with aborbed light (iabs)
-      ##-----------------------------------------------------------------------
-      ## Gross primary productivity
-      gpp <- iabs * lue  # in g C m-2 s-1
-
-      ## Vcmax per unit ground area is the product of the intrinsic quantum
-      ## efficiency, the absorbed PAR, and 'n'
-      vcmax <- iabs * vcmax_unitiabs
-
-      ## (vcmax normalized to 25 deg C)
-      vcmax25 <- iabs * vcmax25_unitiabs
-
-      ## Dark respiration
-      rd <- iabs * rd_unitiabs
-
-      # ## active metabolic leaf N (canopy-level), mol N/m2-ground (same equations as for nitrogen content per unit leaf area, gN/m2-leaf)
-      # actnv <- iabs * actnv_unitiabs
-
-    } else {
-
-      gpp <- NA
-      vcmax <- NA
-      vcmax25 <- NA
-      rd <- NA
-      actnv <- NA
-
-    }
-
-  } else {
-
-    vcmax_unitfapar <- NA
-    vcmax25_unitfapar <- NA
-    rd_unitfapar <- NA
-    actnv_unitfapar <- NA
-
-    gpp <- NA
-    vcmax <- NA
-    vcmax25 <- NA
-    rd <- NA
-    actnv <- NA
-
-  }
+  # ## active metabolic leaf N (canopy-level), mol N/m2-ground (same equations as for nitrogen content per unit leaf area, gN/m2-leaf)
+  # actnv <- ifelse(!is.na(iabs), iabs * actnv_unitiabs, rep(NA, len)) 
 
   ## construct list for output
   out <- list(
@@ -542,7 +396,7 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
               mj              = out_optchi$mj,
               mc              = out_optchi$mc,
               ci              = ci,
-              lue             = lue,
+              lue             = out_lue_vcmax$lue,
               gpp             = gpp,
               iwue            = iwue,
               gs              = (gpp / c_molmass) / (ca - ci),
@@ -550,20 +404,6 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
               vcmax25         = vcmax25,
               rd              = rd
               )
-
-  # additional outputs returned only for Smith 2019 method  
-  if (method_jmaxlim=="smith19"){
-    add_list <- list(
-      omega               = omega,
-      omega_star          = omega_star
-      # ftemp_inst_vcmax    = ftemp_inst_vcmax,
-      # vcmax_star          = vcmax_star,
-      # vcmax_unitiabs_star = vcmax_unitiabs_star,
-      # jvrat               = jvrat,
-      # jmax_prime          = jmax_prime
-      )
-    out <- c(out, add_list)
-  }
 
   if (!is.null(returnvar)) out <- out[returnvar]
 
@@ -628,6 +468,125 @@ calc_optimal_chi <- function( kmm, gammastar, ns_star, ca, vpd, beta ){
   mjoc <- (chi + kappa) / (chi + 2 * gamma)
 
   out <- list( chi=chi, mc=mc, mj=mj, mjoc=mjoc )
+  return(out)
+}
+
+
+calc_lue_vcmax_wang17 <- function(out_optchi, kphio, ftemp_kphio, c_molmass, soilmstress){
+  
+  ## Include effect of Jmax limitation
+  len <- length(out_optchi[[1]])
+  mprime <- calc_mprime( out_optchi$mj )
+
+  out <- list(
+
+    ## Light use efficiency (gpp per unit absorbed light)
+    lue = kphio * ftemp_kphio * mprime * c_molmass * soilmstress,
+
+    ## Vcmax normalised per unit absorbed PPFD (assuming iabs=1), with Jmax limitation
+    vcmax_unitiabs = kphio * ftemp_kphio * out_optchi$mjoc * mprime / out_optchi$mj * soilmstress,
+
+    ## complement for non-smith19 
+    omega               = rep(NA, len),
+    omega_star          = rep(NA, len)
+    )
+
+  return(out)
+}
+
+
+calc_lue_vcmax_smith19 <- function(out_optchi, kphio, ftemp_kphio, c_molmass, soilmstress){
+
+  len <- length(out_optchi[[1]])
+  
+  # Adopted from Nick Smith's code:
+  # Calculate omega, see Smith et al., 2019 Ecology Letters
+  calc_omega <- function( theta, c_cost, m ){
+
+    cm <- 4 * c_cost / m                        # simplification term for omega calculation
+    v  <- 1/(cm * (1 - theta * cm)) - 4 * theta # simplification term for omega calculation
+
+    # account for non-linearities at low m values
+    capP <- (((1/1.4) - 0.7)^2 / (1-theta)) + 3.4
+    aquad <- -1
+    bquad <- capP
+    cquad <- -(capP * theta)
+    m_star <- (4 * c_cost) / polyroot(c(aquad, bquad, cquad))
+
+    omega <- ifelse(  m < Re(m_star[1]),
+                      -( 1 - (2 * theta) ) - sqrt( (1 - theta) * v),
+                      -( 1 - (2 * theta))  + sqrt( (1 - theta) * v)
+                      )
+    return(omega)
+  }
+
+  ## constants
+  theta <- 0.85    # should be calibratable?
+  c_cost <- 0.05336251
+
+  # ## override?
+  # kphio <- 0.257
+
+  ## factors derived as in Smith et al., 2019
+  omega <- calc_omega( theta = theta, c_cost = c_cost, m = out_optchi$mj )          # Eq. S4
+  omega_star <- 1.0 + omega - sqrt( (1.0 + omega)^2 - (4.0 * theta * omega) )       # Eq. 18
+
+  ## Effect of Jmax limitation
+  mprime <- out_optchi$mj * omega_star / (8.0 * theta)
+
+  ## Light use efficiency (gpp per unit absorbed light)
+  lue <- kphio * ftemp_kphio * mprime * c_molmass * soilmstress
+
+  # calculate Vcmax per unit aborbed light
+  vcmax_unitiabs  <- kphio * ftemp_kphio * out_optchi$mjoc * omega_star / (8.0 * theta) * soilmstress   # Eq. 19
+
+  out <- list(
+    lue            = lue,
+    vcmax_unitiabs = vcmax_unitiabs,
+    omega          = omega,
+    omega_star     = omega_star
+    )
+
+  return(out)
+}
+
+
+calc_lue_vcmax_none <- function(out_optchi, kphio, ftemp_kphio, c_molmass, soilmstress){
+  ## Do not include effect of Jmax limitation
+  len <- length(out_optchi[[1]])
+  
+  out <- list(
+
+    ## Light use efficiency (gpp per unit absorbed light)
+    lue = kphio * ftemp_kphio * out_optchi$mj * c_molmass * soilmstress,
+
+    ## Vcmax normalised per unit absorbed PPFD (assuming iabs=1), with Jmax limitation
+    vcmax_unitiabs = kphio * ftemp_kphio * out_optchi$mjoc * soilmstress,
+
+    ## complement for non-smith19 
+    omega               = rep(NA, len),
+    omega_star          = rep(NA, len)
+    )
+
+  return(out)
+}
+
+
+calc_lue_vcmax_c4 <- function( kphio, ftemp_kphio, c_molmass, soilmstress ){
+
+  len <- length(kphio)
+  out <- list(
+    ## Light use efficiency (gpp per unit absorbed light)
+    lue = kphio * ftemp_kphio * c_molmass * soilmstress,
+
+    ## Vcmax normalised per unit absorbed PPFD (assuming iabs=1), with Jmax limitation
+    vcmax_unitiabs = kphio * ftemp_kphio * soilmstress,
+
+    ## complement for non-smith19 
+    omega               = rep(NA, len),
+    omega_star          = rep(NA, len)
+  )
+
   return(out)
 }
 
@@ -700,7 +659,7 @@ calc_mprime <- function( mc ){
   mpi <- mc^2 - kc^(2.0/3.0) * (mc^(4.0/3.0))
 
   # Check for negatives:
-  if (mpi > 0){ mpi <- sqrt(mpi) }
+  mpi <- ifelse(mpi>0, sqrt(mpi), NA)
 
   return(mpi)
 }

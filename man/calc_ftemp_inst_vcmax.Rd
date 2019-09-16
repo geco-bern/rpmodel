@@ -34,7 +34,7 @@ The function is given by Kattge & Knorr (2007) as
 where \eqn{f(T, \Delta Hv)} is a regular Arrhenius-type temperature response function (see
 \link{calc_ftemp_arrh}) with \eqn{Hv=71513} J mol-1,
 \deqn{
-		A = 1 + exp( (T0 \Delta S -Hd) / (T0 R) )
+		A = 1 + exp( (T0 \Delta S - Hd) / (T0 R) )
 }
 and
 \deqn{

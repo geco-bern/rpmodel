@@ -1,7 +1,7 @@
 Package: rpmodel
 Type: Package
 Title: P-model
-Version: 1.0.0
+Version: 1.0.2
 Authors@R: person( "Benjamin", "Stocker", email = "benjamin.stocker@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-2697-9096") )
 Maintainer: Benjamin Stocker <benjamin.stocker@gmail.com>
 Description: This package provides an R implementation of the P-model (Prentice et al., 2014; Wang et al., 2017; Stocker et al., 2019).
