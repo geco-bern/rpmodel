@@ -6,9 +6,16 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Usage • rpmodel</title>
+<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Usage">
 <meta property="og:description" content="">
 <meta property="og:image" content="/logo.png">
@@ -31,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rpmodel</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.2</span>
       </span>
     </div>
 
@@ -39,7 +46,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -65,7 +72,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/stineb/rpmodel">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -78,13 +85,14 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>Usage</h1>
                         <h4 class="author">Beni Stocker</h4>
             
-            <h4 class="date">2019-08-04</h4>
+            <h4 class="date">2019-09-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/stineb/rpmodel/blob/master/vignettes/usage.Rmd"><code>vignettes/usage.Rmd</code></a></small>
       <div class="hidden name"><code>usage.Rmd</code></div>
@@ -99,7 +107,7 @@
 <a href="#example-p-model-run" class="anchor"></a>Example P-model run</h2>
 <p>Let’s run the P-model, without <span class="math inline">\(J_{\text{max}}\)</span> limitation (arugment <code>method_jmaxlim = "none"</code>), for one point. The set of inputs, being temperature (<code>tc</code>), photosynthetic photon flux density (<code>ppfd</code>), vapour pressure deficit (<code>vpd</code>), ambient CO<span class="math inline">\(_2\)</span> (<code>co2</code>), elevation (<code>elv</code>), and fraction of absorbed photosynthetically active radiation (<code>fapar</code>). The quantum yield efficiency parameter is provided as an argument (<code>kphio</code>) and corresponds to <span class="math inline">\(\widehat{\varphi_0}\)</span> in Stocker et al. (2019) if the temperature-dependence of this parameter is ignored (argument <code>do_ftemp_kphio = FALSE</code>, corresponding to simulation setup ‘ORG’ in Stocker et al. (2019)), or to <span class="math inline">\(\widehat{c_L}\)</span> if the temperature-dependence of the quantum yield efficiency is included (argument <code>do_ftemp_kphio = TRUE</code>, used in simulation setups ‘BRC’ and ‘FULL’ in Stocker et al. (2019)). By default the optional argument <code>do_soilmstress</code> is set to <code>FALSE</code>, meaning that the empirical soil moisture stress function is not included. The unit cost ratio (<span class="math inline">\(\beta\)</span> in Stocker et al. (2019)) is given by argument <code>beta</code>.</p>
 <p>To run the <code><a href="../reference/rpmodel.html">rpmodel()</a></code> function we can do:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(rpmodel)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(rpmodel)
 out_pmodel &lt;-<span class="st"> </span><span class="kw"><a href="../reference/rpmodel.html">rpmodel</a></span>( 
   <span class="dt">tc             =</span> <span class="dv">20</span>,           <span class="co"># temperature, deg C</span>
   <span class="dt">vpd            =</span> <span class="dv">1000</span>,         <span class="co"># Pa,</span>
@@ -117,7 +125,7 @@ out_pmodel &lt;-<span class="st"> </span><span class="kw"><a href="../reference/
 <pre><code>## Warning: Atmospheric pressure (patm) not provided. Calculating it as a
 ## function of elevation (elv), assuming standard atmosphere (101325 Pa at sea
 ## level).</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(out_pmodel)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(out_pmodel)</code></pre></div>
 <pre><code>## $ca
 ## [1] 40.53
 ## 
@@ -169,23 +177,23 @@ c_i = c_a - A / g_s = \chi c_a
 kphio &lt;-<span class="st"> </span><span class="fl">0.05</span>         <span class="co"># quantum yield efficiency, value as used in the function call to rpmodel()</span>
 ppfd &lt;-<span class="st"> </span><span class="dv">300</span>           <span class="co"># mol/m2/d, value as used in the function call to rpmodel()</span>
 fapar &lt;-<span class="st"> </span><span class="dv">1</span>            <span class="co"># fraction, value as used in the function call to rpmodel()</span>
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>( out_pmodel<span class="op">$</span>ci )</code></pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>( out_pmodel<span class="op">$</span>ci )</code></pre></div>
 <pre><code>## [1] 28.14209</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>( out_pmodel<span class="op">$</span>ca <span class="op">-</span><span class="st"> </span>(out_pmodel<span class="op">$</span>gpp <span class="op">/</span><span class="st"> </span>c_molmass) <span class="op">/</span><span class="st"> </span>out_pmodel<span class="op">$</span>gs )</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>( out_pmodel<span class="op">$</span>ca <span class="op">-</span><span class="st"> </span>(out_pmodel<span class="op">$</span>gpp <span class="op">/</span><span class="st"> </span>c_molmass) <span class="op">/</span><span class="st"> </span>out_pmodel<span class="op">$</span>gs )</code></pre></div>
 <pre><code>## [1] 28.14209</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>( out_pmodel<span class="op">$</span>ca <span class="op">*</span><span class="st"> </span>out_pmodel<span class="op">$</span>chi )</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>( out_pmodel<span class="op">$</span>ca <span class="op">*</span><span class="st"> </span>out_pmodel<span class="op">$</span>chi )</code></pre></div>
 <pre><code>## [1] 28.14209</code></pre>
 <p>Yes.</p>
 <p>And for… <span class="math display">\[
 A = V_{\text{cmax}} \frac{c_i-\Gamma^{\ast}}{c_i + K} = \phi_0 I_{\text{abs}} \frac{c_i-\Gamma^{\ast}}{c_i + 2 \Gamma^{\ast}} = g_s (c_a - c_i)
 \]</span></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>( out_pmodel<span class="op">$</span>gpp <span class="op">/</span><span class="st"> </span>c_molmass )</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>( out_pmodel<span class="op">$</span>gpp <span class="op">/</span><span class="st"> </span>c_molmass )</code></pre></div>
 <pre><code>## [1] 10.68456</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>( out_pmodel<span class="op">$</span>vcmax <span class="op">*</span><span class="st"> </span>(out_pmodel<span class="op">$</span>ci <span class="op">-</span><span class="st"> </span>out_pmodel<span class="op">$</span>gammastar) <span class="op">/</span><span class="st"> </span>(out_pmodel<span class="op">$</span>ci <span class="op">+</span><span class="st"> </span>out_pmodel<span class="op">$</span>kmm ))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>( out_pmodel<span class="op">$</span>vcmax <span class="op">*</span><span class="st"> </span>(out_pmodel<span class="op">$</span>ci <span class="op">-</span><span class="st"> </span>out_pmodel<span class="op">$</span>gammastar) <span class="op">/</span><span class="st"> </span>(out_pmodel<span class="op">$</span>ci <span class="op">+</span><span class="st"> </span>out_pmodel<span class="op">$</span>kmm ))</code></pre></div>
 <pre><code>## [1] 10.68456</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>( out_pmodel<span class="op">$</span>gs <span class="op">*</span><span class="st"> </span>(out_pmodel<span class="op">$</span>ca <span class="op">-</span><span class="st"> </span>out_pmodel<span class="op">$</span>ci) )</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>( out_pmodel<span class="op">$</span>gs <span class="op">*</span><span class="st"> </span>(out_pmodel<span class="op">$</span>ca <span class="op">-</span><span class="st"> </span>out_pmodel<span class="op">$</span>ci) )</code></pre></div>
 <pre><code>## [1] 10.68456</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>( kphio <span class="op">*</span><span class="st"> </span>ppfd <span class="op">*</span><span class="st"> </span>fapar <span class="op">*</span><span class="st"> </span>(out_pmodel<span class="op">$</span>ci <span class="op">-</span><span class="st"> </span>out_pmodel<span class="op">$</span>gammastar) <span class="op">/</span><span class="st"> </span>(out_pmodel<span class="op">$</span>ci <span class="op">+</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>out_pmodel<span class="op">$</span>gammastar ))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>( kphio <span class="op">*</span><span class="st"> </span>ppfd <span class="op">*</span><span class="st"> </span>fapar <span class="op">*</span><span class="st"> </span>(out_pmodel<span class="op">$</span>ci <span class="op">-</span><span class="st"> </span>out_pmodel<span class="op">$</span>gammastar) <span class="op">/</span><span class="st"> </span>(out_pmodel<span class="op">$</span>ci <span class="op">+</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>out_pmodel<span class="op">$</span>gammastar ))</code></pre></div>
 <pre><code>## [1] 10.68456</code></pre>
 <p>Yes.</p>
 <div id="elevation-and-pressure" class="section level3">
@@ -198,11 +206,11 @@ A = V_{\text{cmax}} \frac{c_i-\Gamma^{\ast}}{c_i + K} = \phi_0 I_{\text{abs}} \f
 <a href="#p-model-for-time-series" class="anchor"></a>P-model for time series</h3>
 <p>The <code><a href="../reference/rpmodel.html">rpmodel()</a></code> function can also be invoked for time series, where <code>tc</code>, <code>vpd</code>, <code>co2</code>, <code>fapar</code>, <code>patm</code>, and <code>ppfd</code> are vectors.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out_ts_pmodel &lt;-<span class="st"> </span><span class="kw"><a href="../reference/rpmodel.html">rpmodel</a></span>( 
-  <span class="dt">tc             =</span> <span class="dv">20</span> <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dv">5</span>, <span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> <span class="dv">5</span>),
-  <span class="dt">vpd            =</span> <span class="dv">1000</span> <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dv">5</span>, <span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> <span class="dv">50</span>),
-  <span class="dt">co2            =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="dv">400</span>, <span class="dv">5</span>),
-  <span class="dt">fapar          =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="dv">1</span>, <span class="dv">5</span>),
-  <span class="dt">ppfd           =</span> <span class="dv">300</span> <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dv">5</span>, <span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> <span class="dv">30</span>),
+  <span class="dt">tc             =</span> <span class="dv">20</span> <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(<span class="dv">5</span>, <span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> <span class="dv">5</span>),
+  <span class="dt">vpd            =</span> <span class="dv">1000</span> <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(<span class="dv">5</span>, <span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> <span class="dv">50</span>),
+  <span class="dt">co2            =</span> <span class="kw"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="dv">400</span>, <span class="dv">5</span>),
+  <span class="dt">fapar          =</span> <span class="kw"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="dv">1</span>, <span class="dv">5</span>),
+  <span class="dt">ppfd           =</span> <span class="dv">300</span> <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(<span class="dv">5</span>, <span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> <span class="dv">30</span>),
   <span class="dt">elv            =</span> <span class="dv">0</span>,         
   <span class="dt">kphio          =</span> <span class="fl">0.05</span>,         
   <span class="dt">beta           =</span> <span class="dv">146</span>,
@@ -210,22 +218,16 @@ A = V_{\text{cmax}} \frac{c_i-\Gamma^{\ast}}{c_i + K} = \phi_0 I_{\text{abs}} \f
   <span class="dt">method_jmaxlim =</span> <span class="st">"none"</span>,
   <span class="dt">do_ftemp_kphio =</span> <span class="ot">FALSE</span>,
   <span class="dt">verbose        =</span> <span class="ot">FALSE</span>
-  )</code></pre></div>
-<pre><code>## Warning in if (vbkg &gt; 0) {: the condition has length &gt; 1 and only the first
-## element will be used</code></pre>
-<pre><code>## Warning in if (!is.na(ppfd)) {: the condition has length &gt; 1 and only the
-## first element will be used</code></pre>
-<pre><code>## Warning in if (!is.na(fapar)) {: the condition has length &gt; 1 and only the
-## first element will be used</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(out_ts_pmodel<span class="op">$</span>gpp)</code></pre></div>
-<pre><code>## [1] 141.37435 136.06249  95.84889 102.00621 151.27663</code></pre>
+  )
+<span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(out_ts_pmodel<span class="op">$</span>gpp)</code></pre></div>
+<pre><code>## [1] 116.1896 133.0937 140.5581 127.5810 154.4996</code></pre>
 <p>Note that <code>gpp</code> (as well as all other returned variables) are now vectors of the same length as the vectors provided as inputs.</p>
 </div>
 <div id="p-model-in-the-tidyverse" class="section level3">
 <h3 class="hasAnchor">
 <a href="#p-model-in-the-tidyverse" class="anchor"></a>P-model in the tidyverse</h3>
 <p>We can create a data frame (in <a href="https://www.tidyverse.org/">tidyverse</a> this is a tibble) and apply the <code>rpmode()</code> function to each row.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(dplyr)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(dplyr)</code></pre></div>
 <pre><code>## 
 ## Attaching package: 'dplyr'</code></pre>
 <pre><code>## The following objects are masked from 'package:stats':
@@ -234,13 +236,13 @@ A = V_{\text{cmax}} \frac{c_i-\Gamma^{\ast}}{c_i + K} = \phi_0 I_{\text{abs}} \f
 <pre><code>## The following objects are masked from 'package:base':
 ## 
 ##     intersect, setdiff, setequal, union</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(purrr)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(purrr)
 df &lt;-<span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">tibble</a></span>(
-  <span class="dt">tc             =</span> <span class="dv">20</span> <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dv">5</span>, <span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> <span class="dv">5</span>),
-  <span class="dt">vpd            =</span> <span class="dv">1000</span> <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dv">5</span>, <span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> <span class="dv">50</span>),
-  <span class="dt">co2            =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="dv">400</span>, <span class="dv">5</span>),
-  <span class="dt">fapar          =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="dv">1</span>, <span class="dv">5</span>),
-  <span class="dt">ppfd           =</span> <span class="dv">300</span> <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dv">5</span>, <span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> <span class="dv">30</span>)
+  <span class="dt">tc             =</span> <span class="dv">20</span> <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(<span class="dv">5</span>, <span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> <span class="dv">5</span>),
+  <span class="dt">vpd            =</span> <span class="dv">1000</span> <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(<span class="dv">5</span>, <span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> <span class="dv">50</span>),
+  <span class="dt">co2            =</span> <span class="kw"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="dv">400</span>, <span class="dv">5</span>),
+  <span class="dt">fapar          =</span> <span class="kw"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="dv">1</span>, <span class="dv">5</span>),
+  <span class="dt">ppfd           =</span> <span class="dv">300</span> <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(<span class="dv">5</span>, <span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> <span class="dv">30</span>)
   ) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>( <span class="dt">out_pmodel =</span> purrr<span class="op">::</span><span class="kw"><a href="https://purrr.tidyverse.org/reference/map2.html">pmap</a></span>(., rpmodel, 
     <span class="dt">elv            =</span> <span class="dv">0</span>,         
@@ -250,30 +252,30 @@ df &lt;-<span class="st"> </span><span class="kw"><a href="https://dplyr.tidyver
     <span class="dt">method_jmaxlim =</span> <span class="st">"none"</span>,
     <span class="dt">do_ftemp_kphio =</span> <span class="ot">FALSE</span>
     ) )
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(df)</code></pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(df)</code></pre></div>
 <pre><code>## # A tibble: 5 x 6
-##      tc   vpd   co2 fapar  ppfd out_pmodel 
-##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;list&gt;     
-## 1  22.7 1008.   400     1  280. &lt;list [15]&gt;
-## 2  21.2  966.   400     1  296. &lt;list [15]&gt;
-## 3  14.9 1048.   400     1  290. &lt;list [15]&gt;
-## 4  23.7 1039.   400     1  238. &lt;list [15]&gt;
-## 5  22.6  925.   400     1  334. &lt;list [15]&gt;</code></pre>
+##      tc   vpd   co2 fapar  ppfd out_pmodel       
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;list&gt;           
+## 1  22.4 1007.   400     1  335. &lt;named list [15]&gt;
+## 2  21.7 1064.   400     1  288. &lt;named list [15]&gt;
+## 3  18.4 1054.   400     1  292. &lt;named list [15]&gt;
+## 4  15.8  983.   400     1  325. &lt;named list [15]&gt;
+## 5  20.8 1029.   400     1  248. &lt;named list [15]&gt;</code></pre>
 <p>Note that the new column <code>out_pmodel</code> now contains the list returned as output of the <code><a href="../reference/rpmodel.html">rpmodel()</a></code> function applied to each row separately. Additional (constant) arguments are just passed to <code><a href="https://purrr.tidyverse.org/reference/map2.html">purrr::pmap</a></code> as arguments.</p>
 <p>If you prefer the elements of these lists to be in separate columns of <code>df</code>, use tidyr to do:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(tidyr)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(tidyr)
 df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>( <span class="dt">out_pmodel =</span> purrr<span class="op">::</span><span class="kw"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span>(out_pmodel, <span class="op">~</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">as_tibble</a></span>(.))) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw"><a href="https://tidyr.tidyverse.org/reference/unnest.html">unnest</a></span>(out_pmodel)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(df)</code></pre></div>
+<span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>( <span class="dt">out_pmodel =</span> purrr<span class="op">::</span><span class="kw"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span>(out_pmodel, <span class="op">~</span><span class="kw"><a href="https://tidyr.tidyverse.org/reference/reexports.html">as_tibble</a></span>(.))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="https://tidyr.tidyverse.org/reference/nest.html">unnest</a></span>(out_pmodel)
+<span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(df)</code></pre></div>
 <pre><code>## # A tibble: 5 x 20
 ##      tc   vpd   co2 fapar  ppfd    ca gammastar   kmm ns_star   chi    mj
 ##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1  22.7 1008.   400     1  280.  40.5      3.85  58.1    1.05 0.726 0.689
-## 2  21.2  966.   400     1  296.  40.5      3.55  51.0    1.09 0.712 0.704
-## 3  14.9 1048.   400     1  290.  40.5      2.53  29.7    1.28 0.622 0.749
-## 4  23.7 1039.   400     1  238.  40.5      4.05  63.4    1.03 0.735 0.679
-## 5  22.6  925.   400     1  334.  40.5      3.83  57.8    1.06 0.734 0.692
+## 1  22.4 1007.   400     1  335.  40.5      3.79  56.8    1.06 0.723 0.692
+## 2  21.7 1064.   400     1  288.  40.5      3.66  53.6    1.08 0.710 0.696
+## 3  18.4 1054.   400     1  292.  40.5      3.07  40.2    1.17 0.669 0.723
+## 4  15.8  983.   400     1  325.  40.5      2.67  32.3    1.25 0.642 0.745
+## 5  20.8 1029.   400     1  248.  40.5      3.49  49.5    1.10 0.702 0.704
 ## # … with 9 more variables: mc &lt;dbl&gt;, ci &lt;dbl&gt;, lue &lt;dbl&gt;, gpp &lt;dbl&gt;,
 ## #   iwue &lt;dbl&gt;, gs &lt;dbl&gt;, vcmax &lt;dbl&gt;, vcmax25 &lt;dbl&gt;, rd &lt;dbl&gt;</code></pre>
 </div>
@@ -307,15 +309,15 @@ df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="s
 <pre><code>## Warning: Atmospheric pressure (patm) not provided. Calculating it as a
 ## function of elevation (elv), assuming standard atmosphere (101325 Pa at sea
 ## level).</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(<span class="st">"Ratio Vcmax/Vcmax25      :"</span>, out_pmodel<span class="op">$</span>vcmax<span class="op">/</span>out_pmodel<span class="op">$</span>vcmax25))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="st">"Ratio Vcmax/Vcmax25      :"</span>, out_pmodel<span class="op">$</span>vcmax<span class="op">/</span>out_pmodel<span class="op">$</span>vcmax25))</code></pre></div>
 <pre><code>## [1] "Ratio Vcmax/Vcmax25      : 0.260975632963417"</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(<span class="st">"calc_ftemp_inst_vcmax(10):"</span>, <span class="kw"><a href="../reference/calc_ftemp_inst_vcmax.html">calc_ftemp_inst_vcmax</a></span>(<span class="dv">10</span>)))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="st">"calc_ftemp_inst_vcmax(10):"</span>, <span class="kw"><a href="../reference/calc_ftemp_inst_vcmax.html">calc_ftemp_inst_vcmax</a></span>(<span class="dv">10</span>)))</code></pre></div>
 <pre><code>## [1] "calc_ftemp_inst_vcmax(10): 0.260975632963417"</code></pre>
 <ul>
 <li><p><code><a href="../reference/calc_ftemp_arrh.html">calc_ftemp_arrh()</a></code> Calculates the Arrhenius-type temperature response and is used inside <code><a href="../reference/calc_ftemp_inst_vcmax.html">calc_ftemp_inst_vcmax()</a></code>.</p></li>
 <li><p><code><a href="../reference/calc_ftemp_inst_rd.html">calc_ftemp_inst_rd()</a></code> calculates the temperature response of dark respiration (<span class="math inline">\(R_d\)</span>), which is slightly less steep than that for <span class="math inline">\(V_\text{cmax}\)</span>:</p></li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(<span class="st">"calc_ftemp_inst_rd(10):"</span>, <span class="kw"><a href="../reference/calc_ftemp_inst_rd.html">calc_ftemp_inst_rd</a></span>(<span class="dv">10</span>)))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="st">"calc_ftemp_inst_rd(10):"</span>, <span class="kw"><a href="../reference/calc_ftemp_inst_rd.html">calc_ftemp_inst_rd</a></span>(<span class="dv">10</span>)))</code></pre></div>
 <pre><code>## [1] "calc_ftemp_inst_rd(10): 0.284933345928884"</code></pre>
 </div>
 <div id="parameters-in-the-fvcb-model" class="section level3">
@@ -325,17 +327,17 @@ df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="s
 <li>
 <code><a href="../reference/calc_gammastar.html">calc_gammastar()</a></code> calculates the CO<span class="math inline">\(_2\)</span> compensation point (<span class="math inline">\(\Gamma^\ast\)</span>) in the Farquhar-von Caemmerer-Berry model as a function of temperature (argument <code>tc</code>) and atmospheric pressure (argumnet <code>patm</code>). This is returned by the <code><a href="../reference/rpmodel.html">rpmodel()</a></code> function and by the separate auxiliary function <code><a href="../reference/calc_gammastar.html">calc_gammastar()</a></code>. <code><a href="../reference/calc_gammastar.html">calc_gammastar()</a></code> requires atmospheric pressure (<code>patm</code>) to be given as an argument (in addition to temperature). Corresponding to the <code><a href="../reference/rpmodel.html">rpmodel()</a></code> call above, let’s calculate this using the auxiliary function <code><a href="../reference/calc_patm.html">calc_patm()</a></code> with 0 metres above sea level, and assuming standard atmospheric pressure (101325 Pa at 0 m a.s.l.):</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(<span class="st">"From rpmodel call :"</span>, out_pmodel<span class="op">$</span>gammastar))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="st">"From rpmodel call :"</span>, out_pmodel<span class="op">$</span>gammastar))</code></pre></div>
 <pre><code>## [1] "From rpmodel call : 1.93016150706341"</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(<span class="st">"calc_gammastar(10):"</span>, <span class="kw"><a href="../reference/calc_gammastar.html">calc_gammastar</a></span>(<span class="dv">10</span>, <span class="dt">patm =</span> <span class="kw"><a href="../reference/calc_patm.html">calc_patm</a></span>(<span class="dt">elv =</span> <span class="dv">0</span>))))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="st">"calc_gammastar(10):"</span>, <span class="kw"><a href="../reference/calc_gammastar.html">calc_gammastar</a></span>(<span class="dv">10</span>, <span class="dt">patm =</span> <span class="kw"><a href="../reference/calc_patm.html">calc_patm</a></span>(<span class="dt">elv =</span> <span class="dv">0</span>))))</code></pre></div>
 <pre><code>## [1] "calc_gammastar(10): 1.93016150706341"</code></pre>
 <ul>
 <li>
 <code><a href="../reference/calc_kmm.html">calc_kmm()</a></code> calculates the Michaelis Menten coefficient for Rubisco-limited photosynthesis as a function of temperature (argument <code>tc</code>) and atmospheric pressure (argumnet <code>patm</code>). As above, <code><a href="../reference/calc_kmm.html">calc_kmm()</a></code> requires atmospheric pressur to be given as an argument (in addition to temperature). Corresponding to the <code><a href="../reference/rpmodel.html">rpmodel()</a></code> call above, let’s calculate this using the auxiliary function <code><a href="../reference/calc_patm.html">calc_patm()</a></code> with 0 metres above sea level, and assuming standard atmospheric pressure (101325 Pa at 0 m a.s.l.):</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(<span class="st">"From rpmodel call:"</span>, out_pmodel<span class="op">$</span>kmm))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="st">"From rpmodel call:"</span>, out_pmodel<span class="op">$</span>kmm))</code></pre></div>
 <pre><code>## [1] "From rpmodel call: 19.6242174524746"</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(<span class="st">"calc_kmm(10)     :"</span>, <span class="kw"><a href="../reference/calc_kmm.html">calc_kmm</a></span>(<span class="dv">10</span>, <span class="dt">patm =</span> <span class="kw"><a href="../reference/calc_patm.html">calc_patm</a></span>(<span class="dt">elv =</span> <span class="dv">0</span>))))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="st">"calc_kmm(10)     :"</span>, <span class="kw"><a href="../reference/calc_kmm.html">calc_kmm</a></span>(<span class="dv">10</span>, <span class="dt">patm =</span> <span class="kw"><a href="../reference/calc_patm.html">calc_patm</a></span>(<span class="dt">elv =</span> <span class="dv">0</span>))))</code></pre></div>
 <pre><code>## [1] "calc_kmm(10)     : 19.6242174524746"</code></pre>
 </div>
 <div id="temperature-dependence-of-quantum-yield-efficiency" class="section level3">
@@ -360,13 +362,13 @@ out_pmodel_ftemp_kphio_OFF &lt;-<span class="st"> </span><span class="kw"><a hre
   <span class="dt">elv            =</span> <span class="dv">0</span>,            <span class="co"># m.a.s.l.,</span>
   <span class="dt">do_ftemp_kphio =</span> <span class="ot">FALSE</span>
   )
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(<span class="st">"LUE ftemp_ON /LUE ftemp_OFF ="</span>, out_pmodel_ftemp_kphio_ON<span class="op">$</span>lue <span class="op">/</span><span class="st"> </span>out_pmodel_ftemp_kphio_OFF<span class="op">$</span>lue))</code></pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="st">"LUE ftemp_ON /LUE ftemp_OFF ="</span>, out_pmodel_ftemp_kphio_ON<span class="op">$</span>lue <span class="op">/</span><span class="st"> </span>out_pmodel_ftemp_kphio_OFF<span class="op">$</span>lue))</code></pre></div>
 <pre><code>## [1] "LUE ftemp_ON /LUE ftemp_OFF = 1.08933333333333"</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(<span class="st">"GPP ftemp_ON /GPP ftemp_OFF ="</span>, out_pmodel_ftemp_kphio_ON<span class="op">$</span>gpp <span class="op">/</span><span class="st"> </span>out_pmodel_ftemp_kphio_OFF<span class="op">$</span>gpp))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="st">"GPP ftemp_ON /GPP ftemp_OFF ="</span>, out_pmodel_ftemp_kphio_ON<span class="op">$</span>gpp <span class="op">/</span><span class="st"> </span>out_pmodel_ftemp_kphio_OFF<span class="op">$</span>gpp))</code></pre></div>
 <pre><code>## [1] "GPP ftemp_ON /GPP ftemp_OFF = 1.08933333333333"</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(<span class="st">"Vcmax ftemp_ON /Vcmax ftemp_OFF ="</span>, out_pmodel_ftemp_kphio_ON<span class="op">$</span>vcmax <span class="op">/</span><span class="st"> </span>out_pmodel_ftemp_kphio_OFF<span class="op">$</span>vcmax))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="st">"Vcmax ftemp_ON /Vcmax ftemp_OFF ="</span>, out_pmodel_ftemp_kphio_ON<span class="op">$</span>vcmax <span class="op">/</span><span class="st"> </span>out_pmodel_ftemp_kphio_OFF<span class="op">$</span>vcmax))</code></pre></div>
 <pre><code>## [1] "Vcmax ftemp_ON /Vcmax ftemp_OFF = 1.08933333333333"</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(<span class="st">"calc_ftemp_kphio(20) ="</span>, <span class="kw"><a href="../reference/calc_ftemp_kphio.html">calc_ftemp_kphio</a></span>(<span class="dv">20</span>)))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="st">"calc_ftemp_kphio(20) ="</span>, <span class="kw"><a href="../reference/calc_ftemp_kphio.html">calc_ftemp_kphio</a></span>(<span class="dv">20</span>)))</code></pre></div>
 <pre><code>## [1] "calc_ftemp_kphio(20) = 0.656"</code></pre>
 </div>
 <div id="soil-moisture-stress" class="section level3">
@@ -397,13 +399,13 @@ out_pmodel_soilmstress_ON &lt;-<span class="st"> </span><span class="kw"><a href
   <span class="dt">bpar_soilm     =</span> <span class="fl">0.7</span>,
   <span class="dt">meanalpha      =</span> <span class="fl">0.2</span> 
   )
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(<span class="st">"LUE soilmstress_ON /LUE soilmstress_OFF ="</span>, out_pmodel_soilmstress_ON<span class="op">$</span>lue <span class="op">/</span><span class="st"> </span>out_pmodel_soilmstress_OFF<span class="op">$</span>lue))</code></pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="st">"LUE soilmstress_ON /LUE soilmstress_OFF ="</span>, out_pmodel_soilmstress_ON<span class="op">$</span>lue <span class="op">/</span><span class="st"> </span>out_pmodel_soilmstress_OFF<span class="op">$</span>lue))</code></pre></div>
 <pre><code>## [1] "LUE soilmstress_ON /LUE soilmstress_OFF = 0.662222222222222"</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(<span class="st">"GPP soilmstress_ON /GPP soilmstress_OFF ="</span>, out_pmodel_soilmstress_ON<span class="op">$</span>gpp <span class="op">/</span><span class="st"> </span>out_pmodel_soilmstress_OFF<span class="op">$</span>gpp))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="st">"GPP soilmstress_ON /GPP soilmstress_OFF ="</span>, out_pmodel_soilmstress_ON<span class="op">$</span>gpp <span class="op">/</span><span class="st"> </span>out_pmodel_soilmstress_OFF<span class="op">$</span>gpp))</code></pre></div>
 <pre><code>## [1] "GPP soilmstress_ON /GPP soilmstress_OFF = 0.662222222222222"</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(<span class="st">"Vcmax soilmstress_ON /Vcmax soilmstress_OFF ="</span>, out_pmodel_soilmstress_ON<span class="op">$</span>vcmax <span class="op">/</span><span class="st"> </span>out_pmodel_soilmstress_OFF<span class="op">$</span>vcmax))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="st">"Vcmax soilmstress_ON /Vcmax soilmstress_OFF ="</span>, out_pmodel_soilmstress_ON<span class="op">$</span>vcmax <span class="op">/</span><span class="st"> </span>out_pmodel_soilmstress_OFF<span class="op">$</span>vcmax))</code></pre></div>
 <pre><code>## [1] "Vcmax soilmstress_ON /Vcmax soilmstress_OFF = 0.662222222222222"</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(<span class="st">"calc_soilmstress(0.2, apar_soilm = 0.1, bpar_soilm = 0.7, meanalpha = 0.2) ="</span>, <span class="kw"><a href="../reference/calc_soilmstress.html">calc_soilmstress</a></span>(<span class="fl">0.2</span>, <span class="dt">apar_soilm =</span> <span class="fl">0.1</span>, <span class="dt">bpar_soilm =</span> <span class="fl">0.7</span>, <span class="dt">meanalpha =</span> <span class="fl">0.2</span>)))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="st">"calc_soilmstress(0.2, apar_soilm = 0.1, bpar_soilm = 0.7, meanalpha = 0.2) ="</span>, <span class="kw"><a href="../reference/calc_soilmstress.html">calc_soilmstress</a></span>(<span class="fl">0.2</span>, <span class="dt">apar_soilm =</span> <span class="fl">0.1</span>, <span class="dt">bpar_soilm =</span> <span class="fl">0.7</span>, <span class="dt">meanalpha =</span> <span class="fl">0.2</span>)))</code></pre></div>
 <pre><code>## [1] "calc_soilmstress(0.2, apar_soilm = 0.1, bpar_soilm = 0.7, meanalpha = 0.2) = 0.662222222222222"</code></pre>
 <p><code><a href="../reference/calc_ftemp_arrh.html">calc_ftemp_arrh()</a></code> Calculates the Arrhenius-type temperature response.</p>
 <!-- ## Response to CO2 -->
@@ -461,17 +463,20 @@ out_pmodel_soilmstress_ON &lt;-<span class="st"> </span><span class="kw"><a href
 </div>
 
 
+
       <footer><div class="copyright">
   <p>Developed by Benjamin Stocker.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>
