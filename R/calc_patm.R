@@ -22,13 +22,15 @@
 #'
 #' @return A numeric value for \eqn{p}
 #'
-#' @examples print(paste("Standard atmospheric pressure, in Pa, corrected for 1000 m.a.s.l.:", calc_patm(1000)))
+#' @examples print("Standard atmospheric pressure, in Pa, corrected for 1000 m.a.s.l.:")
+#' print(calc_patm(1000))
 #' 
 #' @references  Allen, R. G., Pereira, L. S., Raes, D., Smith, M.: 
 #'              FAO Irrigation and Drainage Paper No. 56, Food and 
 #'              Agriculture Organization of the United Nations, 1998
 #'
 #' @export
+#' 
 calc_patm <- function( elv, patm0 = 101325 ){
 
   # Define constants:

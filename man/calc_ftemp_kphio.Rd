@@ -25,10 +25,12 @@ The temperature factor is calculated as
 The factor \eqn{\phi(T)} is to be multiplied with leaf absorptance and the fraction 
 of absorbed light that reaches photosystem II. In the P-model these additional factors
 are lumped into a single apparent quantum yield efficiency parameter (argument \code{kphio} 
-to function \link{pmodel()}).
+to function \link{rpmodel}).
 }
 \examples{
-print(paste("Relative change in the quantum yield efficiency between 5 and 25 degrees celsius (percent change):", (calc_ftemp_kphio(25.0)/calc_ftemp_kphio(5.0)-1)*100 ))
+## Relative change in the quantum yield efficiency 
+## between 5 and 25 degrees celsius (percent change):
+print(paste((calc_ftemp_kphio(25.0)/calc_ftemp_kphio(5.0)-1)*100 ))
 
 }
 \references{

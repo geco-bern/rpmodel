@@ -35,7 +35,8 @@ atmospheric pressure \eqn{p(z)} (see \link{calc_patm}) at elevation \eqn{z}.
 \eqn{p(z)} is given by argument \code{patm}.
 }
 \examples{
-print(paste("CO2 compensation point at 20 degrees Celsius and standard atmosphere (in Pa):", calc_gammastar(20, 101325)))
+print("CO2 compensation point at 20 degrees Celsius and standard atmosphere (in Pa):")
+print(calc_gammastar(20, 101325))
 
 }
 \references{

@@ -44,7 +44,8 @@ by multiplication with the standard atmosphere (101325 Pa). \eqn{T} is given
 by the argument \code{tc}.
 }
 \examples{
-print(paste("Michaelis-Menten coefficient at 20 degrees Celsius and standard atmosphere (in Pa):", calc_kmm(20, 101325)))
+print("Michaelis-Menten coefficient at 20 degrees Celsius and standard atmosphere (in Pa):")
+print(calc_kmm(20, 101325))
 
 }
 \references{

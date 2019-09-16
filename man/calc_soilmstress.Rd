@@ -19,7 +19,7 @@ sensitivity of the empirical soil moisture stress function. Defaults to 0.0, the
 as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'FULL' (corresponding to a setup
 with \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_calc_soilmstress=TRUE}).}
 
-\item{bapar_soilm}{(Optional, used only if \code{do_calc_soilmstress==TRUE}) Parameter determining the 
+\item{bpar_soilm}{(Optional, used only if \code{do_calc_soilmstress==TRUE}) Parameter determining the 
 sensitivity of the empirical soil moisture stress function. Defaults to 0.685, the empirically fitted value
 as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'FULL' (corresponding to a setup
 with \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_calc_soilmstress=TRUE}).}
@@ -52,7 +52,9 @@ quantified by the local annual mean ratio of actual over potential evapotranspir
 \eqn{a} is given by argument \code{apar}, \eqn{b} is given by argument \code{bpar}.
 }
 \examples{
-print(paste("Relative change in light use efficiency due to soil moisture stress (percent change in response to a change in relative soil water content from 1.0 to 0.2):", (calc_soilmstress(0.2)-1)*100 ))
+## Relative reduction (\%) in GPP due to soil moisture stress at 
+## relative soil water content ('soilm') of 0.2:
+print((calc_soilmstress(0.2)-1)*100 )
 
 }
 \references{

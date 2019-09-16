@@ -28,11 +28,11 @@ respective output variables are returned as per unit months.}
 
 \item{patm}{Atmospheric pressure (Pa). When provided, overrides \code{elv}, otherwise \code{patm} 
 is calculated using standard atmosphere (101325 Pa), corrected for elevation (argument \code{elv}), 
-using the function \link{calc_patm()}.}
+using the function \link{calc_patm}.}
 
 \item{elv}{Elevation above sea-level (m.a.s.l.). Is used only for calculating atmospheric pressure (using 
 standard atmosphere (101325 Pa), corrected for elevation (argument \code{elv}), using the function 
-\link{calc_patm()}), if argument \code{patm} is not provided. If argument \code{patm} is provided, 
+\link{calc_patm}), if argument \code{patm} is not provided. If argument \code{patm} is provided, 
 \code{elv} is overriden.}
 
 \item{kphio}{Apparent quantum yield efficiency (unitless). Defaults to 0.0817 for

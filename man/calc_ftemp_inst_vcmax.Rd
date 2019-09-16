@@ -49,7 +49,9 @@ with \eqn{aS = 668.39} J mol-1 K-1, and \eqn{bS = 1.07} J mol-1 K-2, and \eqn{T}
 degrees Celsius (!)
 }
 \examples{
-print(paste("Relative change in Vcmax going (instantaneously, i.e. not acclimatedly) from 10 to 25 degrees (percent change):", (calc_ftemp_inst_vcmax(25)/calc_ftemp_inst_vcmax(10)-1)*100 ))
+## Relative change in Vcmax going (instantaneously, i.e. 
+## not acclimatedly) from 10 to 25 degrees (percent change):
+print((calc_ftemp_inst_vcmax(25)/calc_ftemp_inst_vcmax(10)-1)*100 )
 
 }
 \references{

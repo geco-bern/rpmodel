@@ -7,6 +7,10 @@ output:
     toc: true
     toc_float: true
     toc_depth: 3
+vignette: >
+  %\VignetteEngine{knitr::knitr}
+  %\usepackage[utf8]{inputenc}
+  %\VignetteIndexEntry{Running the P-model in R}
 ---
 
 The rpmodel package implements the P-model as described in Stocker et al. (2019) *Geosci. Mod. Dev.*. The main function available through the package is `rpmodel()`, which returns a list of quantities (see `?rpmodel`) for a given set of inputs. An additional set of important functions that are used within `rpmodel()` are also available through this package. Usage examples are given below.

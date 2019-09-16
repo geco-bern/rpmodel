@@ -41,7 +41,8 @@
 #'
 #' @return A numeric value for \eqn{K} (in Pa)
 #'
-#' @examples print(paste("Michaelis-Menten coefficient at 20 degrees Celsius and standard atmosphere (in Pa):", calc_kmm(20, 101325)))
+#' @examples print("Michaelis-Menten coefficient at 20 degrees Celsius and standard atmosphere (in Pa):")
+#' print(calc_kmm(20, 101325))
 #'
 #' @export
 #'

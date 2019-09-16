@@ -26,7 +26,9 @@ scaling factor to calculate dark respiration at temperature \eqn{T} (argument \c
 where \eqn{T} is given in degrees Celsius.
 }
 \examples{
-print(paste("Relative change in Rd going (instantaneously, i.e. not acclimatedly) from 10 to 25 degrees (percent change):", (calc_ftemp_inst_rd(25)/calc_ftemp_inst_rd(10)-1)*100 ))
+## Relative change in Rd going (instantaneously, i.e. not 
+## acclimatedly) from 10 to 25 degrees (percent change):
+print( (calc_ftemp_inst_rd(25)/calc_ftemp_inst_rd(10)-1)*100 )
 
 }
 \references{

@@ -13,10 +13,10 @@
 #' respective output variables are returned as per unit months.
 #' @param patm Atmospheric pressure (Pa). When provided, overrides \code{elv}, otherwise \code{patm} 
 #' is calculated using standard atmosphere (101325 Pa), corrected for elevation (argument \code{elv}), 
-#' using the function \link{calc_patm()}.
+#' using the function \link{calc_patm}.
 #' @param elv Elevation above sea-level (m.a.s.l.). Is used only for calculating atmospheric pressure (using 
 #' standard atmosphere (101325 Pa), corrected for elevation (argument \code{elv}), using the function 
-#' \link{calc_patm()}), if argument \code{patm} is not provided. If argument \code{patm} is provided, 
+#' \link{calc_patm}), if argument \code{patm} is not provided. If argument \code{patm} is provided, 
 #' \code{elv} is overriden. 
 #' @param kphio Apparent quantum yield efficiency (unitless). Defaults to 0.0817 for
 #' \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=FALSE}, 0.0870 for 
@@ -600,14 +600,24 @@ calc_optimal_chi <- function( kmm, gammastar, ns_star, ca, vpd, beta ){
   vacg <- ca + 2.0 * gammastar
   vbkg <- beta * (kmm + gammastar)
 
-  # Check for negatives:
-  if (vbkg > 0){
-    vsr <- sqrt( 1.6 * ns_star * vpd / vbkg )
-
-    # Based on the mc' formulation (see Regressing_LUE.pdf)
-    mj <- vdcg / ( vacg + 3.0 * gammastar * vsr )
+  ## wrap if condition in a function to allow vectorization
+  calc_mj <- function(ns_star, vpd, vbkg){
+    if (ns_star>0 && vpd>0 && vbkg>0){
+      vsr <- sqrt( 1.6 * ns_star * vpd / vbkg )
+      
+      # Based on the mc' formulation (see Regressing_LUE.pdf)
+      mj <- vdcg / ( vacg + 3.0 * gammastar * vsr )
+      
+    } else {
+      mj <- NA
+    }
+    
+    return(mj)
   }
-
+  
+  # Check for negatives:
+  mj <- calc_mj(ns_star, vpd, vbkg)
+  
   ## alternative variables
   gamma <- gammastar / ca
   kappa <- kmm / ca

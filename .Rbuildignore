@@ -1,2 +1,10 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^cran-comments\.md$
+^README\.Rmd$
+^_config\.yml$
+^_pkgdown\.yml$
+^docs$
+^vignettes_add$
+
+^revdep$

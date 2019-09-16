@@ -39,7 +39,10 @@
 #'
 #' @return A numeric value for \eqn{fv}
 #'
-#' @examples print(paste("Relative change in Vcmax going (instantaneously, i.e. not acclimatedly) from 10 to 25 degrees (percent change):", (calc_ftemp_inst_vcmax(25)/calc_ftemp_inst_vcmax(10)-1)*100 ))
+#' @examples 
+#' ## Relative change in Vcmax going (instantaneously, i.e. 
+#' ## not acclimatedly) from 10 to 25 degrees (percent change):
+#' print((calc_ftemp_inst_vcmax(25)/calc_ftemp_inst_vcmax(10)-1)*100 )
 #'
 #' @export
 #'

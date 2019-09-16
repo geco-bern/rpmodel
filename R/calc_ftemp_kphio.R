@@ -13,17 +13,21 @@
 #' The factor \eqn{\phi(T)} is to be multiplied with leaf absorptance and the fraction 
 #' of absorbed light that reaches photosystem II. In the P-model these additional factors
 #' are lumped into a single apparent quantum yield efficiency parameter (argument \code{kphio} 
-#' to function \link{pmodel()}).
+#' to function \link{rpmodel}).
 #' 
 #' @return A numeric value for \eqn{\phi(T)}
 #'
-#' @examples print(paste("Relative change in the quantum yield efficiency between 5 and 25 degrees celsius (percent change):", (calc_ftemp_kphio(25.0)/calc_ftemp_kphio(5.0)-1)*100 ))
+#' @examples
+#' ## Relative change in the quantum yield efficiency 
+#' ## between 5 and 25 degrees celsius (percent change):
+#' print(paste((calc_ftemp_kphio(25.0)/calc_ftemp_kphio(5.0)-1)*100 ))
 #' 
 #' @references  Bernacchi, C. J., Pimentel, C., and Long, S. P.:  In vivo temperature 
 #' 				response func-tions  of  parameters required  to  model  RuBP-limited  
 #' 				photosynthesis,  Plant  Cell Environ., 26, 1419–1430, 2003
 #'
 #' @export
+#' 
 calc_ftemp_kphio <- function( tc ){
 
   ftemp <- 0.352 + 0.022 * tc - 3.4e-4 * tc^2

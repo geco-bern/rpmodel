@@ -30,8 +30,6 @@ out_pmodel <- rpmodel(
 print( out_pmodel )
 ```
 
-For more information and examples see [here](https://stineb.github.io/rpmodel/usage.html).
-
 ## Installation
 
 ### Development release

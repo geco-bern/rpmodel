@@ -34,7 +34,8 @@ pressure at 0 m a.s.l. (argument \code{patm0}, defaults to 101325 Pa),
 is the standard temperature (298.15 K, corresponds to 25 deg C).
 }
 \examples{
-print(paste("Standard atmospheric pressure, in Pa, corrected for 1000 m.a.s.l.:", calc_patm(1000)))
+print("Standard atmospheric pressure, in Pa, corrected for 1000 m.a.s.l.:")
+print(calc_patm(1000))
 
 }
 \references{

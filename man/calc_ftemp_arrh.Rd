@@ -37,6 +37,7 @@ and is 8.3145 J mol-1 K-1. Note that this is equivalent to
 }
 }
 \examples{
-print( paste( "Relative rate change from 25 to 10 degrees Celsius (percent change):", (1.0-calc_ftemp_arrh( 283.15, 100000, tkref = 298.15))*100 ))
+print("Relative rate change from 25 to 10 degrees Celsius (percent change):")
+print( (1.0-calc_ftemp_arrh( 283.15, 100000, tkref = 298.15))*100 )
 
 }

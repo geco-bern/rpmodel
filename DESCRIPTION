@@ -4,10 +4,13 @@ Title: P-model
 Version: 1.0.0
 Authors@R: person( "Benjamin", "Stocker", email = "benjamin.stocker@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-2697-9096") )
 Maintainer: Benjamin Stocker <benjamin.stocker@gmail.com>
-Description: An R implementation of the P-model (Prentice et al., 2014; Wang et al., 2017)
-License: GNU General Public License v3
+Description: This package provides an R implementation of the P-model (Prentice et al., 2014; Wang et al., 2017; Stocker et al., 2019).
+License: file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
+Imports: rlang
+Suggests: dplyr, purrr, tidyr, knitr
+VignetteBuilder: knitr
 URL: https://github.com/stineb/rpmodel
 BugReports: https://github.com/stineb/rpmodel/issues

@@ -32,7 +32,8 @@
 #'
 #' @return A numeric value for \eqn{\Gamma*} (in Pa)
 #'
-#' @examples print(paste("CO2 compensation point at 20 degrees Celsius and standard atmosphere (in Pa):", calc_gammastar(20, 101325)))
+#' @examples print("CO2 compensation point at 20 degrees Celsius and standard atmosphere (in Pa):")
+#' print(calc_gammastar(20, 101325))
 #'
 #' @export
 #'
