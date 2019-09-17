@@ -105,7 +105,7 @@
 <div id="example-p-model-run" class="section level2">
 <h2 class="hasAnchor">
 <a href="#example-p-model-run" class="anchor"></a>Example P-model run</h2>
-<p>Let’s run the P-model, without <span class="math inline">\(J_{\text{max}}\)</span> limitation (arugment <code>method_jmaxlim = "none"</code>), for one point. The set of inputs, being temperature (<code>tc</code>), photosynthetic photon flux density (<code>ppfd</code>), vapour pressure deficit (<code>vpd</code>), ambient CO<span class="math inline">\(_2\)</span> (<code>co2</code>), elevation (<code>elv</code>), and fraction of absorbed photosynthetically active radiation (<code>fapar</code>). The quantum yield efficiency parameter is provided as an argument (<code>kphio</code>) and corresponds to <span class="math inline">\(\widehat{\varphi_0}\)</span> in Stocker et al. (2019) if the temperature-dependence of this parameter is ignored (argument <code>do_ftemp_kphio = FALSE</code>, corresponding to simulation setup ‘ORG’ in Stocker et al. (2019)), or to <span class="math inline">\(\widehat{c_L}\)</span> if the temperature-dependence of the quantum yield efficiency is included (argument <code>do_ftemp_kphio = TRUE</code>, used in simulation setups ‘BRC’ and ‘FULL’ in Stocker et al. (2019)). By default the optional argument <code>do_soilmstress</code> is set to <code>FALSE</code>, meaning that the empirical soil moisture stress function is not included. The unit cost ratio (<span class="math inline">\(\beta\)</span> in Stocker et al. (2019)) is given by argument <code>beta</code>.</p>
+<p>Let’s run the P-model, without <span class="math inline">\(J_{\text{max}}\)</span> limitation (argument <code>method_jmaxlim = "none"</code>), for one point. The set of inputs, being temperature (<code>tc</code>), photosynthetic photon flux density (<code>ppfd</code>), vapour pressure deficit (<code>vpd</code>), ambient CO<span class="math inline">\(_2\)</span> (<code>co2</code>), elevation (<code>elv</code>), and fraction of absorbed photosynthetically active radiation (<code>fapar</code>). The quantum yield efficiency parameter is provided as an argument (<code>kphio</code>) and corresponds to <span class="math inline">\(\widehat{\varphi_0}\)</span> in Stocker et al. (2019) if the temperature-dependence of this parameter is ignored (argument <code>do_ftemp_kphio = FALSE</code>, corresponding to simulation setup ‘ORG’ in Stocker et al. (2019)), or to <span class="math inline">\(\widehat{c_L}\)</span> if the temperature-dependence of the quantum yield efficiency is included (argument <code>do_ftemp_kphio = TRUE</code>, used in simulation setups ‘BRC’ and ‘FULL’ in Stocker et al. (2019)). By default the optional argument <code>do_soilmstress</code> is set to <code>FALSE</code>, meaning that the empirical soil moisture stress function is not included. The unit cost ratio (<span class="math inline">\(\beta\)</span> in Stocker et al. (2019)) is given by argument <code>beta</code>.</p>
 <p>To run the <code><a href="../reference/rpmodel.html">rpmodel()</a></code> function we can do:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(rpmodel)
 out_pmodel &lt;-<span class="st"> </span><span class="kw"><a href="../reference/rpmodel.html">rpmodel</a></span>( 
@@ -220,7 +220,7 @@ A = V_{\text{cmax}} \frac{c_i-\Gamma^{\ast}}{c_i + K} = \phi_0 I_{\text{abs}} \f
   <span class="dt">verbose        =</span> <span class="ot">FALSE</span>
   )
 <span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(out_ts_pmodel<span class="op">$</span>gpp)</code></pre></div>
-<pre><code>## [1] 121.2124 116.9936 140.2555 132.6630 117.0387</code></pre>
+<pre><code>## [1] 130.2608 139.0021 153.5773 109.7453 111.3067</code></pre>
 <p>Note that <code>gpp</code> (as well as all other returned variables) are now vectors of the same length as the vectors provided as inputs.</p>
 </div>
 <div id="p-model-in-the-tidyverse" class="section level3">
@@ -256,11 +256,11 @@ df &lt;-<span class="st"> </span><span class="kw"><a href="https://dplyr.tidyver
 <pre><code>## # A tibble: 5 x 6
 ##      tc   vpd   co2 fapar  ppfd out_pmodel       
 ##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;list&gt;           
-## 1  33.6  995.   400     1  353. &lt;named list [15]&gt;
-## 2  25.5 1003.   400     1  275. &lt;named list [15]&gt;
-## 3  14.5 1030.   400     1  326. &lt;named list [15]&gt;
-## 4  14.6  980.   400     1  256. &lt;named list [15]&gt;
-## 5  25.3  952.   400     1  260. &lt;named list [15]&gt;</code></pre>
+## 1  17.0 1082.   400     1  266. &lt;named list [15]&gt;
+## 2  24.1  966.   400     1  286. &lt;named list [15]&gt;
+## 3  22.6  944.   400     1  284. &lt;named list [15]&gt;
+## 4  14.0 1002.   400     1  240. &lt;named list [15]&gt;
+## 5  17.3 1035.   400     1  301. &lt;named list [15]&gt;</code></pre>
 <p>Note that the new column <code>out_pmodel</code> now contains the list returned as output of the <code><a href="../reference/rpmodel.html">rpmodel()</a></code> function applied to each row separately. Additional (constant) arguments are just passed to <code><a href="https://purrr.tidyverse.org/reference/map2.html">purrr::pmap</a></code> as arguments.</p>
 <p>If you prefer the elements of these lists to be in separate columns of <code>df</code>, use tidyr to do:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(tidyr)
@@ -271,11 +271,11 @@ df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="s
 <pre><code>## # A tibble: 5 x 20
 ##      tc   vpd   co2 fapar  ppfd    ca gammastar   kmm ns_star   chi    mj
 ##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1  33.6  995.   400     1  353.  40.5      6.65 148.    0.831 0.837 0.578
-## 2  25.5 1003.   400     1  275.  40.5      4.43  73.7   0.990 0.758 0.664
-## 3  14.5 1030.   400     1  326.  40.5      2.48  28.8   1.30  0.619 0.752
-## 4  14.6  980.   400     1  256.  40.5      2.50  29.1   1.29  0.626 0.753
-## 5  25.3  952.   400     1  260.  40.5      4.39  72.6   0.994 0.761 0.667
+## 1  17.0 1082.   400     1  266.  40.5      2.84  35.5    1.21 0.647 0.733
+## 2  24.1  966.   400     1  286.  40.5      4.13  65.5    1.02 0.746 0.678
+## 3  22.6  944.   400     1  284.  40.5      3.82  57.4    1.06 0.731 0.693
+## 4  14.0 1002.   400     1  240.  40.5      2.42  27.6    1.31 0.615 0.756
+## 5  17.3 1035.   400     1  301.  40.5      2.89  36.6    1.20 0.656 0.732
 ## # … with 9 more variables: mc &lt;dbl&gt;, ci &lt;dbl&gt;, lue &lt;dbl&gt;, gpp &lt;dbl&gt;,
 ## #   iwue &lt;dbl&gt;, gs &lt;dbl&gt;, vcmax &lt;dbl&gt;, vcmax25 &lt;dbl&gt;, rd &lt;dbl&gt;</code></pre>
 </div>
@@ -290,7 +290,7 @@ df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="s
 <p>Different instantaneous temperature scaling functions are applied for <span class="math inline">\(V_\text{cmax}\)</span> and dark respiration (<span class="math inline">\(R_d\)</span>).</p>
 <ul>
 <li>
-<code><a href="../reference/calc_ftemp_inst_vcmax.html">calc_ftemp_inst_vcmax()</a></code> calculates the instantaneous temperature response of <span class="math inline">\(V_\text{cmax}\)</span>. Let’s run the P-model for <code>tc = 10</code> (degrees C). The ratio of <span class="math inline">\(V_\text{cmax}/V_\text{cmax25}\)</span> should equal the instantaneous temperatre scaling function for <span class="math inline">\(V_\text{cmax}\)</span> at 10 degrees C (calculated by <code><a href="../reference/calc_ftemp_inst_vcmax.html">calc_ftemp_inst_vcmax(10)</a></code>):</li>
+<code><a href="../reference/calc_ftemp_inst_vcmax.html">calc_ftemp_inst_vcmax()</a></code> calculates the instantaneous temperature response of <span class="math inline">\(V_\text{cmax}\)</span>. Let’s run the P-model for <code>tc = 10</code> (degrees C). The ratio of <span class="math inline">\(V_\text{cmax}/V_\text{cmax25}\)</span> should equal the instantaneous temperature scaling function for <span class="math inline">\(V_\text{cmax}\)</span> at 10 degrees C (calculated by <code><a href="../reference/calc_ftemp_inst_vcmax.html">calc_ftemp_inst_vcmax(10)</a></code>):</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out_pmodel &lt;-<span class="st"> </span><span class="kw"><a href="../reference/rpmodel.html">rpmodel</a></span>( 
   <span class="dt">tc             =</span> <span class="dv">10</span>,           <span class="co"># temperature, deg C</span>
@@ -333,7 +333,7 @@ df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="s
 <pre><code>## [1] "calc_gammastar(10): 1.93016150706341"</code></pre>
 <ul>
 <li>
-<code><a href="../reference/calc_kmm.html">calc_kmm()</a></code> calculates the Michaelis Menten coefficient for Rubisco-limited photosynthesis as a function of temperature (argument <code>tc</code>) and atmospheric pressure (argumnet <code>patm</code>). As above, <code><a href="../reference/calc_kmm.html">calc_kmm()</a></code> requires atmospheric pressur to be given as an argument (in addition to temperature). Corresponding to the <code><a href="../reference/rpmodel.html">rpmodel()</a></code> call above, let’s calculate this using the auxiliary function <code><a href="../reference/calc_patm.html">calc_patm()</a></code> with 0 metres above sea level, and assuming standard atmospheric pressure (101325 Pa at 0 m a.s.l.):</li>
+<code><a href="../reference/calc_kmm.html">calc_kmm()</a></code> calculates the Michaelis Menten coefficient for Rubisco-limited photosynthesis as a function of temperature (argument <code>tc</code>) and atmospheric pressure (argumnet <code>patm</code>). As above, <code><a href="../reference/calc_kmm.html">calc_kmm()</a></code> requires atmospheric pressure to be given as an argument (in addition to temperature). Corresponding to the <code><a href="../reference/rpmodel.html">rpmodel()</a></code> call above, let’s calculate this using the auxiliary function <code><a href="../reference/calc_patm.html">calc_patm()</a></code> with 0 metres above sea level, and assuming standard atmospheric pressure (101325 Pa at 0 m a.s.l.):</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="st">"From rpmodel call:"</span>, out_pmodel<span class="op">$</span>kmm))</code></pre></div>
 <pre><code>## [1] "From rpmodel call: 19.6242174524746"</code></pre>

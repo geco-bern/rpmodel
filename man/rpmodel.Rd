@@ -148,7 +148,7 @@ photosynthesis model, P-model predictions, including all its corollary). This in
                        \deqn{
                              iWUE = ca (1-\chi)/(1.6)
                        }
-        \item \code{gs}: Stomatal conductance (gs, in mol C m−2 Pa−1), calculated as
+        \item \code{gs}: Stomatal conductance (gs, in mol C m-2 Pa-1), calculated as
                        \deqn{
                             gs = A / (ca (1-\chi))
                        }

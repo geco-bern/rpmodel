@@ -11,7 +11,33 @@ LaTeX errors found:
 
 
 ## R CMD check results
+### devtools::check() locally:
 0 errors | 0 warnings | 0 notes
+
+### devtools::check_rhub()
+0 errors | 0 warnings | 1 note 
+
+This is: 
+* checking CRAN incoming feasibility ... NOTE
+Maintainer: 'Benjamin Stocker <benjamin.stocker@gmail.com>'
+New submission
+
+Non-FOSS package license (file LICENSE)
+
+Possibly mis-spelled words in DESCRIPTION:
+  Stocker (7:114)
+  al (7:84, 7:103, 7:125)
+  et (7:81, 7:100, 7:122)
+
+The Title field should be in title case. Current version is:
+'P-model'
+In title case that is:
+'P-Model'
+
+The Description field should not start with the package name,
+  'This package' or similar.
+
+Comment from B. Stocker: That's all ok as is.
 
 ## Downstream dependencies
 * rlang, version 0.4.0 successfully installed.

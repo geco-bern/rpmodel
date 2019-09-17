@@ -6,3 +6,4 @@
 
 * Preparations for submission to CRAN
     - Vectorized all if-statements using ifelse().
+    - Several small fixes in documentation to make it build on several platforms, while resolving devtools::release().

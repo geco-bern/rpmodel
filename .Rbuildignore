@@ -9,3 +9,8 @@
 ^docs_save$
 ^revdep$
 ^pkgdown$
+^\.\.Rcheck$
+^doc$
+^Meta$
+^check.log$
+^rpmodel_1.0.2.tar.gz$
