@@ -1,4 +1,4 @@
-[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/stineb/rsofun?branch=master&svg=true)](https://ci.appveyor.com/project/stineb/rsofun)
+[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/stineb/rpmodel?branch=master&svg=true)](https://ci.appveyor.com/project/stineb/rpmodel)
 <a href="https://www.buymeacoffee.com/H2wlgqCLO" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" height="21px" ></a>
 [![Github All Releases](https://img.shields.io/github/downloads/atom/atom/total.svg)]()
 
