@@ -33,7 +33,7 @@ using the function \link{calc_patm}.}
 \item{elv}{Elevation above sea-level (m.a.s.l.). Is used only for calculating atmospheric pressure (using 
 standard atmosphere (101325 Pa), corrected for elevation (argument \code{elv}), using the function 
 \link{calc_patm}), if argument \code{patm} is not provided. If argument \code{patm} is provided, 
-\code{elv} is overriden.}
+\code{elv} is overridden.}
 
 \item{kphio}{Apparent quantum yield efficiency (unitless). Defaults to 0.0817 for
 \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=FALSE}, 0.0870 for 
@@ -79,7 +79,7 @@ and \code{"none"} for ignoring effects of Jmax limitation.}
 \item{do_ftemp_kphio}{(Optional) A logical specifying whether temperature-dependence of quantum yield
 efficiency after Bernacchi et al., 2003 is to be accounted for. Defaults to \code{TRUE}.}
 
-\item{do_soilmstress}{(Optional) A logical specifying wether an empirical soil moisture stress factor
+\item{do_soilmstress}{(Optional) A logical specifying whether an empirical soil moisture stress factor
 is to be applied to down-scale light use efficiency (and only light use efficiency). Defaults to \code{FALSE}.}
 
 \item{returnvar}{(Optional) A character string of vector of character strings specifying which variables
@@ -144,7 +144,7 @@ photosynthesis model, P-model predictions, including all its corollary). This in
                        where \eqn{Iabs} is given by \code{fapar*ppfd} (arguments), and is
                        \code{NA} if \code{fapar==NA} or \code{ppfd==NA}. Note that \code{gpp} scales with
                        absorbed light. Thus, its units depend on the units in which \code{ppfd} is given.
-        \item \code{iwue}: Intrinsic water use efficiency (iWUE, Pa), calulated as
+        \item \code{iwue}: Intrinsic water use efficiency (iWUE, Pa), calculated as
                        \deqn{
                              iWUE = ca (1-\chi)/(1.6)
                        }
@@ -199,7 +199,7 @@ Bernacchi, C. J., Pimentel, C., and Long, S. P.:  In vivo temperature response f
              Heskel,  M.,  O’Sullivan,  O.,  Reich,  P.,  Tjoelker,  M.,  Weerasinghe,  L.,  Penillard,  A.,Egerton, J.,
              Creek, D., Bloomfield, K., Xiang, J., Sinca, F., Stangl, Z., Martinez-De La Torre, A., Griffin, K.,
              Huntingford, C., Hurry, V., Meir, P., Turnbull, M.,and Atkin, O.:  Convergence in the temperature response
-             of leaf respiration acrossbiomes and plant functional types, Proceedings of the National Academy of Sciences,
+             of leaf respiration across biomes and plant functional types, Proceedings of the National Academy of Sciences,
              113,  3832–3837,  doi:10.1073/pnas.1520282113,2016.
 
              Huber,  M.  L.,  Perkins,  R.  A.,  Laesecke,  A.,  Friend,  D.  G.,  Sengers,  J.  V.,  Assael,M. J.,
@@ -211,12 +211,12 @@ Bernacchi, C. J., Pimentel, C., and Long, S. P.:  In vivo temperature response f
              Ecology  Letters,  17,  82–91,  10.1111/ele.12211,http://dx.doi.org/10.1111/ele.12211, 2014.
 
              Wang, H., Prentice, I. C., Keenan, T. F., Davis, T. W., Wright, I. J., Cornwell, W. K.,Evans, B. J.,
-             and Peng, C.:  Towards a universal model for carbon dioxide uptake byplants, Nat Plants, 3, 734–741, 2017.
+             and Peng, C.:  Towards a universal model for carbon dioxide uptake by plants, Nat Plants, 3, 734–741, 2017.
              Atkin, O. K., et al.:  Global variability in leaf respiration in relation to climate, plant func-tional
              types and leaf traits, New Phytologist, 206, 614–636, doi:10.1111/nph.13253,
              https://nph.onlinelibrary.wiley.com/doi/abs/10.1111/nph.13253.
              
-             Smith, N. G., Keenan, T. F., Colin Prentice, I. , Wang, H. , Wright, I. J., Niinemets, Ü. , Crous, K. Y., 
+             Smith, N. G., Keenan, T. F., Colin Prentice, I. , Wang, H. , Wright, I. J., Niinemets, U. , Crous, K. Y., 
              Domingues, T. F., Guerrieri, R. , Yoko Ishida, F. , Kattge, J. , Kruger, E. L., Maire, V. , Rogers, A. , 
              Serbin, S. P., Tarvainen, L. , Togashi, H. F., Townsend, P. A., Wang, M. , Weerasinghe, L. K. and Zhou, S. 
              (2019), Global photosynthetic capacity is optimized to the environment. Ecol Lett, 22: 506-517. 

@@ -7,7 +7,7 @@
 #' @param patm0 (Optional) Atmospheric pressure at sea level (Pa), defaults to 101325 Pa.
 #'
 #' @details The elevation-dependence of atmospheric pressure is computed by 
-#' assuming a lineardecrease in temperature with elevation and a mean 
+#' assuming a linear decrease in temperature with elevation and a mean 
 #' adiabatic lapse rate (Berberan-Santos et al., 1997):
 #' \deqn{
 #'    p(z) = p0 ( 1 - Lz / TK0) ^ ( g M / (RL) )

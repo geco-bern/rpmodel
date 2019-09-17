@@ -35,6 +35,6 @@ print( (calc_ftemp_inst_rd(25)/calc_ftemp_inst_rd(10)-1)*100 )
 Heskel,  M.,  O’Sullivan,  O.,  Reich,  P.,  Tjoelker,  M.,  Weerasinghe,  L.,  Penillard,  A.,Egerton, J., 
              Creek, D., Bloomfield, K., Xiang, J., Sinca, F., Stangl, Z., Martinez-De La Torre, A., Griffin, K., 
              Huntingford, C., Hurry, V., Meir, P., Turnbull, M.,and Atkin, O.:  Convergence in the temperature response 
-             of leaf respiration acrossbiomes and plant functional types, Proceedings of the National Academy of Sciences,
+             of leaf respiration across biomes and plant functional types, Proceedings of the National Academy of Sciences,
              113,  3832–3837,  doi:10.1073/pnas.1520282113,2016.
 }

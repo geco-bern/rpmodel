@@ -31,7 +31,7 @@
 #' by the argument \code{tc}.
 #'
 #' @references Farquhar,  G.  D.,  von  Caemmerer,  S.,  and  Berry,  J.  A.:
-#'             A  biochemical  model  ofphotosynthetic CO2 assimilation in leaves of
+#'             A  biochemical  model  of photosynthetic CO2 assimilation in leaves of
 #'             C 3 species, Planta, 149, 78–90, 1980.
 #'
 #'             Bernacchi,  C.  J.,  Singsaas,  E.  L.,  Pimentel,  C.,  Portis,  A.
