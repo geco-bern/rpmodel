@@ -92,7 +92,7 @@
       <h1>Usage</h1>
                         <h4 class="author">Beni Stocker</h4>
             
-            <h4 class="date">2019-10-01</h4>
+            <h4 class="date">2019-10-03</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/stineb/rpmodel/blob/master/vignettes/usage.Rmd"><code>vignettes/usage.Rmd</code></a></small>
       <div class="hidden name"><code>usage.Rmd</code></div>
@@ -220,7 +220,7 @@ A = V_{\text{cmax}} \frac{c_i-\Gamma^{\ast}}{c_i + K} = \phi_0 I_{\text{abs}} \f
 <a class="sourceLine" id="cb19-13" data-line-number="13">  <span class="dt">verbose        =</span> <span class="ot">FALSE</span></a>
 <a class="sourceLine" id="cb19-14" data-line-number="14">  )</a>
 <a class="sourceLine" id="cb19-15" data-line-number="15"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(out_ts_pmodel<span class="op">$</span>gpp)</a></code></pre></div>
-<pre><code>## [1] 122.3270 149.1064 139.5530 131.8255 118.9295</code></pre>
+<pre><code>## [1] 116.4998 118.5537 115.5126 109.3857 112.5507</code></pre>
 <p>Note that <code>gpp</code> (as well as all other returned variables) are now vectors of the same length as the vectors provided as inputs.</p>
 </div>
 <div id="p-model-in-the-tidyverse" class="section level3">
@@ -256,11 +256,11 @@ A = V_{\text{cmax}} \frac{c_i-\Gamma^{\ast}}{c_i + K} = \phi_0 I_{\text{abs}} \f
 <pre><code>## # A tibble: 5 x 6
 ##      tc   vpd   co2 fapar  ppfd out_pmodel       
 ##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;list&gt;           
-## 1  19.0  980.   400     1  307. &lt;named list [15]&gt;
-## 2  32.3  971.   400     1  314. &lt;named list [15]&gt;
-## 3  20.5  962.   400     1  354. &lt;named list [15]&gt;
-## 4  16.8 1006.   400     1  291. &lt;named list [15]&gt;
-## 5  22.0 1060.   400     1  318. &lt;named list [15]&gt;</code></pre>
+## 1  29.4 1008.   400     1  287. &lt;named list [15]&gt;
+## 2  17.2 1034.   400     1  308. &lt;named list [15]&gt;
+## 3  21.5 1076.   400     1  263. &lt;named list [15]&gt;
+## 4  18.6 1029.   400     1  319. &lt;named list [15]&gt;
+## 5  22.6 1013.   400     1  320. &lt;named list [15]&gt;</code></pre>
 <p>Note that the new column <code>out_pmodel</code> now contains the list returned as output of the <code><a href="../reference/rpmodel.html">rpmodel()</a></code> function applied to each row separately. Additional (constant) arguments are just passed to <code><a href="https://purrr.tidyverse.org/reference/map2.html">purrr::pmap</a></code> as arguments.</p>
 <p>If you prefer the elements of these lists to be in separate columns of <code>df</code>, use tidyr to do:</p>
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(tidyr)</a>
@@ -271,11 +271,11 @@ A = V_{\text{cmax}} \frac{c_i-\Gamma^{\ast}}{c_i + K} = \phi_0 I_{\text{abs}} \f
 <pre><code>## # A tibble: 5 x 20
 ##      tc   vpd   co2 fapar  ppfd    ca gammastar   kmm ns_star   chi    mj
 ##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1  19.0  980.   400     1  307.  40.5      3.17  42.4   1.15  0.684 0.721
-## 2  32.3  971.   400     1  314.  40.5      6.25 133.    0.853 0.828 0.593
-## 3  20.5  962.   400     1  354.  40.5      3.43  48.3   1.11  0.705 0.709
-## 4  16.8 1006.   400     1  291.  40.5      2.82  35.1   1.22  0.653 0.737
-## 5  22.0 1060.   400     1  318.  40.5      3.70  54.6   1.07  0.713 0.694
+## 1  29.4 1008.   400     1  287.  40.5      5.42 104.    0.907 0.799 0.624
+## 2  17.2 1034.   400     1  308.  40.5      2.88  36.3   1.21  0.655 0.733
+## 3  21.5 1076.   400     1  263.  40.5      3.62  52.5   1.08  0.706 0.697
+## 4  18.6 1029.   400     1  319.  40.5      3.10  40.9   1.16  0.674 0.722
+## 5  22.6 1013.   400     1  320.  40.5      3.83  57.7   1.06  0.725 0.690
 ## # … with 9 more variables: mc &lt;dbl&gt;, ci &lt;dbl&gt;, lue &lt;dbl&gt;, gpp &lt;dbl&gt;,
 ## #   iwue &lt;dbl&gt;, gs &lt;dbl&gt;, vcmax &lt;dbl&gt;, vcmax25 &lt;dbl&gt;, rd &lt;dbl&gt;</code></pre>
 </div>
@@ -325,7 +325,7 @@ A = V_{\text{cmax}} \frac{c_i-\Gamma^{\ast}}{c_i + K} = \phi_0 I_{\text{abs}} \f
 <a href="#parameters-in-the-fvcb-model" class="anchor"></a>Parameters in the FvCB model</h3>
 <ul>
 <li>
-<code><a href="../reference/calc_gammastar.html">calc_gammastar()</a></code> calculates the CO<span class="math inline">\(_2\)</span> compensation point (<span class="math inline">\(\Gamma^\ast\)</span>) in the Farquhar-von Caemmerer-Berry model as a function of temperature (argument <code>tc</code>) and atmospheric pressure (argumnet <code>patm</code>). This is returned by the <code><a href="../reference/rpmodel.html">rpmodel()</a></code> function and by the separate auxiliary function <code><a href="../reference/calc_gammastar.html">calc_gammastar()</a></code>. <code><a href="../reference/calc_gammastar.html">calc_gammastar()</a></code> requires atmospheric pressure (<code>patm</code>) to be given as an argument (in addition to temperature). Corresponding to the <code><a href="../reference/rpmodel.html">rpmodel()</a></code> call above, let’s calculate this using the auxiliary function <code><a href="../reference/calc_patm.html">calc_patm()</a></code> with 0 metres above sea level, and assuming standard atmospheric pressure (101325 Pa at 0 m a.s.l.):</li>
+<code><a href="../reference/calc_gammastar.html">calc_gammastar()</a></code> calculates the CO<span class="math inline">\(_2\)</span> compensation point (<span class="math inline">\(\Gamma^\ast\)</span>) in the Farquhar-von Caemmerer-Berry model as a function of temperature (argument <code>tc</code>) and atmospheric pressure (argument <code>patm</code>). This is returned by the <code><a href="../reference/rpmodel.html">rpmodel()</a></code> function and by the separate auxiliary function <code><a href="../reference/calc_gammastar.html">calc_gammastar()</a></code>. <code><a href="../reference/calc_gammastar.html">calc_gammastar()</a></code> requires atmospheric pressure (<code>patm</code>) to be given as an argument (in addition to temperature). Corresponding to the <code><a href="../reference/rpmodel.html">rpmodel()</a></code> call above, let’s calculate this using the auxiliary function <code><a href="../reference/calc_patm.html">calc_patm()</a></code> with 0 metres above sea level, and assuming standard atmospheric pressure (101325 Pa at 0 m a.s.l.):</li>
 </ul>
 <div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="st">"From rpmodel call :"</span>, out_pmodel<span class="op">$</span>gammastar))</a></code></pre></div>
 <pre><code>## [1] "From rpmodel call : 1.93016150706341"</code></pre>
@@ -333,7 +333,7 @@ A = V_{\text{cmax}} \frac{c_i-\Gamma^{\ast}}{c_i + K} = \phi_0 I_{\text{abs}} \f
 <pre><code>## [1] "calc_gammastar(10): 1.93016150706341"</code></pre>
 <ul>
 <li>
-<code><a href="../reference/calc_kmm.html">calc_kmm()</a></code> calculates the Michaelis Menten coefficient for Rubisco-limited photosynthesis as a function of temperature (argument <code>tc</code>) and atmospheric pressure (argumnet <code>patm</code>). As above, <code><a href="../reference/calc_kmm.html">calc_kmm()</a></code> requires atmospheric pressure to be given as an argument (in addition to temperature). Corresponding to the <code><a href="../reference/rpmodel.html">rpmodel()</a></code> call above, let’s calculate this using the auxiliary function <code><a href="../reference/calc_patm.html">calc_patm()</a></code> with 0 metres above sea level, and assuming standard atmospheric pressure (101325 Pa at 0 m a.s.l.):</li>
+<code><a href="../reference/calc_kmm.html">calc_kmm()</a></code> calculates the Michaelis Menten coefficient for Rubisco-limited photosynthesis as a function of temperature (argument <code>tc</code>) and atmospheric pressure (argument <code>patm</code>). As above, <code><a href="../reference/calc_kmm.html">calc_kmm()</a></code> requires atmospheric pressure to be given as an argument (in addition to temperature). Corresponding to the <code><a href="../reference/rpmodel.html">rpmodel()</a></code> call above, let’s calculate this using the auxiliary function <code><a href="../reference/calc_patm.html">calc_patm()</a></code> with 0 metres above sea level, and assuming standard atmospheric pressure (101325 Pa at 0 m a.s.l.):</li>
 </ul>
 <div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="st">"From rpmodel call:"</span>, out_pmodel<span class="op">$</span>kmm))</a></code></pre></div>
 <pre><code>## [1] "From rpmodel call: 19.6242174524746"</code></pre>
