@@ -30,6 +30,9 @@ print( out_pmodel )
 
 ## Installation
 
+### Stable release
+`rpmodel` is available on CRAN [here](https://cran.r-project.org/web/packages/rpmodel/index.html).
+
 ### Development release
 To install and load the rpmodel package (development release) run the following command in your R terminal: 
 ```r
@@ -37,9 +40,6 @@ if(!require(devtools)){install.packages(devtools)}
 devtools::install_github( "stineb/rpmodel", build_vignettes = TRUE )
 library(rpmodel)
 ```
-
-### Stable release
-`rpmodel` is not yet available on CRAN. We're working on it.
 
 ## Author and contact
 
