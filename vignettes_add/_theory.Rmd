@@ -245,26 +245,7 @@ We can now implement a numerical version of the $J_{\mathrm{max}}$-limited P-mod
 - Maximise $A_J - c \; J_{\mathrm{max}}$.
 
 ```{r}
-maximise_this_chi <- function( chi, kmm, gammastar, ns_star, ca, vpd, beta ){
-  out <- 1.6 * ns_star * vpd / (ca * (1.0 - chi)) + beta * (chi * ca + kmm)/(chi * ca - gammastar)
-  return(out)
-}
-
-maximise_this_jmax <- function( jmax, chi, kmm, gammastar, ns_star, ca, vpd, kphio, ppfd, beta, c_cost ){
-  
-  mj <- (chi * ca - gammastar) / (chi * ca + 2 * gammastar)
-  assim_jmaxlim <- kphio * ppfd * mj * 1 / sqrt(1 + ((4 * kphio * ppfd)/jmax)^2)
-  
-  # ## extended optimality criterion
-  # out <- 1.6 * ns_star * vpd / (ca * (1.0 - chi)) + beta * (chi * ca + kmm)/(chi * ca - gammastar) + c_cost * jmax / assim_jmaxlim
-
-  ## second optimality criterion expressed as a maximisation
-  out <- -(assim_jmaxlim - c_cost * jmax)
-  
-  return(out)
-}
-
-calc_optimal_jmax_num <- function( kmm, gammastar, ns_star, ca, vpd, beta, chi = NULL, fn_chi = NULL, ppfd, kphio, c_cost, fn_jmax){
+calc_optimal_jmax_num <- function( kmm, gammastar, ns_star, ca, vpd, beta, chi = NULL, ppfd, kphio, c_cost){
   #-----------------------------------------------------------------------
   # Input:    - float, 'kmm' : Pa, Michaelis-Menten coeff.
   #           - float, 'ns_star'  : (unitless) viscosity correction factor for water
@@ -276,13 +257,32 @@ calc_optimal_jmax_num <- function( kmm, gammastar, ns_star, ca, vpd, beta, chi =
   #           - ns
   #           - vpd
   #-----------------------------------------------------------------------
+  maximise_this_chi <- function( chi, kmm, gammastar, ns_star, ca, vpd, beta ){
+    out <- 1.6 * ns_star * vpd / (ca * (1.0 - chi)) + beta * (chi * ca + kmm)/(chi * ca - gammastar)
+    return(out)
+  }
+  
+  maximise_this_jmax <- function( jmax, chi, kmm, gammastar, ns_star, ca, vpd, kphio, ppfd, beta, c_cost ){
+    
+    mj <- (chi * ca - gammastar) / (chi * ca + 2 * gammastar)
+    assim_jmaxlim <- kphio * ppfd * mj * 1 / sqrt(1 + ((4 * kphio * ppfd)/jmax)^2)
+    
+    # ## extended optimality criterion
+    # out <- 1.6 * ns_star * vpd / (ca * (1.0 - chi)) + beta * (chi * ca + kmm)/(chi * ca - gammastar) + c_cost * jmax / assim_jmaxlim
+  
+    ## second optimality criterion expressed as a maximisation
+    out <- -(assim_jmaxlim - c_cost * jmax)
+    
+    return(out)
+  }
+  
   if (is.null(chi)){
     ## first get optimal chi independent of jmax
     out_optim_chi <- optimr::optimr(
       par       = 0.7,
       lower     = 0.1,
       upper     = 0.99,
-      fn        = fn_chi,
+      fn        = maximise_this_chi,
       kmm       = kmm,
       gammastar = gammastar,
       ns_star   = ns_star,
@@ -300,7 +300,7 @@ calc_optimal_jmax_num <- function( kmm, gammastar, ns_star, ca, vpd, beta, chi =
     par       = 10,
     lower     = 0.0,
     upper     = 500,
-    fn        = fn_jmax,
+    fn        = maximise_this_jmax,
     chi       = chi,
     kmm       = kmm,
     gammastar = gammastar,
