@@ -333,7 +333,7 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
   ## Quantities that scale linearly with absorbed light
   ##-----------------------------------------------------------------------
   len <- length(out_lue_vcmax[[1]])
-  iabs <- fapar * ppfd
+  iabs <- rep(fapar * ppfd, len)
 
   ## Gross primary productivity
   gpp <- ifelse(!is.na(iabs), iabs * out_lue_vcmax$lue, rep(NA, len))   # in g C m-2 s-1
@@ -350,10 +350,10 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
 
   ## construct list for output
   out <- list(
-              ca              = ca,
-              gammastar       = gammastar,
-              kmm             = kmm,
-              ns_star         = ns_star,
+              ca              = rep(ca, len),
+              gammastar       = rep(gammastar, len),
+              kmm             = rep(kmm, len),
+              ns_star         = rep(ns_star, len),
               chi             = out_optchi$chi,
               mj              = out_optchi$mj,
               mc              = out_optchi$mc,
