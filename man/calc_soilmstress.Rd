@@ -4,8 +4,7 @@
 \alias{calc_soilmstress}
 \title{Calculates an empirical soil moisture stress factor}
 \usage{
-calc_soilmstress(soilm, meanalpha = 1, apar_soilm = 0,
-  bpar_soilm = 0.685)
+calc_soilmstress(soilm, meanalpha = 1, apar_soilm = 0, bpar_soilm = 0.685)
 }
 \arguments{
 \item{soilm}{Relative soil moisture as a fraction 

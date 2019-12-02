@@ -137,12 +137,28 @@
     <p>R implementation of the P-model and its corrolary predictions (Prentice et al., 2014; Han et al., 2017).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>rpmodel</span>(<span class='no'>tc</span>, <span class='no'>vpd</span>, <span class='no'>co2</span>, <span class='no'>fapar</span>, <span class='no'>ppfd</span>, <span class='kw'>patm</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>elv</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
-  <span class='kw'>kphio</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span>(<span class='no'>do_ftemp_kphio</span>, <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span>(<span class='no'>do_soilmstress</span>, <span class='fl'>0.087</span>, <span class='fl'>0.0817</span>),
-  <span class='fl'>0.0492</span>), <span class='kw'>beta</span> <span class='kw'>=</span> <span class='fl'>146</span>, <span class='kw'>soilm</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>meanalpha</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>apar_soilm</span> <span class='kw'>=</span> <span class='fl'>0</span>,
-  <span class='kw'>bpar_soilm</span> <span class='kw'>=</span> <span class='fl'>0.685</span>, <span class='kw'>c4</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>method_optci</span> <span class='kw'>=</span> <span class='st'>"prentice14"</span>,
-  <span class='kw'>method_jmaxlim</span> <span class='kw'>=</span> <span class='st'>"wang17"</span>, <span class='kw'>do_ftemp_kphio</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>do_soilmstress</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>returnvar</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>rpmodel</span>(
+  <span class='no'>tc</span>,
+  <span class='no'>vpd</span>,
+  <span class='no'>co2</span>,
+  <span class='no'>fapar</span>,
+  <span class='no'>ppfd</span>,
+  <span class='kw'>patm</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
+  <span class='kw'>elv</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
+  <span class='kw'>kphio</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span>(<span class='no'>do_ftemp_kphio</span>, <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span>(<span class='no'>do_soilmstress</span>, <span class='fl'>0.087182</span>, <span class='fl'>0.081785</span>), <span class='fl'>0.049977</span>),
+  <span class='kw'>beta</span> <span class='kw'>=</span> <span class='fl'>146</span>,
+  <span class='kw'>soilm</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>meanalpha</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>apar_soilm</span> <span class='kw'>=</span> <span class='fl'>0</span>,
+  <span class='kw'>bpar_soilm</span> <span class='kw'>=</span> <span class='fl'>0.733</span>,
+  <span class='kw'>c4</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>method_optci</span> <span class='kw'>=</span> <span class='st'>"prentice14"</span>,
+  <span class='kw'>method_jmaxlim</span> <span class='kw'>=</span> <span class='st'>"wang17"</span>,
+  <span class='kw'>do_ftemp_kphio</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>do_soilmstress</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>returnvar</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -414,25 +430,25 @@ photosynthesis model, P-model predictions, including all its corollary). This in
 #&gt; [1] 28.14209
 #&gt; 
 #&gt; $lue
-#&gt; [1] 0.2544867
+#&gt; [1] 0.2547515
 #&gt; 
 #&gt; $gpp
-#&gt; [1] 76.34602
+#&gt; [1] 76.42545
 #&gt; 
 #&gt; $iwue
 #&gt; [1] 7.742446
 #&gt; 
 #&gt; $gs
-#&gt; [1] 0.5131212
+#&gt; [1] 0.513655
 #&gt; 
 #&gt; $vcmax
-#&gt; [1] 19.02667
+#&gt; [1] 19.04646
 #&gt; 
 #&gt; $vcmax25
-#&gt; [1] 29.86563
+#&gt; [1] 29.8967
 #&gt; 
 #&gt; $rd
-#&gt; [1] 0.3022512
+#&gt; [1] 0.3025656
 #&gt; </div><div class='input'>
 </div></pre>
   </div>

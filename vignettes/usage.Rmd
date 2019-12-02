@@ -13,7 +13,7 @@ vignette: >
   %\VignetteIndexEntry{Running the P-model in R}
 ---
 
-The rpmodel package implements the P-model as described in Stocker et al. (2019) *Geosci. Mod. Dev.*. The main function available through the package is `rpmodel()`, which returns a list of quantities (see `?rpmodel`) for a given set of inputs. An additional set of important functions that are used within `rpmodel()` are also available through this package. Usage examples are given below.
+The rpmodel package implements the P-model as described in Stocker et al. (2019) *Geosci. Mod. Dev.* The main function available through the package is `rpmodel()`, which returns a list of quantities (see `?rpmodel`) for a given set of inputs. An additional set of important functions that are used within `rpmodel()` are also available through this package. Usage examples are given below.
 
 ## Example P-model run
 
@@ -34,9 +34,18 @@ out_pmodel <- rpmodel(
   method_optci   = "prentice14",
   method_jmaxlim = "none",
   do_ftemp_kphio = FALSE,
+  do_soilmstress = FALSE,
   verbose        = TRUE
   )
 print(out_pmodel)
+```
+
+Here, we specified the model paramters (arguments `beta` and `kphio`). This overrides the defaults, where `rpmodel()` uses the parameters as calibrated by Stocker et al. (2019), depending on the choices for arguments `do_ftemp_kphio` and `do_soilmstress`:
+```{r eval=FALSE}
+kphio = ifelse(do_ftemp_kphio, ifelse(do_soilmstress, 0.087182, 0.081785), 0.049977)
+beta = 146.0
+apar_soilm = 0.0
+bpar_soilm = 0.73300
 ```
 
 The function returns a list of variables (see also man page by `?rpmodel`), including $V_{\mathrm{cmax}}$, $g_s$, and all the parameters of the photosynthesis model ($K$, $\Gamma^{\ast}$), which are all internally consistent, as can be verified for...
@@ -71,7 +80,7 @@ Yes.
 
 ### Elevation and pressure
 
-Above, atmospheric pressure (`patm`) was not provided as an argument, but elevation (`elv`) was. Hence the warning was printed (only when `verbose = TRUE`), saying: `Atmospheric pressure (patm) not provided. Calculating it as a function of elevation (elv), assuming standard atmosphere (101325 Pa at sea level).`. Alternatively, we can provide atmospheric pressure (`patm`) as input, which overrides the argument `elv`.
+Above, atmospheric pressure (`patm`) was not provided as an argument, but elevation (`elv`) was. Hence the warning was printed (only when `verbose = TRUE`), saying: `Atmospheric pressure (patm) not provided. Calculating it as a function of elevation (elv),` `Assuming standard atmosphere (101325 Pa at sea level).`. Alternatively, we can provide atmospheric pressure (`patm`) as input, which overrides the argument `elv`.
 
 ### P-model for time series
 
@@ -97,7 +106,7 @@ Note that `gpp` (as well as all other returned variables) are now vectors of the
 
 ### P-model in the tidyverse
 
-We can create a data frame (in [tidyverse](https://www.tidyverse.org/) this is a tibble) and apply the `rpmode()` function to each row.
+We can create a data frame (in [tidyverse](https://www.tidyverse.org/) this is a tibble) and apply the `rpmodel()` function to each row.
 ```{r}
 library(dplyr)
 library(purrr)
@@ -283,3 +292,9 @@ print(paste("calc_soilmstress(0.2, apar_soilm = 0.1, bpar_soilm = 0.7, meanalpha
 <!--   geom_line() -->
 
 <!-- ``` -->
+
+## References
+
+Stocker, B. D., Wang, H., Smith, N. G., Harrison, S. P., Keenan, T. F., Sandoval, D., Davis, T., and Prentice, I. C.: P-model v1.0: An optimality-based light use efficiency model for simulating ecosystem gross primary production, Geosci. Model Dev. Discuss., https://doi.org/10.5194/gmd-2019-200, in review, 2019.
+
+

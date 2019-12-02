@@ -193,8 +193,8 @@
 #' @examples rpmodel( tc = 20, vpd = 1000, co2 = 400, fapar = 1, ppfd = 300, elv = 0)
 #'
 rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA, 
-                     kphio = ifelse(do_ftemp_kphio, ifelse(do_soilmstress, 0.0870, 0.0817), 0.0492), 
-                     beta = 146.0, soilm = 1.0, meanalpha = 1.0, apar_soilm = 0.0, bpar_soilm = 0.685, 
+                     kphio = ifelse(do_ftemp_kphio, ifelse(do_soilmstress, 0.087182, 0.081785), 0.049977), 
+                     beta = 146.0, soilm = 1.0, meanalpha = 1.0, apar_soilm = 0.0, bpar_soilm = 0.73300, 
                      c4 = FALSE, method_optci = "prentice14", method_jmaxlim = "wang17", 
                      do_ftemp_kphio = TRUE, do_soilmstress = FALSE, returnvar = NULL, verbose = FALSE ){
   
@@ -210,32 +210,9 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
   # Fixed parameters
   #-----------------------------------------------------------------------
   c_molmass <- 12.0107  # molecular mass of carbon (g)
-  kPo   <- 101325.0     # standard atmosphere, Pa (Allen, 1973)
-  kTo   <- 25.0         # base temperature, deg C (Prentice, unpublished)
-  # beta <- 244.033
+  kPo <- 101325.0       # standard atmosphere, Pa (Allen, 1973)
+  kTo <- 25.0           # base temperature, deg C (Prentice, unpublished)
   rd_to_vcmax <- 0.015  # Ratio of Rdark to Vcmax25, number from Atkin et al., 2015 for C3 herbaceous
-
-  # Metabolic N ratio (N per unit Vcmax)
-  # Reference: Harrison et al., 2009, Plant, Cell and Environment; Eq. 3
-  # THIS IS USED FOR STUFF NOT RETURNED BY THE FUNCTION SO FAR.
-  #-----------------------------------------------------------------------
-  mol_weight_rubisco <- 5.5e5    # molecular weight of Rubisco, (g R)(mol R)-1
-  n_conc_rubisco     <- 1.14e-2  # N concentration in rubisco, (mol N)(g R)-1
-  cat_turnover_per_site <- 2.33  # catalytic turnover rate per site at 25 deg C, (mol CO2)(mol R sites)-1; use 2.33 instead of (3.5) as not all Rubisco is active (see Harrison et al., 2009)
-  cat_sites_per_mol_R   <- 8.0   # number of catalytic sites per mol R, (mol R sites)(mol R)-1
-
-  # Metabolic N ratio (mol N s (mol CO2)-1 )
-  n_v <- mol_weight_rubisco * n_conc_rubisco / ( cat_turnover_per_site * cat_sites_per_mol_R )
-
-  ## parameters for Narea -- under construction
-  # sla <- 0.0014       # specific leaf area (m2/gC)
-
-  # N in cell walls: Slope of WN~LMA is 0.0002 mol N / g leaf mass (Hikosaka&Shigeno, 2009)
-  # With 0.5 g C / g leaf mass and 14 g N / mol N: n_cw = 0.0056 g N / g C
-
-  # ncw <- 0.0056          # N:C ratio in cell walls, working hypothesis: leaf N is solely determined by Vcmax25
-  # n_v  <- 1.0/40.96    # gN ??mol-1 s-1. Value 40.96 is 'sv' in Table 2 in Kattge et al., 2009, GCB, C3 herbaceous
-  ## -- under construction
 
   #-----------------------------------------------------------------------
   # Temperature dependence of quantum yield efficiency
@@ -290,11 +267,6 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
     ##-----------------------------------------------------------------------
     out_optchi <- calc_optimal_chi( kmm, gammastar, ns_star, ca, vpd, beta )
 
-  # } else if (method_optci=="prentice14_num"){
-  # 
-  #   ## Full formualation (Gamma-star not zero), numerical solution
-  #   ##-----------------------------------------------------------------------
-  #   out_optchi_num <- calc_optimal_chi_num( kmm, gammastar, ns_star, ca, vpd, beta ) # numerical solution
 
   } else {
 
@@ -309,9 +281,6 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
   ##-----------------------------------------------------------------------
   ## Corrolary preditions
   ##-----------------------------------------------------------------------
-  # ## stomatal conductance
-  # gs <- gpp  / ( ca - ci )
-
   ## intrinsic water use efficiency (in Pa)
   iwue = ( ca - ci ) / 1.6
 
@@ -349,9 +318,8 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
 
 
   ##-----------------------------------------------------------------------
-  ## Corrolary preditions (This is prelimirary!)
+  ## Corrolary preditions
   ##-----------------------------------------------------------------------
-
   ## Vcmax25 (vcmax normalized to 25 deg C)
   ftemp25_inst_vcmax  <- calc_ftemp_inst_vcmax( tc, tc, tcref = 25.0 )
   vcmax25_unitiabs  <- out_lue_vcmax$vcmax_unitiabs  / ftemp25_inst_vcmax
@@ -359,9 +327,6 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
   ## Dark respiration at growth temperature
   ftemp_inst_rd <- calc_ftemp_inst_rd( tc )
   rd_unitiabs  <- rd_to_vcmax * (ftemp_inst_rd / ftemp25_inst_vcmax) * out_lue_vcmax$vcmax_unitiabs
-
-  # ## active metabolic leaf N (canopy-level), mol N/m2-ground (same equations as for nitrogen content per unit leaf area, gN/m2-leaf)
-  # actnv_unitiabs  <- vcmax25_unitiabs  * n_v
 
 
   ##-----------------------------------------------------------------------
@@ -382,9 +347,6 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
 
   ## Dark respiration
   rd <- ifelse(!is.na(iabs), iabs * rd_unitiabs, rep(NA, len))
-
-  # ## active metabolic leaf N (canopy-level), mol N/m2-ground (same equations as for nitrogen content per unit leaf area, gN/m2-leaf)
-  # actnv <- ifelse(!is.na(iabs), iabs * actnv_unitiabs, rep(NA, len)) 
 
   ## construct list for output
   out <- list(
@@ -429,12 +391,6 @@ calc_optimal_chi <- function( kmm, gammastar, ns_star, ca, vpd, beta ){
   xi  <- sqrt( (beta * ( kmm + gammastar ) ) / ( 1.6 * ns_star ) )
   chi <- gammastar / ca + ( 1.0 - gammastar / ca ) * xi / ( xi + sqrt(vpd) )
 
-  ## consistent with this, directly return light-use-efficiency (mc)
-  ## see Eq. 13 in 'Simplifying_LUE.pdf'
-
-  ## light use efficiency (mc)
-  # mc <- (ca - gammastar)/(ca + 2.0 * gammastar + 3.0 * gammastar * sqrt( (1.6 * vpd) / (beta * (K + gammastar) / ns_star ) ) )
-
   # Define variable substitutes:
   vdcg <- ca - gammastar
   vacg <- ca + 2.0 * gammastar
@@ -456,10 +412,6 @@ calc_optimal_chi <- function( kmm, gammastar, ns_star, ca, vpd, beta ){
   ## alternative variables
   gamma <- gammastar / ca
   kappa <- kmm / ca
-
-  # ## mj
-  # mj_test <- (ci - gamma) / (ci + 2 * gamma)
-  # print(paste("mj should be equal: ", mj, mj_test))
 
   ## mc
   mc <- (chi - gamma) / (chi + kappa)
@@ -524,8 +476,6 @@ calc_lue_vcmax_smith19 <- function(out_optchi, kphio, ftemp_kphio, c_molmass, so
   theta <- 0.85    # should be calibratable?
   c_cost <- 0.05336251
 
-  # ## override?
-  # kphio <- 0.257
 
   ## factors derived as in Smith et al., 2019
   omega <- calc_omega( theta = theta, c_cost = c_cost, m = out_optchi$mj )          # Eq. S4
@@ -589,54 +539,6 @@ calc_lue_vcmax_c4 <- function( kphio, ftemp_kphio, c_molmass, soilmstress ){
 
   return(out)
 }
-
-
-# calc_optimal_chi_num <- function( kmm, gammastar, ns_star, ca, vpd, beta ){
-#   #-----------------------------------------------------------------------
-#   # Input:    - float, 'kmm' : Pa, Michaelis-Menten coeff.
-#   #           - float, 'ns_star'  : (unitless) viscosity correction factor for water
-#   #           - float, 'vpd' : Pa, vapor pressure deficit
-#   # Output:   float, ratio of ci/ca (chi)
-#   # Features: Returns an estimate of leaf internal to ambient CO2
-#   #           partial pressure following the "simple formulation".
-#   # Depends:  - kc
-#   #           - ns
-#   #           - vpd
-#   #-----------------------------------------------------------------------
-#   maximise_this <- function( chi, kmm, gammastar, ns_star, ca, vpd, beta ){
-#     out <- 1.6 * ns_star * vpd / (ca * (1.0 - chi)) + beta * (chi * ca + kmm)/(chi * ca - gammastar)
-#     return(out)
-#   }
-# 
-#   out_optim <- optimr::optimr(
-#     par       = 0.7,
-#     lower     = 0.01,
-#     upper     = 0.99,
-#     fn        = maximise_this,
-#     kmm       = kmm,
-#     gammastar = gammastar,
-#     ns_star   = ns_star,
-#     ca        = ca,
-#     vpd       = vpd,
-#     beta      = beta,
-#     method    = "L-BFGS-B",
-#     control   = list( maxit = 100, maximize = TRUE )
-#     )
-# 
-#   chi <- out_optim$par
-# 
-#   ## mj
-#   mj <- (ca * chi - gammastar) / (ca * chi + 2 * gammastar)
-# 
-#   ## mc
-#   mc <- (ca * chi - gammastar) / (ca * chi + kmm)
-# 
-#   ## mj:mv
-#   mjoc <- (ca * chi + kmm) / (ca * chi + 2 * gammastar)
-# 
-#   out <- list( chi=chi, mc=mc, mj=mj, mjoc=mjoc )
-#   return(out)
-# }
 
 
 calc_chi_c4 <- function(){
@@ -797,131 +699,3 @@ calc_viscosity_h2o <- function( tc, p ) {
 
   return( mu )
 }
-
-
-calc_viscosity_h2o_vogel <- function( tc ) {
-  #-----------------------------------------------------------------------
-  # Input:    - float, ambient temperature (tc), degrees C
-  # Return:   float, viscosity of water (mu), Pa s
-  # Features: Calculates viscosity of water at a given temperature and
-  #           pressure.
-  # Depends:  density_h2o
-  # Ref:      Vogel ...
-  #-----------------------------------------------------------------------
-
-  tk <- tc + 272.15
-
-  a <- -3.7188
-  b <- 578.919
-  c <- 137.546
-
-  visc <- 1e-3 * exp(a + b/(tk - c))
-
-  return( visc )
-}
-
-
-# calc_dgpp <- function( fapar, dppfd, mlue ) {
-#   ##//////////////////////////////////////////////////////////////////
-#   ## Calculates daily GPP (mol CO2)
-#   ##------------------------------------------------------------------
-#   ## GPP is light use efficiency multiplied by absorbed light and C-P-alpha
-#   dgpp <- fapar * dppfd * mlue
-
-#   return( dgpp )
-# }
-
-
-# calc_drd <- function( lai, meanmppfd, mrd_unitiabs ){
-#   ##//////////////////////////////////////////////////////////////////
-#   ## Calculates daily dark respiration (Rd) based on monthly mean
-#   ## PPFD (assumes acclimation on a monthly time scale) (mol CO2).
-#   ## meanmppfd is monthly mean PPFD, averaged over daylight seconds (mol m-2 s-1)
-#   ##------------------------------------------------------------------
-#   fapar <- get_fapar( lai )
-
-#   ## Dark respiration takes place during night and day (24 hours)
-#   drd <- fapar * meanmppfd * mrd_unitiabs * 60.0 * 60.0 * 24.0
-
-#   return( drd )
-# }
-
-
-# calc_dtransp <- function( lai, dppfd, transp_unitiabs ) {
-#   ##//////////////////////////////////////////////////////////////////
-#   ## Calculates daily GPP (mol H2O).
-#   ##------------------------------------------------------------------
-#   fapar <- get_fapar( lai )
-
-#   ## GPP is light use efficiency multiplied by absorbed light and C-P-alpha
-#   dtransp <- fapar * dppfd * transp_unitiabs
-
-#   return( dtransp )
-# }
-
-
-# calc_vcmax <- function( lai, meanmppfd, vcmax_unitiabs ) {
-#   ##//////////////////////////////////////////////////////////////////
-#   ## Calculates leaf-level metabolic N content per unit leaf area as a
-#   ## function of Vcmax25.
-#   ##------------------------------------------------------------------
-#   fapar <- get_fapar( lai )
-
-#   ## Calculate leafy-scale Rubisco-N as a function of LAI and current LUE
-#   vcmax <- fapar * meanmppfd * vcmax_unitiabs / lai
-
-#   return( vcmax )
-
-# }
-
-
-# calc_nr_leaf <- function( lai, mactnv_unitiabs, meanmppfd ) {
-#   ##//////////////////////////////////////////////////////////////////
-#   ## Calculates leaf-level metabolic N content per unit leaf area as a
-#   ## function of Vcmax25.
-#   ##------------------------------------------------------------------
-#   fapar <- get_fapar( lai )
-
-#   ## Calculate leafy-scale Rubisco-N as a function of LAI and current LUE
-#   nr_leaf <- max( fapar * meanmppfd[] * mactnv_unitiabs[] ) / lai
-
-#   return( nr_leaf )
-# }
-
-
-# calc_n_rubisco_area <- function( vcmax25 ){
-#   #-----------------------------------------------------------------------
-#   # Input:    - vcmax25 : leaf level Vcmax  at 25 deg C, (mol CO2) m-2 s-1
-#   # Output:   - n_area  : Rubisco N content per unit leaf area, (g N)(m-2 leaf)
-#   # Features: Returns Rubisco N content per unit leaf area for a given
-#   #           Vcmax.
-#   # Reference: Harrison et al., 2009, Plant, Cell and Environment; Eq. 3
-#   #-----------------------------------------------------------------------
-
-#   mol_weight_rubisco <- 5.5e5    # molecular weight of Rubisco, (g R)(mol R)-1
-#   n_conc_rubisco     <- 1.14e-2  # N concentration in rubisco, (mol N)(g R)-1
-#   mol_weight_n       <- 14.0067  # molecular weight of N, (g N)(mol N)-1
-#   cat_turnover_per_site <- 3.5   # catalytic turnover rate per site at 25 deg C, (mol CO2)(mol R sites)-1
-#   cat_sites_per_mol_R   <- 8.0   # number of catalytic sites per mol R, (mol R sites)(mol R)-1
-
-#   # Metabolic N ratio
-#   n_v <- mol_weight_rubisco * n_conc_rubisco * mol_weight_n / ( cat_turnover_per_site * cat_sites_per_mol_R )
-
-#   n_rubisco_area <- vcmax25 * n_v
-
-#   return(n_rubisco_area)
-# }
-
-# get_fapar <- function( lai ){
-#   ##////////////////////////////////////////////////////////////////
-#   ## Function returns fractional plant cover an individual
-#   ## Eq. 7 in Sitch et al., 2003
-#   ##----------------------------------------------------------------
-#   kbeer <- 0.5
-
-#   fapar <- ( 1.0 - exp( -1.0 * kbeer * lai ) )
-
-#   return( fapar )
-
-# }
-

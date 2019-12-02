@@ -8,7 +8,7 @@ Description: Implements the P-model (Stocker et al., 2019 <doi:10.5194/gmd-2019-
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.0
 Imports: rlang
 Suggests: dplyr, purrr, tidyr, knitr
 VignetteBuilder: knitr

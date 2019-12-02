@@ -4,12 +4,28 @@
 \alias{rpmodel}
 \title{Invokes a P-model function call}
 \usage{
-rpmodel(tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
-  kphio = ifelse(do_ftemp_kphio, ifelse(do_soilmstress, 0.087, 0.0817),
-  0.0492), beta = 146, soilm = 1, meanalpha = 1, apar_soilm = 0,
-  bpar_soilm = 0.685, c4 = FALSE, method_optci = "prentice14",
-  method_jmaxlim = "wang17", do_ftemp_kphio = TRUE,
-  do_soilmstress = FALSE, returnvar = NULL, verbose = FALSE)
+rpmodel(
+  tc,
+  vpd,
+  co2,
+  fapar,
+  ppfd,
+  patm = NA,
+  elv = NA,
+  kphio = ifelse(do_ftemp_kphio, ifelse(do_soilmstress, 0.087182, 0.081785), 0.049977),
+  beta = 146,
+  soilm = 1,
+  meanalpha = 1,
+  apar_soilm = 0,
+  bpar_soilm = 0.733,
+  c4 = FALSE,
+  method_optci = "prentice14",
+  method_jmaxlim = "wang17",
+  do_ftemp_kphio = TRUE,
+  do_soilmstress = FALSE,
+  returnvar = NULL,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{tc}{Temperature, relevant for photosynthesis (deg C)}

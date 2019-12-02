@@ -17,7 +17,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="P-Model">
-<meta property="og:description" content="Provides an R implementation of the P-model (Stocker et al., 2019 &lt;doi:10.5194/gmd-2019-200&gt;), which predicts acclimated parameters of the enzyme kinetics of C3 photosynthesis, assimilation, and dark respiration rates as a function of the environment (temperature, CO2, vapour pressure deficit, light, atmospheric pressure).">
+<meta property="og:description" content="Implements the P-model (Stocker et al., 2019 &lt;doi:10.5194/gmd-2019-200&gt;), predicting acclimated parameters of the enzyme kinetics of C3 photosynthesis, assimilation, and dark respiration rates as a function of the environment (temperature, CO2, vapour pressure deficit, light, atmospheric pressure).">
 <meta property="og:image" content="/logo.png">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -89,7 +89,6 @@
       </header><div class="row">
   <div class="contents col-md-9">
 
-
 <div id="purpose" class="section level2">
 <h2 class="hasAnchor">
 <a href="#purpose" class="anchor"></a>Purpose</h2>
@@ -140,9 +139,9 @@
 <div id="references" class="section level2">
 <h2 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h2>
-<p>Stocker, B. D., Wang, H., Smith, N. G., Harrison, S. P., Keenan, T. F., Sandoval, D., Davis, T., and Prentice, I. C.: P-model v1.0: An optimality-based light use efficiency model for simulating ecosystem gross primary production, Geosci. Model Dev. Discuss., <a href="https://doi.org/10.5194/gmd-2019-200" class="uri">https://doi.org/10.5194/gmd-2019-200</a>, in review, 2019.</p>
+<p>Stocker, B. D., Wang, H., Smith, N. G., Harrison, S. P., Keenan, T. F., Sandoval, D., Davis, T., and Prentice, I. C.: P-model v1.0: An optimality-based light use efficiency model for simulating ecosystem gross primary production, Geosci. Model Dev. Discuss., in review, 2019.</p>
 <p>Wang, H., Prentice, I. C., Keenan, T. F., Davis, T. W., Wright, I. J., Cornwell, W. K.,Evans, B. J., and Peng, C.: Towards a universal model for carbon dioxide uptake by plants, Nat Plants, 3, 734–741, 2017.</p>
-<p>Prentice, I. C., Dong, N., Gleason, S. M., Maire, V., and Wright, I. J.: Balancingthe costs of carbon gain and water transport: testing a new theoretical frameworkfor plant functional ecology, Ecology Letters, 17, 82–91, 10.1111/ele.12211, <a href="http://dx.doi.org/10.1111/ele.12211" class="uri">http://dx.doi.org/10.1111/ele.12211</a>, 2014.</p>
+<p>Prentice, I. C., Dong, N., Gleason, S. M., Maire, V., and Wright, I. J.: Balancingthe costs of carbon gain and water transport: testing a new theoretical frameworkfor plant functional ecology, Ecology Letters, 17, 82–91, 10.1111/ele.12211, 2014.</p>
 </div>
 <div id="acknowledgement" class="section level2">
 <h2 class="hasAnchor">
@@ -156,6 +155,8 @@
     <div class="links">
 <h2>Links</h2>
 <ul class="list-unstyled">
+<li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=rpmodel">https://​cloud.r-project.org/​package=rpmodel</a>
+</li>
 <li>Browse source code at <br><a href="https://github.com/stineb/rpmodel">https://​github.com/​stineb/​rpmodel</a>
 </li>
 <li>Report a bug at <br><a href="https://github.com/stineb/rpmodel/issues">https://​github.com/​stineb/​rpmodel/​issues</a>
@@ -181,15 +182,7 @@
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
-<ul class="list-unstyled">
-<li><a href="https://ci.appveyor.com/project/stineb/rpmodel"><img src="https://ci.appveyor.com/api/projects/status/github/stineb/rpmodel?branch=master&amp;svg=true" alt="AppVeyor build status"></a></li>
-<li><a href="https://www.buymeacoffee.com/H2wlgqCLO" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" height="21px"></a></li>
-<li><a href=""><img src="https://img.shields.io/github/downloads/atom/atom/total.svg" alt="Github All Releases"></a></li>
-</ul>
-</div>
-</div>
+  </div>
 </div>
 
 
