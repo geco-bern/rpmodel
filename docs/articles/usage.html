@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rpmodel</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
       </span>
     </div>
 
@@ -226,7 +226,7 @@ A = V_{\text{cmax}} \frac{c_i-\Gamma^{\ast}}{c_i + K} = \phi_0 I_{\text{abs}} \f
 <a class="sourceLine" id="cb20-13" data-line-number="13">  <span class="dt">verbose        =</span> <span class="ot">FALSE</span></a>
 <a class="sourceLine" id="cb20-14" data-line-number="14">  )</a>
 <a class="sourceLine" id="cb20-15" data-line-number="15"><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(out_ts_pmodel<span class="op">$</span>gpp)</a></code></pre></div>
-<pre><code>## [1] 137.7037 121.4762 144.9073 107.4208 132.4461</code></pre>
+<pre><code>## [1] 116.0536 139.8199 115.8085 133.0066 156.4714</code></pre>
 <p>Note that <code>gpp</code> (as well as all other returned variables) are now vectors of the same length as the vectors provided as inputs.</p>
 </div>
 <div id="p-model-in-the-tidyverse" class="section level3">
@@ -262,11 +262,11 @@ A = V_{\text{cmax}} \frac{c_i-\Gamma^{\ast}}{c_i + K} = \phi_0 I_{\text{abs}} \f
 <pre><code>## # A tibble: 5 x 6
 ##      tc   vpd   co2 fapar  ppfd out_pmodel       
 ##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;list&gt;           
-## 1  41.4  996.   400     1  302. &lt;named list [15]&gt;
-## 2  17.6 1049.   400     1  309. &lt;named list [15]&gt;
-## 3  12.9 1005.   400     1  303. &lt;named list [15]&gt;
-## 4  33.4 1009.   400     1  367. &lt;named list [15]&gt;
-## 5  19.0 1019.   400     1  318. &lt;named list [15]&gt;</code></pre>
+## 1  12.1 1035.   400     1  330. &lt;named list [15]&gt;
+## 2  19.4  974.   400     1  239. &lt;named list [15]&gt;
+## 3  20.9  929.   400     1  301. &lt;named list [15]&gt;
+## 4  26.6 1061.   400     1  315. &lt;named list [15]&gt;
+## 5  26.7 1059.   400     1  271. &lt;named list [15]&gt;</code></pre>
 <p>Note that the new column <code>out_pmodel</code> now contains the list returned as output of the <code><a href="../reference/rpmodel.html">rpmodel()</a></code> function applied to each row separately. Additional (constant) arguments are just passed to <code><a href="https://purrr.tidyverse.org/reference/map2.html">purrr::pmap</a></code> as arguments.</p>
 <p>If you prefer the elements of these lists to be in separate columns of <code>df</code>, use tidyr to do:</p>
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(tidyr)</a>
@@ -277,11 +277,11 @@ A = V_{\text{cmax}} \frac{c_i-\Gamma^{\ast}}{c_i + K} = \phi_0 I_{\text{abs}} \f
 <pre><code>## # A tibble: 5 x 20
 ##      tc   vpd   co2 fapar  ppfd    ca gammastar   kmm ns_star   chi    mj
 ##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1  41.4  996.   400     1  302.  40.5      9.60 289.    0.715 0.894 0.480
-## 2  17.6 1049.   400     1  309.  40.5      2.94  37.5   1.20  0.658 0.729
-## 3  12.9 1005.   400     1  303.  40.5      2.27  25.0   1.35  0.599 0.764
-## 4  33.4 1009.   400     1  367.  40.5      6.59 146.    0.834 0.835 0.580
-## 5  19.0 1019.   400     1  318.  40.5      3.17  42.5   1.15  0.680 0.719
+## 1  12.1 1035.   400     1  330.  40.5      2.18  23.5   1.38  0.585 0.767
+## 2  19.4  974.   400     1  239.  40.5      3.23  43.8   1.14  0.689 0.718
+## 3  20.9  929.   400     1  301.  40.5      3.51  49.9   1.10  0.713 0.707
+## 4  26.6 1061.   400     1  315.  40.5      4.70  81.3   0.965 0.765 0.651
+## 5  26.7 1059.   400     1  271.  40.5      4.72  82.0   0.963 0.767 0.650
 ## # … with 9 more variables: mc &lt;dbl&gt;, ci &lt;dbl&gt;, lue &lt;dbl&gt;, gpp &lt;dbl&gt;,
 ## #   iwue &lt;dbl&gt;, gs &lt;dbl&gt;, vcmax &lt;dbl&gt;, vcmax25 &lt;dbl&gt;, rd &lt;dbl&gt;</code></pre>
 </div>

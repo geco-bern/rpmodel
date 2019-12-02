@@ -1,3 +1,8 @@
+[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/stineb/rpmodel?branch=master&svg=true)](https://ci.appveyor.com/project/stineb/rpmodel)
+<a href="https://www.buymeacoffee.com/H2wlgqCLO" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" height="21px" ></a>
+[![Github All Releases](https://img.shields.io/github/downloads/atom/atom/total.svg)]()
+
+
 ## Purpose
 
 `rpmodel` provides an implementation of the P-model (Prentice et al., 2014; Wang et al., 2017; Stocker et al., 2019), which predicts acclimated photosynthetic parameters, assimilation, and dark respiration rates as a function of the environment. The main function is `rpmodel()` which returns a list of variables that are mutually consistent within the theory of the P-model (see Theory, below). Further functions used within `rpmodel()` are also provided through the package.
