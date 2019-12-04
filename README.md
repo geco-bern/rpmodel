@@ -27,7 +27,7 @@ print( out_pmodel )
 ## Installation
 
 ### Stable release
-`rpmodel` is available on CRAN [here](https://cran.r-project.org/web/packages/rpmodel/index.html).
+`rpmodel` is available on CRAN [here](https://CRAN.R-project.org/package=rpmodel).
 
 ### Development release
 To install and load the rpmodel package (development release) run the following command in your R terminal: 

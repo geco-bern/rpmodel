@@ -1,15 +1,9 @@
 ## Test environments
 
-* Local: OS X install, R version 3.5.3
-* AppVeyor: https://ci.appveyor.com/project/stineb/rpmodel
-* using devtools::check_win_devel() returns error:
+(updated for v1.0.4 @commit c7ba1b5cd40fb4d092d0118b1a1bc344f9d86dcc)
 
-checking PDF version of manual ... WARNING
-LaTeX errors when creating PDF version.
-This typically indicates Rd problems.
-LaTeX errors found:
-! Package inputenc Error: Unicode char − (U+2212)
-(inputenc)                not set up for use with LaTeX.
+* Local: OS X install, R version 3.6.1
+* AppVeyor: https://ci.appveyor.com/project/stineb/rpmodel: Successful build
 
 
 ## R CMD check results
@@ -17,7 +11,10 @@ LaTeX errors found:
 0 errors | 0 warnings | 0 notes
 
 ### devtools::check_rhub()
-0 errors | 0 warnings | 1 note 
+0 errors | 0 warnings | 0 notes
+
+### devtools::check_win_devel()
+Status: OK
 
 ## Downstream dependencies
 * rlang, version 0.4.0 successfully installed.
