@@ -18,6 +18,10 @@ library(dplyr)
 library(purrr)
 library(tidyr)
 library(ggplot2)
+source("eval_environment_chi.R")
+source("eval_environment_jmax.R")
+source("eval_environment_gs_vcmax.R")
+source("QUADP.R")
 ```
 
 ## Theory
@@ -169,6 +173,7 @@ calc_optimal_chi_num <- function( kmm, gammastar, ns_star, ca, vpd, beta ){
     )
 
   return(out_optim$par)
+  return(list(jmax_opt = NA, chi_opt = out_optim$par, aj = NA))
 }
 ```
 
@@ -204,15 +209,29 @@ print( kphio * fapar * ppfd * (out_analytical_none$ci + out_analytical_none$kmm)
 ```
 
 
-### Response to the environment
+### Response of $\chi$
 
-Create data frames where one variable is varied at a time, holding all others constant, and apply rpmodel.
+Create data frames where one variable is varied at a time, holding all others constant, and apply rpmodel. Plot response of $\chi$:
 ```{r echo=FALSE}
-gg_none <- eval_environment(
-  calc_optimal_chi_num,
-  args = c("kmm", "gammastar", "ns_star", "ca", "vpd"),
+gg_none <- eval_environment_chi(
   kphio = kphio, 
-  method_jmaxlim = "none", 
+  method_jmaxlim = "none"
+  )
+
+gg_none$tc
+gg_none$vpd
+gg_none$co2
+gg_none$ppfd
+gg_none$patm
+```
+
+### Response of $A_J$
+
+Same as above, but showing $A_J$ (no Jmax limitation):
+```{r echo=FALSE}
+gg_none <- eval_environment_chi(
+  kphio = kphio, 
+  method_jmaxlim = "none",
   show = "assim"
   )
 
@@ -245,7 +264,7 @@ We can now implement a numerical version of the $J_{\mathrm{max}}$-limited P-mod
 - Maximise $A_J - c \; J_{\mathrm{max}}$.
 
 ```{r}
-calc_optimal_jmax_num <- function( kmm, gammastar, ns_star, ca, vpd, beta, chi = NULL, ppfd, kphio, c_cost){
+calc_optimal_jmax_num <- function( kmm, gammastar, ns_star, ca, vpd, chi = NULL, ppfd, kphio, beta, c_cost){
   #-----------------------------------------------------------------------
   # Input:    - float, 'kmm' : Pa, Michaelis-Menten coeff.
   #           - float, 'ns_star'  : (unitless) viscosity correction factor for water
@@ -298,7 +317,7 @@ calc_optimal_jmax_num <- function( kmm, gammastar, ns_star, ca, vpd, beta, chi =
   ## Get optimal jmax given optimal chi
   out_optim_jmax <- optimr::optimr(
     par       = 10,
-    lower     = 0.0,
+    lower     = 0.1,
     upper     = 500,
     fn        = maximise_this_jmax,
     chi       = chi,
@@ -325,19 +344,17 @@ calc_optimal_jmax_num <- function( kmm, gammastar, ns_star, ca, vpd, beta, chi =
 
 Now, let's find the optimal $\chi$ numerically using above function with the same parameters as calculated inside and returned by the P-model.
 ```{r}
-calc_optimal_jmax_num( 
-  out_analytical_none$kmm, 
-  out_analytical_none$gammastar, 
-  out_analytical_none$ns_star, 
-  out_analytical_none$ca, 
-  vpd, 
-  beta, 
+jmax_chi_opt <- calc_optimal_jmax_num( 
+  kmm = out_analytical_none$kmm, 
+  gammastar = out_analytical_none$gammastar, 
+  ns_star = out_analytical_none$ns_star, 
+  ca = out_analytical_none$ca, 
+  vpd = vpd, 
   chi = chi_opt, 
-  fn_chi = NULL, 
-  ppfd, 
-  kphio, 
-  c_cost / 4.0, 
-  fn_jmax = maximise_this_jmax
+  ppfd = ppfd, 
+  kphio = kphio, 
+  beta = beta, 
+  c_cost = c_cost / 4.0
   )
 
 print(jmax_chi_opt$aj)
@@ -349,7 +366,13 @@ print(out_analytical_jmaxlim$gpp / 12.0107)
 
 Create data frames where one variable is varied at a time, holding all others constant, and apply rpmodel.
 ```{r echo=FALSE}
-gg_none <- eval_environment(calc_optimal_jmax_num, kphio = kphio, method_jmaxlim = "wang17", show = "assim")
+gg_none <- eval_environment_jmax(
+  kphio = kphio, 
+  beta = beta,
+  c_cost = c_cost / 4.0,
+  method_jmaxlim = "wang17", 
+  show = "assim"
+  )
 
 gg_none$tc
 gg_none$vpd
@@ -359,253 +382,226 @@ gg_none$patm
 ```
 
 
-
-Now do the same with the Jmax limitation using `method_jmaxlim = wang17` in the `rpmodel()` function call.
-```{r}
-gg_jmaxlim <- eval_environment(calc_optimal_chi_num, kphio = kphio, method_jmaxlim = "wang17", show = "assim")
-```
-
 <!-- ### Performance benchmark -->
 
 <!-- TODO: Check computation time for N calls of the numerical `calc_optimal_chi_num()` vs. the analytical `calc_optimal_chi()` functions. -->
 
 
-<!-- ## Optimising $g_s$ and $V_{\text{cmax}}$ instead of $\chi$ -->
+## Optimising $g_s$ and $V_{\text{cmax}}$ instead of $\chi$
 
-<!-- At the core of the assimilation-transpiration trade-off are the quantities $g_s$ and $V_{\text{cmax}}$. The combined effect of their magnitudes determines $\chi$. Why not simutaneously optimize $g_s$ and $V_{\text{cmax}}$? We can write Eq. 2 also as: -->
-<!-- $$ -->
-<!-- (1.6g_sD + \beta V_{\text{cmax}})/A_C = min. \;\;\;\;\;\;\;(3) -->
-<!-- $$ -->
-<!-- and implement this in another numerical search function. Note that $c_i$ can be calculated from solving the equation system -->
-<!-- $$ -->
-<!-- A = V_{\mathrm{cmax}} \; \frac{c_i-\Gamma^{\ast}}{c_i + K} \\ -->
-<!-- A = g_s(c_a - c_i) -->
-<!-- $$ -->
-<!-- which leads to a quadratic equation for $c_i$ where we will only take the positive real part (`Re(root_ci)[which(Re(root_ci)>0)]`). This can be implemented as follows. -->
-<!-- ```{r} -->
-<!-- calc_optimal_gs_vcmax <- function( par, args, maximize=FALSE, return_all=FALSE ){ -->
+At the core of the assimilation-transpiration trade-off are the quantities $g_s$ and $V_{\text{cmax}}$. The combined effect of their magnitudes determines $\chi$. Why not simutaneously optimize $g_s$ and $V_{\text{cmax}}$? We can write Eq. 2 also as:
+$$
+(1.6g_sD + \beta V_{\text{cmax}})/A_C = min. \;\;\;\;\;\;\;(3)
+$$
+and implement this in another numerical search function. Note that $c_i$ can be calculated from solving the equation system
+$$
+A = V_{\mathrm{cmax}} \; \frac{c_i-\Gamma^{\ast}}{c_i + K} \\
+A = g_s(c_a - c_i)
+$$
+which leads to a quadratic equation for $c_i$ where we will only take the positive real part (`Re(root_ci)[which(Re(root_ci)>0)]`). This can be implemented as follows.
+```{r}
+calc_optimal_gs_vcmax <- function( par, args, maximize=FALSE, return_all=FALSE, method_opt = "LC", cost_scalar = 0.001717135){
 
-<!--   kmm       <- args[1] -->
-<!--   gammastar <- args[2] -->
-<!--   ns_star   <- args[3] -->
-<!--   ca        <- args[4] -->
-<!--   vpd       <- args[5] -->
-<!--   beta      <- args[6] -->
+  kmm       <- args[1]
+  gammastar <- args[2]
+  ns_star   <- args[3]
+  ca        <- args[4]
+  vpd       <- args[5]
+  beta      <- args[6]
 
-<!--   vcmax <- par[1] -->
-<!--   gs    <- par[2] -->
+  vcmax <- par[1]
+  gs    <- par[2]
 
-<!--   ## Get assimilation and ci, given Vcmax and gs -->
-<!--   ## by solving the equation system -->
-<!--   ## assim = vcmax * (ci - gammastar)/(ci + kmm) -->
-<!--   ## assim = gs * (ca - ci) -->
-<!--   a_quad <- -1.0 * gs -->
-<!--   b_quad <- gs * ca - gs * kmm - vcmax -->
-<!--   c_quad <- gs * ca * kmm + vcmax * gammastar -->
+  ## Rubisco is limiting
+  ## Solve Eq. system
+  ## A = gs (ca- ci)
+  ## A = Vcmax * (ci - gammastar)/(ci + Kmm)
+  
+  ## This leads to a quadratic equation:
+  ## A * ci^2 + B * ci + C  = 0
+  ## 0 = a + b*x + c*x^2
+  
+  ## with
+  A <- -1.0 * gs
+  B <- gs * ca - gs * kmm - vcmax
+  C <- gs * ca * kmm + vcmax * gammastar
+  
+  ci <- QUADM(A, B, C)
+  a_c <- vcmax * (ci - gammastar) / (ci + kmm)
 
-<!--   root_ci <- try( polyroot( c(c_quad, b_quad, a_quad) ) ) -->
+  # ## XXX from Wolfram Alpha:
+  # a_c <- 1/2 * (-sqrt(4 * gs * vcmax * (gammastar - ca) + (ca * gs + gs * kmm + vcmax)^2) + ca * gs + gs * kmm + vcmax) 
+  # ci  <- (sqrt(4 * gs * vcmax * (gammastar - ca) + (ca * gs + gs * kmm + vcmax)^2) + ca * gs - gs * kmm - vcmax)/(2 * gs)
+  
+  ## only cost ratio is defined. for this here we need absolute values. Set randomly
+  cost_transp <- 1.6 * ns_star * gs * vpd
+  cost_vcmax  <- beta * vcmax
 
-<!--   if (class(root_ci)=="try-error"){ -->
+  if (method_opt=="LC"){
+    ## Option A: This is equivalent to the P-model with its optimization of ci:ca.
+    net_assim <- -(cost_transp + cost_vcmax) / a_c
+  } else if (method_opt=="PM"){
+    net_assim <- a_c - cost_scalar * (cost_transp + cost_vcmax)
+  }
+    
+  if (maximize) net_assim <- -net_assim
 
-<!--     return( list( vcmax=NA, gs=NA, ci=NA, chi=NA, a_c=NA, cost_transp=NA, cost_vcmax=NA, net_assim=NA  ) ) -->
+  if (return_all){
+    return( tibble( vcmax_num = vcmax, gs_num = gs, ci_num = ci, chi_num = ci/ca, a_c_num = a_c, cost_transp_num = cost_transp, cost_vcmax_num = cost_vcmax, net_assim_num = net_assim  ) )
+  } else {
+    return( net_assim )
+  }
 
-<!--   } else { -->
+}
+```
 
-<!--     ## take only real part of the root -->
-<!--     ci <- Re(root_ci) -->
+Now that the target function is defined, we can actually numerically search for the optimal $V_{\text{cmax}}$ and $g_s$. We need to provide the algorithm with starting values, taken here as the $V_{\text{cmax}}$ and $g_s$ returned by our initial P-model call.
+```{r}
+wrap_calc_optimal_gs_vcmax <- function( kmm, gammastar, ns_star, ca, vpd, beta, vcmax_start, gs_start, method_opt = "LC" ){
+  
+  out_optim <- optimr::optimr(
+    par        = c( vcmax_start, gs_start ), # starting values
+    lower      = c( vcmax_start*0.0001, gs_start*0.001 ),
+    upper      = c( vcmax_start*1000,   gs_start*1000 ),
+    fn         = calc_optimal_gs_vcmax,
+    args       = c( kmm, gammastar, ns_star, ca, vpd, beta ),
+    method_opt = method_opt,
+    method     = "L-BFGS-B",
+    maximize   = TRUE,
+    control    = list( maxit = 1000 )
+    )
+  varlist <- calc_optimal_gs_vcmax( par=out_optim$par, args=c(kmm, gammastar, ns_star, ca, vpd, beta), maximize=FALSE, return_all=TRUE, method_opt = method_opt )
+  return(varlist)
+}
 
-<!--     ## take only positive root -->
-<!--     ci <- ci[which(ci>0)]   # take positive root -->
+```
 
-<!--     ## if both are positive, take the one that satisfies ci < ca (don't know if this is necessary) -->
-<!--     if (length(ci)>1) ci <- ci[which(ci<ca)] -->
+Note that, given that the optimality criterium implemented here (Eq. 3) embodies the same idea and is mathematically identical as Eq. 1, this should yield the same $\chi$ (which can be back-calculated from the optimised $V_{\text{cmax}}$ and $g_s$). Let's check if this is the case.
+```{r echo=FALSE}
+## Invoke function with optimised Vcmax and gs (in out_optim$par), now returning all variables
+varlist <- wrap_calc_optimal_gs_vcmax( out_analytical_none$kmm, out_analytical_none$gammastar, out_analytical_none$ns_star, out_analytical_none$ca, vpd, beta, out_analytical_none$vcmax, out_analytical_none$gs )
+print( paste("Optimal chi from Vcmax-gs optimization:", varlist$chi_num ) )
+print( paste("Optimal chi from P-model              :", out_analytical_none$chi ) )
+```
+Indeed, this is the same.
 
-<!--     ## A_c -->
-<!--     a_c <- vcmax * (ci - gammastar) / (ci + kmm) -->
 
-<!--     ## only cost ratio is defined. for this here we need absolute values. Set randomly -->
-<!--     cost_transp <- 1.6 * ns_star * gs * vpd -->
-<!--     cost_vcmax  <- beta * vcmax -->
+### Response to the environment
 
-<!--     ## Option B: This is equivalent to the P-model with its optimization of ci:ca. -->
-<!--     net_assim <- -(cost_transp + cost_vcmax) / a_c -->
+```{r echo=FALSE}
+gg_none <- eval_environment_gs_vcmax(
+  kphio = kphio, 
+  beta = beta, 
+  nsteps = 50, 
+  method_jmaxlim = "none", 
+  vcmax_start = out_analytical_none$vcmax, 
+  gs_start = out_analytical_none$gs
+  )
+  
+gg_none$tc
+gg_none$vpd
+gg_none$co2
+gg_none$ppfd
+gg_none$patm
+```
 
-<!--     if (maximize) net_assim <- -net_assim -->
+Ok. That's identical.
 
-<!--     if (return_all){ -->
-<!--       return( list( vcmax=vcmax, gs=gs, ci=ci, chi=ci/ca, a_c=a_c, cost_transp=cost_transp, cost_vcmax=cost_vcmax, net_assim=net_assim  ) ) -->
-<!--     } else { -->
-<!--       return( net_assim ) -->
-<!--     } -->
+Now, we have an optimised $V_{\text{cmax}}$ (lets call it $V_{\text{cmax}}^{\ast}$), and we can have an optimised $c_i$ which is consistent with the former. Given this, we can take the same step as is done in the P-model and assume that $A_J=A_C$, which leads to
+$$
+V_{\text{cmax}} = \phi_0 \; I_{\mathrm{abs}}\;\frac{c_a \chi^{\ast} + K}{c_a \chi^{\ast} + 2 \Gamma^{\ast} }
+$$
+To verify one again:
+```{r}
+print( paste( "optimal Vcmax:", varlist$vcmax_num ) )
+print( paste( "Vcmax^P:", kphio * fapar * ppfd * (varlist$ci_num + varlist$kmm) / (varlist$ci + 2 * varlist$gammastar )) )
+print( paste( "Vcmax from P-model:", out_analytical_none$vcmax ) )
+```
 
-<!--   } -->
-<!-- } -->
-<!-- ``` -->
+It's important to note that calculating $V_{\text{cmax}}$ like this implies the assumption of $A_J = A_C$, while solving for simultaneously optimal $V_{\text{cmax}}$ and $g_s$ doesn't use this assumption. Nevertheless, the results are identical, which may not be immediately obvious.
 
-<!-- Now that the target function is defined, we can actually numerically search for the optimal $V_{\text{cmax}}$ and $g_s$. We need to provide the algorithm with starting values, taken here as the $V_{\text{cmax}}$ and $g_s$ returned by our initial P-model call. -->
-<!-- ```{r} -->
-<!-- wrap_calc_optimal_gs_vcmax <- function( kmm, gammastar, ns_star, ca, vpd, beta, vcmax_start, gs_start ){ -->
-<!--   out_optim <- optimr::optimr( -->
-<!--     par        = c( out_analytical_none$vcmax, out_analytical_none$gs ), # starting values -->
-<!--     lower      = c( out_analytical_none$vcmax*0.0001, out_analytical_none$gs*0.001 ), -->
-<!--     upper      = c( out_analytical_none$vcmax*20,   out_analytical_none$gs*30 ), -->
-<!--     fn         = calc_optimal_gs_vcmax, -->
-<!--     args       = c( out_analytical_none$kmm, out_analytical_none$gammastar, out_analytical_none$ns_star, out_analytical_none$ca, vpd, beta ), -->
-<!--     method     = "L-BFGS-B", -->
-<!--     maximize   = TRUE, -->
-<!--     control    = list( maxit = 1000 ) -->
-<!--     ) -->
-<!--   varlist <- calc_optimal_gs_vcmax( par=out_optim$par, args=c(kmm, gammastar, ns_star, ca, vpd, beta), maximize=FALSE, return_all=TRUE ) -->
-<!--   return(varlist) -->
-<!-- } -->
 
-<!-- ``` -->
+## Alternative Jmax limitation
 
-<!-- Note that, given that the optimality criterium implemented here (Eq. 3) embodies the same idea and is mathematically identical as Eq. 1, this should yield the same $\chi$ (which can be back-calculated from the optimised $V_{\text{cmax}}$ and $g_s$). Let's check if this is the case. -->
-<!-- ```{r echo=FALSE} -->
-<!-- ## Invoke function with optimised Vcmax and gs (in out_optim$par), now returning all variables -->
-<!-- varlist <- wrap_calc_optimal_gs_vcmax( out_analytical_none$kmm, out_analytical_none$gammastar, out_analytical_none$ns_star, out_analytical_none$ca, vpd, beta, out_analytical_none$vcmax, out_analytical_none$gs ) -->
-<!-- print( paste("Optimal chi from Vcmax-gs optimization:", varlist$chi ) ) -->
-<!-- print( paste("Optimal chi from P-model:", out_analytical_none$chi ) ) -->
-<!-- ``` -->
-<!-- Indeed, this is the same. -->
+Now, we can try to account for the cost of Jmax, gs, and Vcmax in one single optimality criterion: 
+$$
+(1.6g_sD + \beta V_{\text{cmax}} + c J_{\text{max}})/A_C = min. \;\;\;\;\;\;\;(3)
+$$
 
-<!-- Now, we have an optimised $V_{\text{cmax}}$ (lets call it $V_{\text{cmax}}^{\ast}$), and we can have an optimised $c_i$ which is consistent with the former. Given this, we can take the same step as is done in the P-model and assume that $A_J=A_C$, which leads to -->
-<!-- $$ -->
-<!-- V_{\text{cmax}} = \phi_0 \; I_{\mathrm{abs}}\;\frac{c_a \chi^{\ast} + K}{c_a \chi^{\ast} + 2 \Gamma^{\ast} } -->
-<!-- $$ -->
-<!-- To verify one again: -->
-<!-- ```{r} -->
-<!-- print( paste( "optimal Vcmax:", varlist$vcmax ) ) -->
-<!-- print( paste( "Vcmax^P:", kphio * fapar * ppfd * (varlist$ci + varlist$kmm) / (varlist$ci + 2 * varlist$gammastar )) ) -->
-<!-- print( paste("Vcmax from P-model:", out_analytical_none$vcmax ) ) -->
-<!-- ``` -->
+This is implemented as follows:
+```{r}
 
-<!-- It's important to note that calculating $V_{\text{cmax}}$ like this implies the assumption of $A_J = A_C$, while solving for simultaneously optimal $V_{\text{cmax}}$ and $g_s$ doesn't use this assumption. Nevertheless, the results are identical, which may not be immediately obvious. -->
+```
 
-<!-- ### Light limitation? -->
+Let's compare the results for $\chi$ with this modified version to the original one:
+```{r}
+source("~/rpmodel/vignettes_add/calc_optimal_gs_vcmax_jmax.R")
+varlist_ll <- calc_optimal_gs_vcmax_jmax( out_analytical_none$kmm, out_analytical_none$gammastar, out_analytical_none$ns_star, out_analytical_none$ca, vpd, ppfd, fapar, kphio, beta, c_cost, out_analytical_none$vcmax, out_analytical_none$gs, 40 )
 
-<!-- But what about the implicit assumption made in the optmisation that assimilation always follows the Rubisco-limited curve? Shouldn't there be a limit given by light availability? We can spell this out by calculating $A=min(A_C, A_J)$ or equivalently $c_i=max(c_i^C, c_i^J)$ and modify `calc_optimal_gs_vcmax()` accordingly. We now need to additionally solve the equation system -->
-<!-- $$ -->
-<!-- A = \phi_0 I_{\text{abs}} \; \frac{c_i-\Gamma^{\ast}}{c_i + 2 \Gamma^{\ast}} \\ -->
-<!-- A = g_s(c_a - c_i) -->
-<!-- $$ -->
+## Invoke function with optimised Vcmax and gs (in out_optim$par), now returning all variables
+print( paste("Optimal chi from P-model:", out_analytical_none$chi ) )
+print( paste("Optimal chi from Vcmax-gs optimization:", jmax_chi_opt$chi_opt ) )
+print( paste("Optimal chi from Vcmax-gs opt. with light limit.:", varlist_ll$chi ) )
+```
 
-<!-- This is implemented as follows: -->
-<!-- ```{r} -->
-<!-- calc_optimal_gs_vcmax_ll <- function( par, args, iabs, kphio, maximize=FALSE, return_all=FALSE ){ -->
+### Response to the environment
 
-<!--   kmm       <- args[1] -->
-<!--   gammastar <- args[2] -->
-<!--   ns_star   <- args[3] -->
-<!--   ca        <- args[4] -->
-<!--   vpd       <- args[5] -->
-<!--   beta      <- args[6] -->
+Create data frames where one variable is varied at a time, holding all others constant, and apply rpmodel.
+```{r echo=FALSE}
+source("~/rpmodel/vignettes_add/eval_environment_jmax_mine.R")
+gg_none <- eval_environment_jmax_mine(
+  kphio = kphio, 
+  beta = beta,
+  c_cost = c_cost / 4.0,
+  method_jmaxlim = "wang17", 
+  show = "chi",
+  vcmax_start = out_analytical_none$vcmax, 
+  gs_start = out_analytical_none$gs,
+  jmax_start = 40
+  )
 
-<!--   vcmax <- par[1] -->
-<!--   gs    <- par[2] -->
+gg_none$tc
+gg_none$vpd
+gg_none$co2
+gg_none$ppfd
+gg_none$patm
+```
 
-<!--   ## Get ci using Rubisco-limited assimilation -->
-<!--   ## Get assimilation and ci, given Vcmax and gs -->
-<!--   ## by solving the equation system -->
-<!--   ## assim = vcmax * (ci - gammastar)/(ci + kmm) -->
-<!--   ## assim = gs * (ca - ci) -->
-<!--   a_quad <- -1.0 * gs  # coefficient of quadratic term -->
-<!--   b_quad <- gs * ca - gs * kmm - vcmax -->
-<!--   c_quad <- gs * ca * kmm + vcmax * gammastar -->
 
-<!--   root_ci_c <- try( polyroot( c(c_quad, b_quad, a_quad) ) ) -->
+## Profit Maximisation vs. Least Cost
 
-<!--   ## Get ci using light-limited assimilation -->
-<!--   ## Get assimilation and ci, given Vcmax and gs -->
-<!--   ## by solving the equation system -->
-<!--   ## assim = kphio * iabs * (ci-gammastar)/(ci+2*gammastar) -->
-<!--   ## assim = gs * (ca - ci) -->
-<!--   a_quad <- gs  # coefficient of quadratic term -->
-<!--   b_quad <- kphio * iabs - gs * ca + 2 * gs * gammastar -->
-<!--   c_quad <- - kphio * iabs * gammastar - 2 * gs * ca * gammastar -->
 
-<!--   root_ci_j <- try( polyroot( c(c_quad, b_quad, a_quad) ) ) -->
+### Response to the environment
 
-<!--   if (class(root_ci_j)=="try-error" || class(root_ci_c)=="try-error"){ -->
+```{r echo=FALSE}
+gg_none <- eval_environment_gs_vcmax(
+  kphio = kphio, 
+  beta = beta, 
+  nsteps = 50, 
+  method_jmaxlim = "none", 
+  vcmax_start = out_analytical_none$vcmax, 
+  gs_start = out_analytical_none$gs,
+  method_opt = "PM"
+  )
+  
+gg_none$tc
+gg_none$vpd
+gg_none$co2
+gg_none$ppfd
+gg_none$patm
+```
 
-<!--     return( list( vcmax=NA, gs=NA, ci=NA, chi=NA, a_c=NA, a_j=NA, ci_c=NA, ci_j=NA, cost_transp=NA, cost_vcmax=NA, net_assim=NA  ) ) -->
 
-<!--   } else { -->
+xxxxxxxxxx
 
-<!--     ## take only real part of the root -->
-<!--     ci_j <- Re(root_ci_j) -->
-<!--     ci_c <- Re(root_ci_c) -->
+### Light limitation?
 
-<!--     ## take only positive root -->
-<!--     ci_j <- ci_j[which(ci_j>0)]   # take positive root -->
-<!--     ci_c <- ci_c[which(ci_c>0)]   # take positive root -->
+But what about the implicit assumption made in the optmisation that assimilation always follows the Rubisco-limited curve? Shouldn't there be a limit given by light availability? We can spell this out by calculating $A=min(A_C, A_J)$ or equivalently $c_i=max(c_i^C, c_i^J)$ and modify `calc_optimal_gs_vcmax()` accordingly. We now need to additionally solve the equation system
+$$
+A = \phi_0 I_{\text{abs}} \; \frac{c_i-\Gamma^{\ast}}{c_i + 2 \Gamma^{\ast}} \\
+A = g_s(c_a - c_i)
+$$
 
-<!--     ## if both are positive, take the one that satisfies ci < ca (don't know if this is necessary) -->
-<!--     if (length(ci_j)>1) ci_j <- ci_j[which(ci_j<ca)] -->
-<!--     if (length(ci_c)>1) ci_c <- ci_c[which(ci_c<ca)] -->
-
-<!--     ## Rubisco-limited -->
-<!--     a_c <- vcmax * (ci_c - gammastar) / (ci_c + kmm) -->
-
-<!--     ## light-limited -->
-<!--     a_j <- kphio * iabs * (ci_j - gammastar) / (ci_j + 2 * gammastar) -->
-
-<!--     ## Take minimum of the two assimilation rates -->
-<!--     assim <- min( a_j, a_c ) -->
-
-<!--     # if (return_all){ -->
-<!--     #   if (a_j<a_c) print("Warning: A_J is lower than A_C") -->
-<!--     # } -->
-
-<!--     ## ... and consistently the maximum of the two ci -->
-<!--     ci <- max( ci_j, ci_c  ) -->
-
-<!--     ## only cost ratio is defined. for this here we need absolute values. Set randomly -->
-<!--     cost_transp <- 1.6 * ns_star * gs * vpd -->
-<!--     cost_vcmax  <- beta * vcmax -->
-
-<!--     ## Option B: This is equivalent to the P-model with its optimization of ci:ca. -->
-<!--     net_assim <- -(cost_transp + cost_vcmax) / assim -->
-
-<!--     if (maximize) net_assim <- -net_assim -->
-
-<!--     if (return_all){ -->
-<!--       return( list( vcmax=vcmax, gs=gs, ci=ci, chi=ci/ca, a_c=a_c, a_j=a_j, ci_c=ci_c, ci_j=ci_j, cost_transp=cost_transp, cost_vcmax=cost_vcmax, net_assim=net_assim  ) ) -->
-<!--     } else { -->
-<!--       return( net_assim ) -->
-<!--     } -->
-
-<!--   } -->
-<!-- } -->
-<!-- ``` -->
-
-<!-- Let's compare the results for $\chi$ with this modified version to the original one: -->
-<!-- ```{r} -->
-<!-- wrap_calc_optimal_gs_vcmax_ll <- function( ppfd, fapar, kphio, kmm, gammastar, ns_star, ca, vpd, beta, vcmax_start, gs_start ){ -->
-<!--   out_optim <- optimr::optimr( -->
-<!--     par        = c( vcmax_start, gs_start ), # starting values -->
-<!--     lower      = c( vcmax_start*0.0001, gs_start*0.001 ), -->
-<!--     upper      = c( vcmax_start*20, gs_start*30 ), -->
-<!--     fn         = calc_optimal_gs_vcmax_ll, -->
-<!--     args       = c(kmm, gammastar, ns_star, ca, vpd, beta), -->
-<!--     iabs       = (ppfd * fapar), -->
-<!--     kphio      = kphio, -->
-<!--     method     = "L-BFGS-B", -->
-<!--     maximize   = TRUE, -->
-<!--     control    = list( maxit = 1000 ) -->
-<!--     ) -->
-<!--   varlist <- calc_optimal_gs_vcmax_ll( par=out_optim$par, args=c(kmm, gammastar, ns_star, ca, vpd, beta), iabs=(fapar*ppfd), kphio=kphio, maximize=FALSE, return_all=TRUE ) -->
-<!--   return(varlist) -->
-<!-- } -->
-
-<!-- varlist_ll <- wrap_calc_optimal_gs_vcmax_ll( ppfd, fapar, kphio, out_analytical_none$kmm, out_analytical_none$gammastar, out_analytical_none$ns_star, out_analytical_none$ca, vpd, beta, out_analytical_none$vcmax, out_analytical_none$gs ) -->
-
-<!-- ## Invoke function with optimised Vcmax and gs (in out_optim$par), now returning all variables -->
-<!-- print( paste("Optimal chi from P-model:", out_analytical_none$chi ) ) -->
-<!-- print( paste("Optimal chi from Vcmax-gs optimization:", varlist$chi ) ) -->
-<!-- print( paste("Optimal chi from Vcmax-gs opt. with light limit.:", varlist_ll$chi ) ) -->
-<!-- ``` -->
 
 <!-- In this case, it's not a problem. It yields the same $\chi$. But is this the case across a range of light conditions (remember, that $\chi$ is independent of light in the original model)? -->
 <!-- ```{r} -->

@@ -1,0 +1,151 @@
+---
+title: "Compare P-model implementations"
+author: "Benjamin D. Stocker"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+fig_width: 30 
+fig_height: 20 
+vignette: >
+  %\VignetteIndexEntry{test_implementations}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+# output:
+#   html_document:
+#     toc: true
+#     toc_float: true
+#     toc_depth: 3
+# # output:
+# #   pdf_document:
+# #     toc: true
+# #     toc_depth: 2
+# header-includes:
+#    - \usepackage{amsmath}
+# # bibliography: bibliography.bib
+---
+
+## Environment
+
+Load the `rsofun` package. This contains all the necessary wrapper functions to set up and run SOFUN and read its output. 
+```{r message=FALSE, echo=FALSE, warning=FALSE}
+library(rsofun)
+library(rpmodel)
+
+## load all rsofun dependencies
+load_dependencies_rsofun()
+
+## other crap
+knitr::opts_knit$set( root.dir = rprojroot::find_rstudio_root_file() ) # does not work properly
+# if (is.null(options()$rsofun.dir.sofun)) rlang::abort( "Option rsofun.dir.sofun not set. Do so by `options( list( rsofun.dir.sofun=string_path_where_sofun_is ))`" )
+options( list( rsofun.dir.sofun="~/sofun/" ))
+```
+
+## Run implementations for a temperature range
+
+Varying temperature from 0 to 35 degrees Celsius. All other factors are held constant with:
+
+- `ppfd = 800`
+- `vpd = 1000`
+- `co2 = 400`
+- `elv = 0`
+
+The quantum yield efficiency is set to `kphio = 0.05` for the `"wanghan"` method, and 0.257 for the `"smith"` method.
+
+```{r, eval=TRUE, message=FALSE, warning=FALSE, fig.width=12}
+ppfd <- 800
+vpd  <- 1000
+co2  <- 400
+elv  <- 0
+fapar <- 1
+
+## R, Vcmax based on Wang Han's formulation
+pmodel_stdrd_R <- purrr::map( as.list( seq( 0, 35, length.out = 100 ) ), 
+  ~rpmodel::rpmodel( tc = ., vpd = vpd, co2 = co2, elv = elv, kphio = 0.05, fapar = fapar, ppfd = ppfd, method_optci="prentice14", method_jmaxlim = "wang17", do_ftemp_kphio = FALSE ) 
+  )
+
+pmodel_smith <- purrr::map( as.list( seq( 0, 35, length.out = 100 ) ), 
+  ~rpmodel::rpmodel( tc = ., vpd = vpd, co2 = co2, elv = elv, kphio = 0.257, fapar = fapar, ppfd = ppfd, method_optci="prentice14", method_jmaxlim = "smith19", do_ftemp_kphio = FALSE ) 
+  )
+
+## Fortran, Vcmax basedon Wang Han's formulation
+## update quantum yield parameter in file
+#params_opt <- readr::read_csv( paste0( path.package("rsofun"), "/extdata/params_opt_kphio_soilm_global.csv" ) )
+params_opt <- tibble(kphio = 0.05)
+nothing <- update_params( params_opt, options()$rsofun.dir.sofun )
+
+pmodel_fortran <- purrr::map( as.list( seq( 0, 35, length.out = 100 ) ), 
+  ~pmodel( temp = ., vpd = vpd, co2 = co2, ppfd = ppfd, fapar = fapar, elv = elv, implementation = "fortran", sofundir = options()$rsofun.dir.sofun ) )
+```
+
+## Evaluation by temperature
+
+Below, I'm comparing different variables calculated in the different implementations, as a function of temperature (to which photosynthesis acclimated to). 'rsofun standard' refers to what is implemented in rsofun, based on Wang Han et al., 2017 and originally adopted from the GePiSaT code. 'Smith my implementation' is based on Beni's adoptation of Nick Smith's code within rsofun. The temperature-dependence of quantum yield efficiency is not accounted for in any of the calculations (argument `do_ftemp_kphio = FALSE` in `rpmode()` function calls).
+
+### Michaelis-Menten K
+
+```{r, eval=TRUE, message=FALSE, warning=FALSE}
+kmm_stdrd_R   <- pmodel_stdrd_R   %>% purrr::map_dbl("kmm")
+kmm_fortran   <- pmodel_fortran   %>% purrr::map_dbl("kmm")
+kmm_smith     <- pmodel_smith     %>% purrr::map_dbl("kmm")
+
+plot(  seq( 0, 35, length.out = 100 ), kmm_stdrd_R, type = "l", xlab = "Temperature (deg C)", ylab = "Michaelis-Menten K", lwd=6 )
+lines( seq( 0, 35, length.out = 100 ), kmm_fortran, col="green", lwd=3 )
+lines( seq( 0, 35, length.out = 100 ), kmm_smith, col="blue", lwd=1 )
+legend( "topright", c("rsofun standard (R)", "rsofun standard (Fortran)", "Smith my implementation"), lty = 1, col = c("black", "green", "blue" ), lwd=c(6,3,1), bty = "n")
+```
+
+### $c_i$
+
+```{r, eval=TRUE, message=FALSE, warning=FALSE}
+ci_stdrd_R   <- pmodel_stdrd_R   %>% purrr::map_dbl("ci")
+ci_fortran   <- pmodel_fortran   %>% purrr::map_dbl("ci")
+ci_smith     <- pmodel_smith     %>% purrr::map_dbl("ci")
+
+plot(  seq( 0, 35, length.out = 100 ), ci_stdrd_R, type = "l", xlab = "Temperature (deg C)", ylab = "ci", lwd=6 )
+lines( seq( 0, 35, length.out = 100 ), ci_smith, col="green", lwd=3 )
+lines( seq( 0, 35, length.out = 100 ), ci_smith, col="blue", lwd=1 )
+legend( "topright", c("rsofun standard (R)", "rsofun standard (Fortran)", "Smith my implementation"), lty = 1, col = c("black", "green", "blue" ), lwd=c(6,3,1), bty = "n")
+```
+
+### $c_i:c_a$
+
+```{r, eval=TRUE, message=FALSE, warning=FALSE}
+chi_stdrd_R   <- pmodel_stdrd_R   %>% purrr::map_dbl("chi")
+chi_fortran   <- pmodel_fortran   %>% purrr::map_dbl("chi")
+chi_smith     <- pmodel_smith     %>% purrr::map_dbl("chi")
+
+plot(  seq( 0, 35, length.out = 100 ), chi_stdrd_R, type = "l", xlab = "Temperature (deg C)", ylab = "ci:ca", lwd=6 )
+lines( seq( 0, 35, length.out = 100 ), chi_fortran, col="green", lwd=3 )
+lines( seq( 0, 35, length.out = 100 ), chi_smith, col="blue", lwd=1 )
+legend( "topright", c("rsofun standard (R)", "rsofun standard (Fortran)", "Smith my implementation"), lty = 1, col = c("black", "green", "blue"), lwd=c(6,3,1), bty = "n")
+```
+
+### Vcmax
+
+```{r, eval=TRUE, message=FALSE, warning=FALSE}
+vcmax_stdrd_R   <- pmodel_stdrd_R   %>% purrr::map_dbl("vcmax")
+vcmax_fortran   <- pmodel_fortran   %>% purrr::map_dbl("vcmax")
+# vcmax_smith     <- pmodel_smith     %>% purrr::map_dbl("vcmax_star")
+
+plot(  seq( 0, 35, length.out = 100 ), vcmax_stdrd_R, type = "l", xlab = "Temperature (deg C)", ylab = "Vcmax", lwd=6, ylim=c(0,max(vcmax_stdrd_R)) )
+lines( seq( 0, 35, length.out = 100 ), vcmax_fortran, col="green", lwd=3 )
+legend( "topleft", c("rsofun standard (R)", "rsofun standard (Fortran)"), lty = 1, col = c("black", "green"), lwd=c(6,3), bty = "n" )
+# lines( seq( 0, 35, length.out = 100 ), vcmax_smith, col="blue", lwd=1 )
+# legend( "topleft", c("rsofun standard (R)", "rsofun standard (Fortran)", "Smith my implementation"), lty = 1, col = c("black", "green", "blue"), lwd=c(6,3,1), bty = "n" )
+```
+
+
+### Light use efficiency
+
+```{r, eval=TRUE, message=FALSE, warning=FALSE}
+lue_stdrd_R   <- pmodel_stdrd_R   %>% purrr::map_dbl("lue")
+lue_fortran   <- pmodel_fortran   %>% purrr::map_dbl("lue")
+lue_smith     <- pmodel_smith     %>% purrr::map_dbl("lue")
+
+plot(  seq( 0, 35, length.out = 100 ), lue_stdrd_R, type = "l", xlab = "Temperature (deg C)", ylab = "lue", lwd=6, ylim=c(0,max(lue_smith)) )
+lines( seq( 0, 35, length.out = 100 ), lue_fortran, col="green", lwd=3 )
+legend( "topright", c("rsofun standard (R)", "rsofun standard (Fortran)"), lty = 1, col = c("black", "green"), lwd=c(6,3), bty = "n")
+# lines( seq( 0, 35, length.out = 100 ), lue_smith, col="blue", lwd=1 )
+# legend( "topright", c("rsofun standard (R)", "rsofun standard (Fortran)", "Smith my implementation"), lty = 1, col = c("black", "green", "blue"), lwd=c(6,3,1), bty = "n")
+```
+
+

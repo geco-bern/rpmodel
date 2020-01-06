@@ -22,8 +22,12 @@ eval_environment <- function(fn, args, kphio, nsteps = 50, method_jmaxlim = "non
         ) ) %>%
     mutate( out_pmodel = purrr::map(out_pmodel, ~as_tibble(.))) %>%
     unnest( out_pmodel ) %>%
-    mutate( chi_num = purrr::pmap(dplyr::select(., args), fn, beta = 146) ) %>%
-    unnest( chi_num ) %>%
+    mutate( out = ifelse(fn == "calc_optimal_chi_num", 
+                    purrr::pmap(dplyr::select(., kmm, gammastar, ns_star, ca, vpd), calc_optimal_chi_num, beta = 146),
+                    ifelse(fn == "calc_optimal_jmax_num",
+                      purrr::pmap(dplyr::select(., kmm, gammastar, ns_star, ca, vpd, chi, ppfd), calc_optimal_jmax_num, kphio, beta = 146, c_cost ),
+                      NA ))) %>%
+    unnest( out ) %>%
     mutate( aj_num = purrr::pmap(dplyr::select(., ppfd, ca, chi = chi_num, gammastar), calc_aj, kphio = kphio)) %>%
     unnest( aj_num ) %>%
     mutate( a_ = gpp / 12.0107 )
@@ -44,9 +48,13 @@ eval_environment <- function(fn, args, kphio, nsteps = 50, method_jmaxlim = "non
         do_ftemp_kphio = FALSE
         ) ) %>%
     mutate( out_pmodel = purrr::map(out_pmodel, ~as_tibble(.))) %>%
-    unnest(out_pmodel) %>%
-    mutate( chi_num = purrr::pmap(dplyr::select(., args), fn, beta = 146) ) %>%
-    unnest( chi_num ) %>%
+    unnest( out_pmodel ) %>%
+    mutate( out = ifelse(fn == "calc_optimal_chi_num", 
+                    purrr::pmap(dplyr::select(., kmm, gammastar, ns_star, ca, vpd), calc_optimal_chi_num, beta = 146),
+                    ifelse(fn == "calc_optimal_jmax_num",
+                      purrr::pmap(dplyr::select(., kmm, gammastar, ns_star, ca, vpd, chi, ppfd), calc_optimal_jmax_num, kphio, beta = 146, c_cost ),
+                      NA ))) %>%
+    unnest( out ) %>%
     mutate( aj_num = purrr::pmap(dplyr::select(., ppfd, ca, chi = chi_num, gammastar), calc_aj, kphio = kphio)) %>%
     unnest( aj_num ) %>%
     mutate( a_ = gpp / 12.0107 )
@@ -67,9 +75,13 @@ eval_environment <- function(fn, args, kphio, nsteps = 50, method_jmaxlim = "non
         do_ftemp_kphio = FALSE
         ) ) %>%
     mutate( out_pmodel = purrr::map(out_pmodel, ~as_tibble(.))) %>%
-    unnest(out_pmodel) %>%
-    mutate( chi_num = purrr::pmap(dplyr::select(., args), fn, beta = 146) ) %>%
-    unnest( chi_num ) %>%
+    unnest( out_pmodel ) %>%
+    mutate( out = ifelse(fn == "calc_optimal_chi_num", 
+                    purrr::pmap(dplyr::select(., kmm, gammastar, ns_star, ca, vpd), calc_optimal_chi_num, beta = 146),
+                    ifelse(fn == "calc_optimal_jmax_num",
+                      purrr::pmap(dplyr::select(., kmm, gammastar, ns_star, ca, vpd, chi, ppfd), calc_optimal_jmax_num, kphio, beta = 146, c_cost ),
+                      NA ))) %>%
+    unnest( out ) %>%
     mutate( aj_num = purrr::pmap(dplyr::select(., ppfd, ca, chi = chi_num, gammastar), calc_aj, kphio = kphio)) %>%
     unnest( aj_num ) %>%
     mutate( a_ = gpp / 12.0107 )
@@ -90,9 +102,13 @@ eval_environment <- function(fn, args, kphio, nsteps = 50, method_jmaxlim = "non
         do_ftemp_kphio = FALSE
         ) ) %>%
     mutate( out_pmodel = purrr::map(out_pmodel, ~as_tibble(.))) %>%
-    unnest(out_pmodel) %>%
-    mutate( chi_num = purrr::pmap(dplyr::select(., args), fn, beta = 146) ) %>%
-    unnest( chi_num ) %>%
+    unnest( out_pmodel ) %>%
+    mutate( out = ifelse(fn == "calc_optimal_chi_num", 
+                    purrr::pmap(dplyr::select(., kmm, gammastar, ns_star, ca, vpd), calc_optimal_chi_num, beta = 146),
+                    ifelse(fn == "calc_optimal_jmax_num",
+                      purrr::pmap(dplyr::select(., kmm, gammastar, ns_star, ca, vpd, chi, ppfd), calc_optimal_jmax_num, kphio, beta = 146, c_cost ),
+                      NA ))) %>%
+    unnest( out ) %>%
     mutate( aj_num = purrr::pmap(dplyr::select(., ppfd, ca, chi = chi_num, gammastar), calc_aj, kphio = kphio)) %>%
     unnest( aj_num ) %>%
     mutate( a_ = gpp / 12.0107 )
@@ -113,9 +129,13 @@ eval_environment <- function(fn, args, kphio, nsteps = 50, method_jmaxlim = "non
         do_ftemp_kphio = FALSE
         ) ) %>%
     mutate( out_pmodel = purrr::map(out_pmodel, ~as_tibble(.))) %>%
-    unnest(out_pmodel) %>%
-    mutate( chi_num = purrr::pmap(dplyr::select(., args), fn, beta = 146) ) %>%
-    unnest( chi_num ) %>%
+    unnest( out_pmodel ) %>%
+    mutate( out = ifelse(fn == "calc_optimal_chi_num", 
+                    purrr::pmap(dplyr::select(., kmm, gammastar, ns_star, ca, vpd), calc_optimal_chi_num, beta = 146),
+                    ifelse(fn == "calc_optimal_jmax_num",
+                      purrr::pmap(dplyr::select(., kmm, gammastar, ns_star, ca, vpd, chi, ppfd), calc_optimal_jmax_num, kphio, beta = 146, c_cost ),
+                      NA ))) %>%
+    unnest( out ) %>%
     mutate( aj_num = purrr::pmap(dplyr::select(., ppfd, ca, chi = chi_num, gammastar), calc_aj, kphio = kphio)) %>%
     unnest( aj_num ) %>%
     mutate( a_ = gpp / 12.0107 )
