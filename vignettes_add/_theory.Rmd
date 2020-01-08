@@ -72,7 +72,7 @@ co2  <- 400          # ppm
 elv  <- 0            # m.a.s.l.
 fapar <- 1           # fraction
 
-out_analytical_none <- rsofun::rpmodel(
+out_analytical_none <- rpmodel::rpmodel(
   tc             = tc,
   vpd            = vpd,
   co2            = co2,
@@ -86,7 +86,7 @@ out_analytical_none <- rsofun::rpmodel(
   do_ftemp_kphio = FALSE
   )
 
-out_analytical_jmaxlim <- rsofun::rpmodel(
+out_analytical_jmaxlim <- rpmodel::rpmodel(
   tc             = tc,
   vpd            = vpd,
   co2            = co2,
@@ -546,6 +546,7 @@ print( paste("Optimal chi from Vcmax-gs opt. with light limit.:", varlist_ll$chi
 
 ### Response to the environment
 
+#### $\chi$
 Create data frames where one variable is varied at a time, holding all others constant, and apply rpmodel.
 ```{r echo=FALSE}
 source("~/rpmodel/vignettes_add/eval_environment_jmax_mine.R")
@@ -567,9 +568,38 @@ gg_none$ppfd
 gg_none$patm
 ```
 
+#### $A_J:A_C$
+
+This demonstrates that the coordination (for mean daily condition) emerges from the alternative optimality criterion (instead of being used as a principle).
+```{r echo=FALSE}
+gg_none <- eval_environment_jmax_mine(
+  kphio = kphio, 
+  beta = beta,
+  c_cost = c_cost / 4.0,
+  method_jmaxlim = "wang17", 
+  show = "assim_jv",
+  vcmax_start = out_analytical_none$vcmax, 
+  gs_start = out_analytical_none$gs,
+  jmax_start = 40
+  )
+
+gg_none$tc
+gg_none$vpd
+gg_none$co2
+gg_none$ppfd
+gg_none$patm
+```
 
 ## Profit Maximisation vs. Least Cost
 
+Maximise the following term numerically, again subject to $V_{\mathrm{cmax}}$ and $g_s$:
+$$
+A_n = A - aE -bV_{\text{cmax}} = max. \;\;\;\;\;\;\;\;\;\;\;\;(4)
+$$
+We can divide this by $a$ in order to define it with the cost ratio $\beta$ which we have used above. However, an absolute cost remains in the first term:
+$$
+A_n = \frac{1}{a} A - E -\beta V_{\text{cmax}} = max. \;\;\;\;\;\;\;\;\;\;\;\;(5)
+$$
 
 ### Response to the environment
 
