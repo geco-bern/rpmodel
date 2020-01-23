@@ -202,65 +202,80 @@ The second term is the leaf construction cost which is a function of the Huber v
 
 ### Simplification
 
-Optimise only $V_{\mathrm{cmax}}$, and treat $\nu_H$ as a constant.
+Treat $\nu_H$ as a constant and optimise $V_{\mathrm{cmax}}$ so that net assimilation is maximised:
+$$
+ A_C - b V_{\mathrm{cmax}} = max.
+$$
+Does it even have a maximum?
 ```{r}
-optimise_midterm_simpl <- function(vcmax, psi_soil, vpd, viscosity, ca, dpsi_star, par_cost, par_photosynth, par_conductance, par_conductivity, vcmax_init){
-  
-  v_huber <- xxx
-  
+fn_target <- function(vcmax, gs_star, ca, par_cost, par_photosynth, do_optim = FALSE){
   ## Required parameter sets:
   ## par_cost        : b
   ## par_photosynth  : kmm, gammastar
-  ## par_conductance : conductivity_base, height
-  ## par_conductivity: psi50 = -2, b = 2
   
-  fn_target <- function(vcmax, v_huber, psi_soil, vpd, viscosity, ca, dpsi_star, par_cost, par_photosynth, par_conductance, par_conductivity){
-    gs_star <- calc_gs_star(psi_soil, vpd, viscosity, dpsi_star, v_huber, par = par_conductance, par_conductivity = par_conductivity)
-    a_c <- calc_assim(gs_star, vcmax, ca, par = par_photosynth)
+  ## Rubisco-limited assimilation
+  a_c <- calc_assim(gs_star, vcmax, ca, par = par_photosynth)
   
-    target <- par_cost$b * vcmax / a_c
-    return(target)
+  ## Profit Maximisation
+  out <- a_c - par_cost$b * vcmax
+  
+  if (do_optim){
+    return(-out)
+  } else {
+    return(out)
   }
-  
+}  
+
+optimise_midterm_simpl <- function(fn_target, gs_star, ca, par_cost, par_photosynth, vcmax_init, return_all = FALSE){
+
   out_optim <- optimr::optimr(
     par       = vcmax_init,
-    lower     = 0.1 * vcmax_init,
-    upper     = 10 * vcmax_init,
+    lower     = 0.00001 * vcmax_init,
+    upper     = 100000 * vcmax_init,
     fn        = fn_target,
-    v_huber, 
-    psi_soil, 
-    vpd, 
-    viscosity, 
-    ca, 
-    dpsi_star, 
-    par_cost, 
-    par_photosynth, 
-    par_conductance, 
-    par_conductivity,
+    gs_star   = gs_star, 
+    ca        = ca,
+    par_cost  = par_cost, 
+    par_photosynth = par_photosynth,
+    do_optim  = TRUE,
     method    = "L-BFGS-B",
     control   = list( maxit = 100, maximize = TRUE )
   )
   
-  psi_l_opt = optim(fn = function(x){ cost_fn(psi_s, x, a1, .01, vpd)}, par = psi_s-0.1, method = "L-BFGS-B", lower = -100, upper = psi_s-0.05)$par
+  out_optim$value <- -out_optim$value
   
-
+  if (return_all){
+    out_optim
+  } else {
+    return(out_optim$par)
+  }
 }
 
 
-# asdf
-# ```{r}
-# optimise_midterm <- function(vcmax, v_huber, psi_soil, vpd, viscosity, ca, dpsi_star, par_photosynth, par_conductance, par_conductivity){
-#   
-#   ## Required parameter sets:
-#   ## par_photosynth  : kmm, gammastar
-#   ## par_conductance : conductivity_base, height
-#   ## par_conductivity: psi50 = -2, b = 2
-#   
-#   gs_star <- calc_gs_star(psi_soil, vpd, viscosity, dpsi_star, v_huber, par = par_conductance, par_conductivity = par_conductivity)
-#   a_c <- calc_assim(gs_star, vcmax, ca, par = par_photosynth)
-#   A_leaf <- 1 / v_huber
-#   a_c_canp <- (1 - exp(-0.5 * A_leaf)) * 
-#   
-# }
+df_test <- tibble( vcmax = seq(out_analytical$vcmax * 0.1, out_analytical$vcmax * 10, length.out = 30) ) %>% 
+  mutate(assim = purrr::map_dbl(vcmax, ~calc_assim(gs = 1, vcmax = ., ca = out_analytical$ca, par = par_photosynth_std))) %>% 
+  mutate(target = purrr::map_dbl(vcmax, ~fn_target(., gs_star = 1, ca = out_analytical$ca, par_cost  = list(b = 0.05), par = par_photosynth_std)))
 
+out_midterm_simpl <- optimise_midterm_simpl(fn_target, gs_star = 1, ca = out_analytical$ca, par_cost  = list(b = 0.05), par_photosynth = par_photosynth_std, vcmax_init = out_analytical$vcmax, return_all = TRUE)
+
+df_test %>% 
+  ggplot(aes(x = vcmax, y = target)) +
+  geom_line() +
+  geom_point(aes(x = out_midterm_simpl$par, y = out_midterm_simpl$value), col = 'red')
+```
+Yes. Ok.
+
+Btw: A least-cost criterion ($b V_{\mathrm{cmax}} / A_C = min.$) doesn't work here
+
+This allows us to predict how $V_{\mathrm{cmax}}$ would acclimate to a drying soil.
+```{r}
+df_w_vol <- tibble( w_vol = seq(0.05, 0.6, length.out = 100)) %>% 
+  mutate(psi_soil = calc_psi_soil(w_vol, par_psi_soil_std)) %>% 
+  mutate(gs_star = purrr::map_dbl(psi_soil, ~calc_gs_star(., vpd = 100, viscosity = 1, dpsi_star = 1, v_huber = 1, par = par_conductance_std, par_conductivity = par_conductivity_std))) %>% 
+  mutate(out_opt = purrr::map_dbl(gs_star, ~optimise_midterm_simpl(fn_target, gs_star = ., ca = out_analytical$ca, par_cost  = list(b = 0.05), par_photosynth = par_photosynth_std, vcmax_init = out_analytical$vcmax)))
+
+df_w_vol %>% 
+  ggplot() + 
+  geom_line(aes(x = w_vol, y = out_opt)) +
+  labs(title = "Regulated Vcmax", subtitle = "As a funtion of volumetric soil water content")
 ```
