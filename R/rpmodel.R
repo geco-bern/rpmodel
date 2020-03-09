@@ -130,10 +130,7 @@
 #'                       \deqn{
 #'                            Vcmax = \phi(T) \phi0 Iabs n
 #'                       }
-#'                       where \eqn{n} is given by \eqn{n=m/mc}, or
-#'                       \deqn{
-#'                           n = (ci + K) / (ci + 2 \Gamma*)
-#'                       }
+#'                       where \eqn{n} is given by \eqn{n=m'/mc}.
 #'         \item \code{vcmax25}: Maximum carboxylation capacity \eqn{Vcmax} (mol C m-2) normalised to 25 deg C
 #'                      following a modified Arrhenius equation, calculated as \eqn{Vcmax25 = Vcmax / fv},
 #'                      where \eqn{fv} is the instantaneous temperature response by Vcmax and is implemented
@@ -439,8 +436,8 @@ calc_lue_vcmax_wang17 <- function(out_optchi, kphio, ftemp_kphio, c_molmass, soi
     vcmax_unitiabs = kphio * ftemp_kphio * out_optchi$mjoc * mprime / out_optchi$mj * soilmstress,
 
     ## complement for non-smith19 
-    omega               = rep(NA, len),
-    omega_star          = rep(NA, len)
+    omega      = rep(NA, len),
+    omega_star = rep(NA, len)
     )
 
   return(out)
