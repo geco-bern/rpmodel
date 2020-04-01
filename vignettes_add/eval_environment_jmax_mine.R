@@ -231,6 +231,38 @@ eval_environment_jmax_mine <- function(kphio, beta, c_cost, nsteps = 50, method_
       scale_color_viridis_c() +
       labs(title = "Pressure sensitivity", subtitle = paste0("VPD = ", df_tc$vpd[1], " Pa;  CO2 = ", df_tc$co2[1], " ppm;  PPFD = ", df_tc$ppfd[1], " mol m-2 d-1;  T = ", df_tc$tc[1], " deg C"))
     
+  }  else if (show=="jv"){
+    
+    gg_tc <- df_tc %>%
+      ggplot(aes(x = jmax_mine, y = vcmax_mine, color = tc)) +
+      geom_point() +
+      scale_color_viridis_c() +
+      labs(title = "Temperature sensitivity", subtitle = paste0("VPD = ", df_tc$vpd[1], " Pa;  CO2 = ", df_tc$co2[1], " ppm;  PPFD = ", df_tc$ppfd[1], " mol m-2 d-1;  p = ", df_tc$patm[1], " Pa"))
+    
+    gg_vpd <- df_vpd %>%
+      ggplot(aes(x = jmax_mine, y = vcmax_mine, color = vpd)) +
+      geom_point() +
+      scale_color_viridis_c() +
+      labs(title = "VPD sensitivity", subtitle = paste0("T = ", df_tc$tc[1], " deg C;  CO2 = ", df_tc$co2[1], " ppm;  PPFD = ", df_tc$ppfd[1], " mol m-2 d-1;  p = ", df_tc$patm[1], " Pa"))
+    
+    gg_co2 <- df_co2 %>%
+      ggplot(aes(x = jmax_mine, y = vcmax_mine, color = co2)) +
+      geom_point() +
+      scale_color_viridis_c() +
+      labs(title = "CO2 sensitivity", subtitle = paste0("VPD = ", df_tc$vpd[1], " Pa;  T = ", df_tc$tc[1], " deg C;  PPFD = ", df_tc$ppfd[1], " mol m-2 d-1;  p = ", df_tc$patm[1], " Pa"))
+    
+    gg_ppfd <- df_ppfd %>%
+      ggplot(aes(x = jmax_mine, y = vcmax_mine, color = ppfd)) +
+      geom_point() +
+      scale_color_viridis_c() +
+      labs(title = "PPFD sensitivity", subtitle = paste0("VPD = ", df_tc$vpd[1], " Pa;  CO2 = ", df_tc$co2[1], " ppm;  T = ", df_tc$tc[1], " deg C;  p = ", df_tc$patm[1], " Pa"))
+    
+    gg_patm <- df_patm %>%
+      ggplot(aes(x = jmax_mine, y = vcmax_mine, color = patm)) +
+      geom_point() +
+      scale_color_viridis_c() +
+      labs(title = "Pressure sensitivity", subtitle = paste0("VPD = ", df_tc$vpd[1], " Pa;  CO2 = ", df_tc$co2[1], " ppm;  PPFD = ", df_tc$ppfd[1], " mol m-2 d-1;  T = ", df_tc$tc[1], " deg C"))
+    
   }
 
 
