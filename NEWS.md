@@ -16,3 +16,8 @@
 ## rpmodel 1.0.4
 
 * Bugfix: vectorized all outputs from `rpmodel()`.
+
+## rpmodel 1.0.5
+
+* Added `jmax` (maximum rate of RuBP regeneration) to the list of returned variables by the `rpmodel()` function.
+* Made `calc_viscosity_h2o()` and `calc_density_h2o()` to public functions, exported as part of the rpmodel package.

@@ -1,7 +1,7 @@
 
 ## Purpose
 
-`rpmodel` provides an implementation of the P-model (Prentice et al., 2014; Wang et al., 2017; Stocker et al., 2019), which predicts acclimated photosynthetic parameters, assimilation, and dark respiration rates as a function of the environment. The main function is `rpmodel()` which returns a list of variables that are mutually consistent within the theory of the P-model (see Theory, below). Further functions used within `rpmodel()` are also provided through the package.
+`rpmodel` provides an implementation of the P-model (Prentice et al., 2014; Wang et al., 2017; Stocker et al., 2020) for predicting acclimated photosynthetic parameters, assimilation, and dark respiration rates as a function of the environment. The main function is `rpmodel()` which returns a list of variables that are mutually consistent within the theory of the P-model (see [Usage](./articles/usage.html) ). Further functions used within `rpmodel()` are also provided through the package.
 
 ## Usage
 
@@ -30,7 +30,7 @@ print( out_pmodel )
 `rpmodel` is available on CRAN [here](https://CRAN.R-project.org/package=rpmodel).
 
 ### Development release
-To install and load the rpmodel package (development release) run the following command in your R terminal: 
+To install and load the latest version of the rpmodel package (development release, not yet on CRAN) run the following command in your R terminal: 
 ```r
 if(!require(devtools)){install.packages(devtools)}
 devtools::install_github( "stineb/rpmodel", build_vignettes = TRUE )
@@ -44,7 +44,7 @@ benjamin.stocker@gmail.com
 
 ## References
 
-Stocker, B. D., Wang, H., Smith, N. G., Harrison, S. P., Keenan, T. F., Sandoval, D., Davis, T., and Prentice, I. C.: P-model v1.0: An optimality-based light use efficiency model for simulating ecosystem gross primary production, Geosci. Model Dev. Discuss., in review, 2019.
+Stocker, B. D., Wang, H., Smith, N. G., Harrison, S. P., Keenan, T. F., Sandoval, D., Davis, T., and Prentice, I. C.: P-model v1.0: an optimality-based light use efficiency model for simulating ecosystem gross primary production, Geosci. Model Dev., 13, 1545–1581, https://doi.org/10.5194/gmd-13-1545-2020, 2020.
 
 Wang, H., Prentice, I. C., Keenan, T. F., Davis, T. W., Wright, I. J., Cornwell, W. K.,Evans, B. J., and Peng, C.:  Towards a universal model for carbon dioxide uptake by plants, Nat Plants, 3, 734–741, 2017.
 

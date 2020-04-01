@@ -77,7 +77,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rpmodel</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.5</span>
       </span>
     </div>
 
@@ -183,29 +183,29 @@
     <tr>
       <th>ppfd</th>
       <td><p>(Optional) Photosynthetic photon flux density (mol m-2 d-1, defaults to <code>NA</code>). Note that
-the units of <code>ppfd</code> (per area and per time) determine the units of outputs <code>lue</code>, <code>gpp</code>, 
-<code>vcmax</code>, and <code>rd</code>. For example, if <code>ppfd</code> is provided in units of mol m-2 month-1, then 
+the units of <code>ppfd</code> (per area and per time) determine the units of outputs <code>lue</code>, <code>gpp</code>,
+<code>vcmax</code>, and <code>rd</code>. For example, if <code>ppfd</code> is provided in units of mol m-2 month-1, then
 respective output variables are returned as per unit months.</p></td>
     </tr>
     <tr>
       <th>patm</th>
-      <td><p>Atmospheric pressure (Pa). When provided, overrides <code>elv</code>, otherwise <code>patm</code> 
-is calculated using standard atmosphere (101325 Pa), corrected for elevation (argument <code>elv</code>), 
+      <td><p>Atmospheric pressure (Pa). When provided, overrides <code>elv</code>, otherwise <code>patm</code>
+is calculated using standard atmosphere (101325 Pa), corrected for elevation (argument <code>elv</code>),
 using the function <a href='calc_patm.html'>calc_patm</a>.</p></td>
     </tr>
     <tr>
       <th>elv</th>
-      <td><p>Elevation above sea-level (m.a.s.l.). Is used only for calculating atmospheric pressure (using 
-standard atmosphere (101325 Pa), corrected for elevation (argument <code>elv</code>), using the function 
-<a href='calc_patm.html'>calc_patm</a>), if argument <code>patm</code> is not provided. If argument <code>patm</code> is provided, 
+      <td><p>Elevation above sea-level (m.a.s.l.). Is used only for calculating atmospheric pressure (using
+standard atmosphere (101325 Pa), corrected for elevation (argument <code>elv</code>), using the function
+<a href='calc_patm.html'>calc_patm</a>), if argument <code>patm</code> is not provided. If argument <code>patm</code> is provided,
 <code>elv</code> is overridden.</p></td>
     </tr>
     <tr>
       <th>kphio</th>
       <td><p>Apparent quantum yield efficiency (unitless). Defaults to 0.0817 for
-<code>method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=FALSE</code>, 0.0870 for 
-<code>method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE</code>, and 0.0492 for 
-<code>method_jmaxlim="wang17", do_ftemp_kphio=FALSE, do_soilmstress=FALSE</code>, corresponding to the empirically 
+<code>method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=FALSE</code>, 0.0870 for
+<code>method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE</code>, and 0.0492 for
+<code>method_jmaxlim="wang17", do_ftemp_kphio=FALSE, do_soilmstress=FALSE</code>, corresponding to the empirically
 fitted value as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'BRC', 'FULL', and 'ORG'
 respectively.</p></td>
     </tr>
@@ -215,27 +215,27 @@ respectively.</p></td>
     </tr>
     <tr>
       <th>soilm</th>
-      <td><p>(Optional, used only if <code>do_soilmstress==TRUE</code>) Relative soil moisture as a fraction 
-of field capacity (unitless). Defaults to 1.0 (no soil moisture stress). This information is used to calculate 
-an empirical soil moisture stress factor (<a href='calc_soilmstress.html'>calc_soilmstress</a>) whereby the sensitivity is determined 
-by average aridity, defined by the local annual mean ratio of actual over potential evapotranspiration, 
+      <td><p>(Optional, used only if <code>do_soilmstress==TRUE</code>) Relative soil moisture as a fraction
+of field capacity (unitless). Defaults to 1.0 (no soil moisture stress). This information is used to calculate
+an empirical soil moisture stress factor (<a href='calc_soilmstress.html'>calc_soilmstress</a>) whereby the sensitivity is determined
+by average aridity, defined by the local annual mean ratio of actual over potential evapotranspiration,
 supplied by argument <code>meanalpha</code>.</p></td>
     </tr>
     <tr>
       <th>meanalpha</th>
-      <td><p>(Optional, used only if <code>do_soilmstress==TRUE</code>) Local annual mean ratio of 
+      <td><p>(Optional, used only if <code>do_soilmstress==TRUE</code>) Local annual mean ratio of
 actual over potential evapotranspiration, measure for average aridity. Defaults to 1.0.</p></td>
     </tr>
     <tr>
       <th>apar_soilm</th>
-      <td><p>(Optional, used only if <code>do_soilmstress==TRUE</code>) Parameter determining the 
+      <td><p>(Optional, used only if <code>do_soilmstress==TRUE</code>) Parameter determining the
 sensitivity of the empirical soil moisture stress function. Defaults to 0.0, the empirically fitted value
 as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'FULL' (corresponding to a setup
 with <code>method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE</code>).</p></td>
     </tr>
     <tr>
       <th>bpar_soilm</th>
-      <td><p>(Optional, used only if <code>do_soilmstress==TRUE</code>) Parameter determining the 
+      <td><p>(Optional, used only if <code>do_soilmstress==TRUE</code>) Parameter determining the
 sensitivity of the empirical soil moisture stress function. Defaults to 0.685, the empirically fitted value
 as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'FULL' (corresponding to a setup
 with <code>method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE</code>).</p></td>
@@ -317,7 +317,7 @@ photosynthesis model, P-model predictions, including all its corollary). This in
                                m' = m \sqrt( 1 - (c/m)^(2/3) )
                         $$
                         with \(c=0.41\) (Wang et al., 2017) if <code>method_jmaxlim=="wang17"</code>. \(Mc\) is
-                        the molecular mass of C (12.0107 g mol-1). \(m\) is given returned variable <code>mj</code>. 
+                        the molecular mass of C (12.0107 g mol-1). \(m\) is given returned variable <code>mj</code>.
                         If <code>do_soilmstress==TRUE</code>, \(LUE\) is multiplied with a soil moisture stress factor,
                         calculated with <a href='calc_soilmstress.html'>calc_soilmstress</a>.</p></li>
 <li><p><code>mj</code>: Factor in the light-limited assimilation rate function, given by
@@ -359,6 +359,11 @@ photosynthesis model, P-model predictions, including all its corollary). This in
                      following a modified Arrhenius equation, calculated as \(Vcmax25 = Vcmax / fv\),
                      where \(fv\) is the instantaneous temperature response by Vcmax and is implemented
                      by function <a href='calc_ftemp_inst_vcmax.html'>calc_ftemp_inst_vcmax</a>.</p></li>
+<li><p><code>jmax</code>: The maximum rate of RuBP regeneration () at growth temperature (argument
+                      <code>tc</code>), calculated using
+                      $$
+                           A_J = A_C
+                      $$</p></li>
 <li><p><code>rd</code>: Dark respiration \(Rd\) (mol C m-2), calculated as
                      $$
                          Rd = b0 Vcmax (fr / fv)
@@ -371,15 +376,15 @@ photosynthesis model, P-model predictions, including all its corollary). This in
 </ul>
 
 <p>Additional variables are contained in the returned list if argument <code>method_jmaxlim=="smith19"</code></p><ul>
-<li><p><code>omega</code>: Term corresponding to \(\omega\), defined by Eq. 16 in Smith et al. (2019), 
+<li><p><code>omega</code>: Term corresponding to \(\omega\), defined by Eq. 16 in Smith et al. (2019),
         and Eq. E19 in Stocker et al. (2019).</p></li>
-<li><p><code>omega_star</code>: Term corresponding to \(\omega^\ast\), defined by Eq. 18 in Smith et al. 
+<li><p><code>omega_star</code>: Term corresponding to \(\omega^\ast\), defined by Eq. 18 in Smith et al.
         (2019), and Eq. E21 in Stocker et al. (2019).</p></li>
 </ul>
 
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>Bernacchi, C. J., Pimentel, C., and Long, S. P.:  In vivo temperature response func-tions  of  parameters  
+    <p>Bernacchi, C. J., Pimentel, C., and Long, S. P.:  In vivo temperature response func-tions  of  parameters
              required  to  model  RuBP-limited  photosynthesis,  Plant  Cell Environ., 26, 1419–1430, 2003</p>
 <p>Heskel,  M.,  O’Sullivan,  O.,  Reich,  P.,  Tjoelker,  M.,  Weerasinghe,  L.,  Penillard,  A.,Egerton, J.,
              Creek, D., Bloomfield, K., Xiang, J., Sinca, F., Stangl, Z., Martinez-De La Torre, A., Griffin, K.,
@@ -396,12 +401,12 @@ photosynthesis model, P-model predictions, including all its corollary). This in
              and Peng, C.:  Towards a universal model for carbon dioxide uptake by plants, Nat Plants, 3, 734–741, 2017.
              Atkin, O. K., et al.:  Global variability in leaf respiration in relation to climate, plant func-tional
              types and leaf traits, New Phytologist, 206, 614–636, doi:10.1111/nph.13253,
-             https://nph.onlinelibrary.wiley.com/doi/abs/10.1111/nph.13253.</p>             
-<p>Smith, N. G., Keenan, T. F., Colin Prentice, I. , Wang, H. , Wright, I. J., Niinemets, U. , Crous, K. Y., 
-             Domingues, T. F., Guerrieri, R. , Yoko Ishida, F. , Kattge, J. , Kruger, E. L., Maire, V. , Rogers, A. , 
-             Serbin, S. P., Tarvainen, L. , Togashi, H. F., Townsend, P. A., Wang, M. , Weerasinghe, L. K. and Zhou, S. 
-             (2019), Global photosynthetic capacity is optimized to the environment. Ecol Lett, 22: 506-517. 
-             doi:10.1111/ele.13210</p>             
+             https://nph.onlinelibrary.wiley.com/doi/abs/10.1111/nph.13253.</p>
+<p>Smith, N. G., Keenan, T. F., Colin Prentice, I. , Wang, H. , Wright, I. J., Niinemets, U. , Crous, K. Y.,
+             Domingues, T. F., Guerrieri, R. , Yoko Ishida, F. , Kattge, J. , Kruger, E. L., Maire, V. , Rogers, A. ,
+             Serbin, S. P., Tarvainen, L. , Togashi, H. F., Townsend, P. A., Wang, M. , Weerasinghe, L. K. and Zhou, S.
+             (2019), Global photosynthetic capacity is optimized to the environment. Ecol Lett, 22: 506-517.
+             doi:10.1111/ele.13210</p>
 <p>Stocker, B. et al. Geoscientific Model Development Discussions (in prep.)</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -446,6 +451,9 @@ photosynthesis model, P-model predictions, including all its corollary). This in
 #&gt; 
 #&gt; $vcmax25
 #&gt; [1] 29.8967
+#&gt; 
+#&gt; $jmax
+#&gt; [1] 38.36589
 #&gt; 
 #&gt; $rd
 #&gt; [1] 0.3025656

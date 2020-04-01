@@ -278,4 +278,9 @@ df_w_vol %>%
   ggplot() + 
   geom_line(aes(x = w_vol, y = out_opt)) +
   labs(title = "Regulated Vcmax", subtitle = "As a funtion of volumetric soil water content")
+
+df_w_vol %>% 
+  ggplot() + 
+  geom_line(aes(x = psi_soil, y = out_opt)) +
+  labs(title = "Regulated Vcmax", subtitle = "As a funtion of soil water potential")
 ```

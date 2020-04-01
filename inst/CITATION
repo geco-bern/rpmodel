@@ -10,17 +10,17 @@ citEntry(entry = "Article",
                    as.person("David Sandoval"),
                    as.person("Tyler Davis"),
                    as.person("Colin Prentice")),
-  journal      = "Geoscientific Model Development Discussions",
-  year         = "2019",
-  volume       = "2019",
+  journal      = "Geoscientific Model Development",
+  year         = "2020",
+  volume       = "13",
   number       = "",
-  pages        = "1--59",
-  url          = "https://www.geosci-model-dev-discuss.net/gmd-2019-200/",
-  doi          = "10.5194/gmd-2019-200",
+  pages        = "1545–1581",
+  url          = "https://doi.org/10.5194/gmd-13-1545-2020",
+  doi          = "10.5194/gmd-13-1545-2020",
 
   textVersion  =
-  paste("Stocker et al. (2019).",
+  paste("Stocker et al. (2020).",
         "P-model v1.0: An optimality-based light use efficiency model for simulating ecosystem gross primary production",
-        "Geoscientific Model Development Discussions, 40(3), 1-25.",
-        "URL http://www.XXX")
+        "Geosci. Model Dev. 13, 1545–1581, 2020",
+        "URL https://doi.org/10.5194/gmd-13-1545-2020")
 )

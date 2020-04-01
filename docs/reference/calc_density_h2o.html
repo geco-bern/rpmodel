@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Calculates atmospheric pressure — calc_patm • rpmodel</title>
+<title>Density of water — calc_density_h2o • rpmodel</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -42,9 +42,9 @@
 
 
 
-<meta property="og:title" content="Calculates atmospheric pressure — calc_patm" />
-<meta property="og:description" content="Calculates atmospheric pressure as a function of elevation, by default assuming 
-standard atmosphere (101325 Pa at sea level)" />
+<meta property="og:title" content="Density of water — calc_density_h2o" />
+<meta property="og:description" content="Calculates the density of water as a function of temperature and atmospheric
+pressure, using the Tumlirz Equation." />
 <meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
 
@@ -129,57 +129,42 @@ standard atmosphere (101325 Pa at sea level)" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Calculates atmospheric pressure</h1>
-    <small class="dont-index">Source: <a href='https://github.com/stineb/rpmodel/blob/master/R/calc_patm.R'><code>R/calc_patm.R</code></a></small>
-    <div class="hidden name"><code>calc_patm.Rd</code></div>
+    <h1>Density of water</h1>
+    <small class="dont-index">Source: <a href='https://github.com/stineb/rpmodel/blob/master/R/calc_density_h2o.R'><code>R/calc_density_h2o.R</code></a></small>
+    <div class="hidden name"><code>calc_density_h2o.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Calculates atmospheric pressure as a function of elevation, by default assuming 
-standard atmosphere (101325 Pa at sea level)</p>
+    <p>Calculates the density of water as a function of temperature and atmospheric
+pressure, using the Tumlirz Equation.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>calc_patm</span>(<span class='no'>elv</span>, <span class='kw'>patm0</span> <span class='kw'>=</span> <span class='fl'>101325</span>)</pre>
+    <pre class="usage"><span class='fu'>calc_density_h2o</span>(<span class='no'>tc</span>, <span class='no'>p</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>elv</th>
-      <td><p>Elevation above sea-level (m.a.s.l.)</p></td>
+      <th>tc</th>
+      <td><p>numeric, air temperature (tc), degrees C</p></td>
     </tr>
     <tr>
-      <th>patm0</th>
-      <td><p>(Optional) Atmospheric pressure at sea level (Pa), defaults to 101325 Pa.</p></td>
+      <th>p</th>
+      <td><p>numeric, atmospheric pressure (p), Pa</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A numeric value for \(p\)</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>The elevation-dependence of atmospheric pressure is computed by 
-assuming a linear decrease in temperature with elevation and a mean 
-adiabatic lapse rate (Berberan-Santos et al., 1997):
-$$
-   p(z) = p0 ( 1 - Lz / TK0) ^ ( g M / (RL) )
-$$
-where \(z\) is the elevation above mean sea level (m, argument <code>elv</code>), 
-\(g\) is the gravity constant (9.80665 m s-2), \(p0\) is the atmospheric 
-pressure at 0 m a.s.l. (argument <code>patm0</code>, defaults to 101325 Pa), 
-\(L\) is the mean adiabatic lapse rate (0.0065 K m-2), 
-\(M\) is the molecular weight for dry air (0.028963 kg mol-1), 
-\(R\) is the universal gas constant (8.3145 J mol-1 K-1), and \(TK0\)
-is the standard temperature (298.15 K, corresponds to 25 deg C).</p>
+    <p>numeric, density of water, kg/m^3</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>Allen, R. G., Pereira, L. S., Raes, D., Smith, M.: 
-             FAO Irrigation and Drainage Paper No. 56, Food and 
-             Agriculture Organization of the United Nations, 1998</p>
+    <p>F.H. Fisher and O.E Dial, Jr. (1975) Equation of state of
+pure water and sea water, Tech. Rept., Marine Physical
+Laboratory, San Diego, CA.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='st'>"Standard atmospheric pressure, in Pa, corrected for 1000 m.a.s.l.:"</span>)</div><div class='output co'>#&gt; [1] "Standard atmospheric pressure, in Pa, corrected for 1000 m.a.s.l.:"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'>calc_patm</span>(<span class='fl'>1000</span>))</div><div class='output co'>#&gt; [1] 90241.54</div><div class='input'>
+    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='st'>"Density of water at 20 degrees C and standard atmospheric pressure:"</span>)</div><div class='output co'>#&gt; [1] "Density of water at 20 degrees C and standard atmospheric pressure:"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'>calc_density_h2o</span>(<span class='fl'>20</span>, <span class='fl'>101325</span>))</div><div class='output co'>#&gt; [1] 998.2056</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -187,7 +172,6 @@ is the standard temperature (298.15 K, corresponds to 25 deg C).</p>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       <li><a href="#value">Value</a></li>
-      <li><a href="#details">Details</a></li>
       <li><a href="#references">References</a></li>
       <li><a href="#examples">Examples</a></li>
     </ul>

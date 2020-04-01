@@ -8,35 +8,35 @@
 #' @param fapar (Optional) Fraction of absorbed photosynthetically active radiation (unitless, defaults to
 #' \code{NA})
 #' @param ppfd (Optional) Photosynthetic photon flux density (mol m-2 d-1, defaults to \code{NA}). Note that
-#' the units of \code{ppfd} (per area and per time) determine the units of outputs \code{lue}, \code{gpp}, 
-#' \code{vcmax}, and \code{rd}. For example, if \code{ppfd} is provided in units of mol m-2 month-1, then 
+#' the units of \code{ppfd} (per area and per time) determine the units of outputs \code{lue}, \code{gpp},
+#' \code{vcmax}, and \code{rd}. For example, if \code{ppfd} is provided in units of mol m-2 month-1, then
 #' respective output variables are returned as per unit months.
-#' @param patm Atmospheric pressure (Pa). When provided, overrides \code{elv}, otherwise \code{patm} 
-#' is calculated using standard atmosphere (101325 Pa), corrected for elevation (argument \code{elv}), 
+#' @param patm Atmospheric pressure (Pa). When provided, overrides \code{elv}, otherwise \code{patm}
+#' is calculated using standard atmosphere (101325 Pa), corrected for elevation (argument \code{elv}),
 #' using the function \link{calc_patm}.
-#' @param elv Elevation above sea-level (m.a.s.l.). Is used only for calculating atmospheric pressure (using 
-#' standard atmosphere (101325 Pa), corrected for elevation (argument \code{elv}), using the function 
-#' \link{calc_patm}), if argument \code{patm} is not provided. If argument \code{patm} is provided, 
-#' \code{elv} is overridden. 
+#' @param elv Elevation above sea-level (m.a.s.l.). Is used only for calculating atmospheric pressure (using
+#' standard atmosphere (101325 Pa), corrected for elevation (argument \code{elv}), using the function
+#' \link{calc_patm}), if argument \code{patm} is not provided. If argument \code{patm} is provided,
+#' \code{elv} is overridden.
 #' @param kphio Apparent quantum yield efficiency (unitless). Defaults to 0.0817 for
-#' \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=FALSE}, 0.0870 for 
-#' \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE}, and 0.0492 for 
-#' \code{method_jmaxlim="wang17", do_ftemp_kphio=FALSE, do_soilmstress=FALSE}, corresponding to the empirically 
+#' \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=FALSE}, 0.0870 for
+#' \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE}, and 0.0492 for
+#' \code{method_jmaxlim="wang17", do_ftemp_kphio=FALSE, do_soilmstress=FALSE}, corresponding to the empirically
 #' fitted value as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'BRC', 'FULL', and 'ORG'
-#' respectively. 
+#' respectively.
 #' @param beta Unit cost ratio. Defaults to 146.0 (see Stocker et al., 2019).
-#' @param soilm (Optional, used only if \code{do_soilmstress==TRUE}) Relative soil moisture as a fraction 
-#' of field capacity (unitless). Defaults to 1.0 (no soil moisture stress). This information is used to calculate 
-#' an empirical soil moisture stress factor (\link{calc_soilmstress}) whereby the sensitivity is determined 
-#' by average aridity, defined by the local annual mean ratio of actual over potential evapotranspiration, 
+#' @param soilm (Optional, used only if \code{do_soilmstress==TRUE}) Relative soil moisture as a fraction
+#' of field capacity (unitless). Defaults to 1.0 (no soil moisture stress). This information is used to calculate
+#' an empirical soil moisture stress factor (\link{calc_soilmstress}) whereby the sensitivity is determined
+#' by average aridity, defined by the local annual mean ratio of actual over potential evapotranspiration,
 #' supplied by argument \code{meanalpha}.
-#' @param meanalpha (Optional, used only if \code{do_soilmstress==TRUE}) Local annual mean ratio of 
+#' @param meanalpha (Optional, used only if \code{do_soilmstress==TRUE}) Local annual mean ratio of
 #' actual over potential evapotranspiration, measure for average aridity. Defaults to 1.0.
-#' @param apar_soilm (Optional, used only if \code{do_soilmstress==TRUE}) Parameter determining the 
+#' @param apar_soilm (Optional, used only if \code{do_soilmstress==TRUE}) Parameter determining the
 #' sensitivity of the empirical soil moisture stress function. Defaults to 0.0, the empirically fitted value
 #' as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'FULL' (corresponding to a setup
 #' with \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE}).
-#' @param bpar_soilm (Optional, used only if \code{do_soilmstress==TRUE}) Parameter determining the 
+#' @param bpar_soilm (Optional, used only if \code{do_soilmstress==TRUE}) Parameter determining the
 #' sensitivity of the empirical soil moisture stress function. Defaults to 0.685, the empirically fitted value
 #' as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'FULL' (corresponding to a setup
 #' with \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE}).
@@ -96,7 +96,7 @@
 #'                                m' = m \sqrt( 1 - (c/m)^(2/3) )
 #'                         }
 #'                         with \eqn{c=0.41} (Wang et al., 2017) if \code{method_jmaxlim=="wang17"}. \eqn{Mc} is
-#'                         the molecular mass of C (12.0107 g mol-1). \eqn{m} is given returned variable \code{mj}. 
+#'                         the molecular mass of C (12.0107 g mol-1). \eqn{m} is given returned variable \code{mj}.
 #'                         If \code{do_soilmstress==TRUE}, \eqn{LUE} is multiplied with a soil moisture stress factor,
 #'                         calculated with \link{calc_soilmstress}.
 #'         \item \code{mj}: Factor in the light-limited assimilation rate function, given by
@@ -138,6 +138,11 @@
 #'                      following a modified Arrhenius equation, calculated as \eqn{Vcmax25 = Vcmax / fv},
 #'                      where \eqn{fv} is the instantaneous temperature response by Vcmax and is implemented
 #'                      by function \link{calc_ftemp_inst_vcmax}.
+#'         \item \code{jmax}: The maximum rate of RuBP regeneration () at growth temperature (argument
+#'                       \code{tc}), calculated using
+#'                       \deqn{
+#'                            A_J = A_C
+#'                       }
 #'         \item \code{rd}: Dark respiration \eqn{Rd} (mol C m-2), calculated as
 #'                      \deqn{
 #'                          Rd = b0 Vcmax (fr / fv)
@@ -148,24 +153,24 @@
 #'                      of dark respiration following Heskel et al. (2016) and is implemented by function
 #'                      \link{calc_ftemp_inst_rd}.
 #' }
-#' 
+#'
 #' Additional variables are contained in the returned list if argument \code{method_jmaxlim=="smith19"}
 #' \itemize{
-#'         \item \code{omega}: Term corresponding to \eqn{\omega}, defined by Eq. 16 in Smith et al. (2019), 
-#'         and Eq. E19 in Stocker et al. (2019). 
-#'         \item \code{omega_star}: Term corresponding to \eqn{\omega^\ast}, defined by Eq. 18 in Smith et al. 
-#'         (2019), and Eq. E21 in Stocker et al. (2019). 
+#'         \item \code{omega}: Term corresponding to \eqn{\omega}, defined by Eq. 16 in Smith et al. (2019),
+#'         and Eq. E19 in Stocker et al. (2019).
+#'         \item \code{omega_star}: Term corresponding to \eqn{\omega^\ast}, defined by Eq. 18 in Smith et al.
+#'         (2019), and Eq. E21 in Stocker et al. (2019).
 #'         }
 #'
-#' @references  Bernacchi, C. J., Pimentel, C., and Long, S. P.:  In vivo temperature response func-tions  of  parameters  
+#' @references  Bernacchi, C. J., Pimentel, C., and Long, S. P.:  In vivo temperature response func-tions  of  parameters
 #'              required  to  model  RuBP-limited  photosynthesis,  Plant  Cell Environ., 26, 1419–1430, 2003
-#' 
+#'
 #'              Heskel,  M.,  O’Sullivan,  O.,  Reich,  P.,  Tjoelker,  M.,  Weerasinghe,  L.,  Penillard,  A.,Egerton, J.,
 #'              Creek, D., Bloomfield, K., Xiang, J., Sinca, F., Stangl, Z., Martinez-De La Torre, A., Griffin, K.,
 #'              Huntingford, C., Hurry, V., Meir, P., Turnbull, M.,and Atkin, O.:  Convergence in the temperature response
 #'              of leaf respiration across biomes and plant functional types, Proceedings of the National Academy of Sciences,
 #'              113,  3832–3837,  doi:10.1073/pnas.1520282113,2016.
-#' 
+#'
 #'              Huber,  M.  L.,  Perkins,  R.  A.,  Laesecke,  A.,  Friend,  D.  G.,  Sengers,  J.  V.,  Assael,M. J.,
 #'              Metaxa, I. N., Vogel, E., Mares, R., and Miyagawa, K.:  New international formulation for the viscosity
 #'              of H2O, Journal of Physical and Chemical ReferenceData, 38, 101–125, 2009
@@ -179,25 +184,25 @@
 #'              Atkin, O. K., et al.:  Global variability in leaf respiration in relation to climate, plant func-tional
 #'              types and leaf traits, New Phytologist, 206, 614–636, doi:10.1111/nph.13253,
 #'              https://nph.onlinelibrary.wiley.com/doi/abs/10.1111/nph.13253.
-#'              
-#'              Smith, N. G., Keenan, T. F., Colin Prentice, I. , Wang, H. , Wright, I. J., Niinemets, U. , Crous, K. Y., 
-#'              Domingues, T. F., Guerrieri, R. , Yoko Ishida, F. , Kattge, J. , Kruger, E. L., Maire, V. , Rogers, A. , 
-#'              Serbin, S. P., Tarvainen, L. , Togashi, H. F., Townsend, P. A., Wang, M. , Weerasinghe, L. K. and Zhou, S. 
-#'              (2019), Global photosynthetic capacity is optimized to the environment. Ecol Lett, 22: 506-517. 
+#'
+#'              Smith, N. G., Keenan, T. F., Colin Prentice, I. , Wang, H. , Wright, I. J., Niinemets, U. , Crous, K. Y.,
+#'              Domingues, T. F., Guerrieri, R. , Yoko Ishida, F. , Kattge, J. , Kruger, E. L., Maire, V. , Rogers, A. ,
+#'              Serbin, S. P., Tarvainen, L. , Togashi, H. F., Townsend, P. A., Wang, M. , Weerasinghe, L. K. and Zhou, S.
+#'              (2019), Global photosynthetic capacity is optimized to the environment. Ecol Lett, 22: 506-517.
 #'              doi:10.1111/ele.13210
-#'              
-#'              Stocker, B. et al. Geoscientific Model Development Discussions (in prep.) 
+#'
+#'              Stocker, B. et al. Geoscientific Model Development Discussions (in prep.)
 #'
 #' @export
 #'
 #' @examples rpmodel( tc = 20, vpd = 1000, co2 = 400, fapar = 1, ppfd = 300, elv = 0)
 #'
-rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA, 
-                     kphio = ifelse(do_ftemp_kphio, ifelse(do_soilmstress, 0.087182, 0.081785), 0.049977), 
-                     beta = 146.0, soilm = 1.0, meanalpha = 1.0, apar_soilm = 0.0, bpar_soilm = 0.73300, 
-                     c4 = FALSE, method_optci = "prentice14", method_jmaxlim = "wang17", 
+rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
+                     kphio = ifelse(do_ftemp_kphio, ifelse(do_soilmstress, 0.087182, 0.081785), 0.049977),
+                     beta = 146.0, soilm = 1.0, meanalpha = 1.0, apar_soilm = 0.0, bpar_soilm = 0.73300,
+                     c4 = FALSE, method_optci = "prentice14", method_jmaxlim = "wang17",
                      do_ftemp_kphio = TRUE, do_soilmstress = FALSE, returnvar = NULL, verbose = FALSE ){
-  
+
   # Check arguments
   if (identical(NA, elv) && identical(NA, patm)){
     rlang::abort("Aborted. Provide either elevation (arugment elv) or atmospheric pressure (argument patm).")
@@ -205,7 +210,7 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
     if (verbose) rlang::warn("Atmospheric pressure (patm) not provided. Calculating it as a function of elevation (elv), assuming standard atmosphere (101325 Pa at sea level).")
     patm <- calc_patm(elv)
   }
-  
+
   #-----------------------------------------------------------------------
   # Fixed parameters
   #-----------------------------------------------------------------------
@@ -348,6 +353,14 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
   ## Dark respiration
   rd <- ifelse(!is.na(iabs), iabs * rd_unitiabs, rep(NA, len))
 
+  ## Jmax using again A_J = A_C
+  fact_jmaxlim <- ifelse(!is.na(iabs),
+                         vcmax * (ci + 2.0 * gammastar) / (kphio * iabs * (ci + kmm)),
+                         rep(NA, len))
+  jmax <- ifelse(!is.na(iabs),
+                 4.0 * kphio * iabs / sqrt( (1.0/fact_jmaxlim)**2 - 1.0 ),
+                 rep(NA, len))
+
   ## construct list for output
   out <- list(
               ca              = rep(ca, len),
@@ -364,6 +377,7 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
               gs              = (gpp / c_molmass) / (ca - ci),
               vcmax           = vcmax,
               vcmax25         = vcmax25,
+              jmax            = jmax,
               rd              = rd
               )
 
@@ -398,17 +412,17 @@ calc_optimal_chi <- function( kmm, gammastar, ns_star, ca, vpd, beta ){
 
   ## wrap if condition in a function to allow vectorization
   calc_mj <- function(ns_star, vpd, vbkg){
-    vsr <- sqrt( 1.6 * ns_star * vpd / vbkg ) 
+    vsr <- sqrt( 1.6 * ns_star * vpd / vbkg )
 
     # Based on the mc' formulation (see Regressing_LUE.pdf)
     mj <- vdcg / ( vacg + 3.0 * gammastar * vsr )
-      
+
     return(mj)
   }
-  
+
   # Check for negatives, vectorized
   mj <- ifelse(ns_star>0 & vpd>0 & vbkg>0, calc_mj(ns_star, vpd, vbkg), rep(NA, length(vpd)))
-  
+
   ## alternative variables
   gamma <- gammastar / ca
   kappa <- kmm / ca
@@ -425,7 +439,7 @@ calc_optimal_chi <- function( kmm, gammastar, ns_star, ca, vpd, beta ){
 
 
 calc_lue_vcmax_wang17 <- function(out_optchi, kphio, ftemp_kphio, c_molmass, soilmstress){
-  
+
   ## Include effect of Jmax limitation
   len <- length(out_optchi[[1]])
   mprime <- calc_mprime( out_optchi$mj )
@@ -438,7 +452,7 @@ calc_lue_vcmax_wang17 <- function(out_optchi, kphio, ftemp_kphio, c_molmass, soi
     ## Vcmax normalised per unit absorbed PPFD (assuming iabs=1), with Jmax limitation
     vcmax_unitiabs = kphio * ftemp_kphio * out_optchi$mjoc * mprime / out_optchi$mj * soilmstress,
 
-    ## complement for non-smith19 
+    ## complement for non-smith19
     omega               = rep(NA, len),
     omega_star          = rep(NA, len)
     )
@@ -450,7 +464,7 @@ calc_lue_vcmax_wang17 <- function(out_optchi, kphio, ftemp_kphio, c_molmass, soi
 calc_lue_vcmax_smith19 <- function(out_optchi, kphio, ftemp_kphio, c_molmass, soilmstress){
 
   len <- length(out_optchi[[1]])
-  
+
   # Adopted from Nick Smith's code:
   # Calculate omega, see Smith et al., 2019 Ecology Letters
   calc_omega <- function( theta, c_cost, m ){
@@ -504,7 +518,7 @@ calc_lue_vcmax_smith19 <- function(out_optchi, kphio, ftemp_kphio, c_molmass, so
 calc_lue_vcmax_none <- function(out_optchi, kphio, ftemp_kphio, c_molmass, soilmstress){
   ## Do not include effect of Jmax limitation
   len <- length(out_optchi[[1]])
-  
+
   out <- list(
 
     ## Light use efficiency (gpp per unit absorbed light)
@@ -513,7 +527,7 @@ calc_lue_vcmax_none <- function(out_optchi, kphio, ftemp_kphio, c_molmass, soilm
     ## Vcmax normalised per unit absorbed PPFD (assuming iabs=1), with Jmax limitation
     vcmax_unitiabs = kphio * ftemp_kphio * out_optchi$mjoc * soilmstress,
 
-    ## complement for non-smith19 
+    ## complement for non-smith19
     omega               = rep(NA, len),
     omega_star          = rep(NA, len)
     )
@@ -532,7 +546,7 @@ calc_lue_vcmax_c4 <- function( kphio, ftemp_kphio, c_molmass, soilmstress ){
     ## Vcmax normalised per unit absorbed PPFD (assuming iabs=1), with Jmax limitation
     vcmax_unitiabs = kphio * ftemp_kphio * soilmstress,
 
-    ## complement for non-smith19 
+    ## complement for non-smith19
     omega               = rep(NA, len),
     omega_star          = rep(NA, len)
   )
@@ -579,123 +593,4 @@ co2_to_ca <- function( co2, patm ){
 }
 
 
-density_h2o <- function( tc, p ){
-  #-----------------------------------------------------------------------
-  # Input:    - float, air temperature (tc), degrees C
-  #           - float, atmospheric pressure (p), Pa
-  # Output:   float, density of water, kg/m^3
-  # Features: Calculates density of water at a given temperature and
-  #           pressure using the Tumlirz Equation
-  # Ref:      F.H. Fisher and O.E Dial, Jr. (1975) Equation of state of
-  #           pure water and sea water, Tech. Rept., Marine Physical
-  #           Laboratory, San Diego, CA.
-  #-----------------------------------------------------------------------
 
-  # Calculate lambda, (bar cm^3)/g:
-  my_lambda <- 1788.316 +
-          21.55053*tc +
-        -0.4695911*tc*tc +
-     (3.096363e-3)*tc*tc*tc +
-    -(7.341182e-6)*tc*tc*tc*tc
-
-  # Calculate po, bar
-  po <- 5918.499 +
-           58.05267*tc +
-         -1.1253317*tc*tc +
-     (6.6123869e-3)*tc*tc*tc +
-    -(1.4661625e-5)*tc*tc*tc*tc
-
-  # Calculate vinf, cm^3/g
-  vinf <- 0.6980547 +
-    -(7.435626e-4)*tc +
-     (3.704258e-5)*tc*tc +
-    -(6.315724e-7)*tc*tc*tc +
-     (9.829576e-9)*tc*tc*tc*tc +
-   -(1.197269e-10)*tc*tc*tc*tc*tc +
-    (1.005461e-12)*tc*tc*tc*tc*tc*tc +
-   -(5.437898e-15)*tc*tc*tc*tc*tc*tc*tc +
-     (1.69946e-17)*tc*tc*tc*tc*tc*tc*tc*tc +
-   -(2.295063e-20)*tc*tc*tc*tc*tc*tc*tc*tc*tc
-
-  # Convert pressure to bars (1 bar <- 100000 Pa)
-  pbar <- (1e-5)*p
-
-  # Calculate the specific volume (cm^3 g^-1):
-  v <- vinf + my_lambda/(po + pbar)
-
-  # Convert to density (g cm^-3) -> 1000 g/kg; 1000000 cm^3/m^3 -> kg/m^3:
-  rho <- (1e3/v)
-
-  return(rho)
-}
-
-
-calc_viscosity_h2o <- function( tc, p ) {
-  #-----------------------------------------------------------------------
-  # Input:    - float, ambient temperature (tc), degrees C
-  #           - float, ambient pressure (p), Pa
-  # Return:   float, viscosity of water (mu), Pa s
-  # Features: Calculates viscosity of water at a given temperature and
-  #           pressure.
-  # Depends:  density_h2o
-  # Ref:      Huber, M. L., R. A. Perkins, A. Laesecke, D. G. Friend, J. V.
-  #           Sengers, M. J. Assael, ..., K. Miyagawa (2009) New
-  #           international formulation for the viscosity of H2O, J. Phys.
-  #           Chem. Ref. Data, Vol. 38(2), pp. 101-125.
-  #-----------------------------------------------------------------------
-
-  # Define reference temperature, density, and pressure values:
-  tk_ast  <- 647.096    # Kelvin
-  rho_ast <- 322.0      # kg/m^3
-  mu_ast  <- 1e-6       # Pa s
-
-  # Get the density of water, kg/m^3
-  rho <- density_h2o(tc, p)
-
-  # Calculate dimensionless parameters:
-  tbar  <- (tc + 273.15)/tk_ast
-  tbarx <- tbar^(0.5)
-  tbar2 <- tbar^2
-  tbar3 <- tbar^3
-  rbar  <- rho/rho_ast
-
-  # Calculate mu0 (Eq. 11 & Table 2, Huber et al., 2009):
-  mu0 <- 1.67752 + 2.20462/tbar + 0.6366564/tbar2 - 0.241605/tbar3
-  mu0 <- 1e2*tbarx/mu0
-
-  # Create Table 3, Huber et al. (2009):
-  h_array <- array(0.0, dim=c(7,6))
-  h_array[1,] <- c(0.520094, 0.0850895, -1.08374, -0.289555, 0.0, 0.0)  # hj0
-  h_array[2,] <- c(0.222531, 0.999115, 1.88797, 1.26613, 0.0, 0.120573) # hj1
-  h_array[3,] <- c(-0.281378, -0.906851, -0.772479, -0.489837, -0.257040, 0.0) # hj2
-  h_array[4,] <- c(0.161913,  0.257399, 0.0, 0.0, 0.0, 0.0) # hj3
-  h_array[5,] <- c(-0.0325372, 0.0, 0.0, 0.0698452, 0.0, 0.0) # hj4
-  h_array[6,] <- c(0.0, 0.0, 0.0, 0.0, 0.00872102, 0.0) # hj5
-  h_array[7,] <- c(0.0, 0.0, 0.0, -0.00435673, 0.0, -0.000593264) # hj6
-
-  # Calculate mu1 (Eq. 12 & Table 3, Huber et al., 2009):
-  mu1 <- 0.0
-  ctbar <- (1.0/tbar) - 1.0
-  # print(paste("ctbar",ctbar))
-  # for i in xrange(6):
-  for (i in 1:6){
-    coef1 <- ctbar^(i-1)
-    # print(paste("i, coef1", i, coef1))
-    coef2 <- 0.0
-    for (j in 1:7){
-      coef2 <- coef2 + h_array[j,i] * (rbar - 1.0)^(j-1)
-    }
-    mu1 <- mu1 + coef1 * coef2
-  }
-  mu1 <- exp( rbar * mu1 )
-  # print(paste("mu1",mu1))
-
-  # Calculate mu_bar (Eq. 2, Huber et al., 2009)
-  #   assumes mu2 = 1
-  mu_bar <- mu0 * mu1
-
-  # Calculate mu (Eq. 1, Huber et al., 2009)
-  mu <- mu_bar * mu_ast    # Pa s
-
-  return( mu )
-}
