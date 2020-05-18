@@ -397,6 +397,9 @@ calc_optimal_chi <- function( kmm, gammastar, ns_star, ca, vpd, beta ){
   #           - ns
   #           - vpd
   #-----------------------------------------------------------------------
+  
+  ## Avoid negative VPD (dew conditions), resolves issue #2 (https://github.com/stineb/rpmodel/issues/2)
+  vpd <- ifelse(vpd < 0, 0, vpd)
 
   ## leaf-internal-to-ambient CO2 partial pressure (ci/ca) ratio
   xi  <- sqrt( (beta * ( kmm + gammastar ) ) / ( 1.6 * ns_star ) )

@@ -21,3 +21,7 @@
 
 * Added `jmax` (maximum rate of RuBP regeneration) to the list of returned variables by the `rpmodel()` function.
 * Made `calc_viscosity_h2o()` and `calc_density_h2o()` to public functions, exported as part of the rpmodel package.
+
+## rpmodel 1.0.6
+
+* Set negative VPD values to zero. Resolves issue [issue #2](https://github.com/stineb/rpmodel/issues/2).
