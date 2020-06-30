@@ -31,6 +31,7 @@ out_pmodel <- rpmodel(
   elv            = 0,            # m.a.s.l.,
   kphio          = 0.05,         # quantum yield efficiency,
   beta           = 146,          # unit cost ratio a/b,
+  c4             = FALSE,
   method_optci   = "prentice14",
   method_jmaxlim = "none",
   do_ftemp_kphio = FALSE,
@@ -95,6 +96,7 @@ out_ts_pmodel <- rpmodel(
   elv            = 0,         
   kphio          = 0.05,         
   beta           = 146,
+  c4             = FALSE,
   method_optci   = "prentice14",
   method_jmaxlim = "none",
   do_ftemp_kphio = FALSE,
@@ -121,6 +123,7 @@ df <- tibble(
     elv            = 0,         
     kphio          = 0.05,         
     beta           = 146,
+    c4             = FALSE,
     method_optci   = "prentice14",
     method_jmaxlim = "none",
     do_ftemp_kphio = FALSE
