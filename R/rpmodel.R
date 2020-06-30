@@ -222,7 +222,7 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
   ## 'do_ftemp_kphio' is not actually a stress function, but is the temperature-dependency of
   ## the quantum yield efficiency after Bernacchi et al., 2003 PCE
   if (do_ftemp_kphio){
-    ftemp_kphio <- calc_ftemp_kphio( tc )
+    ftemp_kphio <- calc_ftemp_kphio( tc, c4 )
   } else {
     ftemp_kphio <- 1.0
   }
@@ -560,7 +560,7 @@ calc_chi_c4 <- function(){
   #//////////////////////////////////////////////////////////////////
   # (Dummy-) ci:ca for C4 photosynthesis
   #-----------------------------------------------------------------------
-  out <- list( chi=9999, mc=1, mj=1, mjoc=1 )
+  out <- list( chi=1.0, mc=1.0, mj=1.0, mjoc=1.0 )
   return(out)
 }
 

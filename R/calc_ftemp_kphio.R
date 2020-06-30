@@ -5,11 +5,22 @@
 #' in light-adapted tobacco leaves, determined by Bernacchi et al. (2003)
 #'
 #' @param tc Temperature, relevant for photosynthesis (degrees Celsius)
+#' @param c4 Boolean specifying whether fitted temperature response for C4 plants
+#' is used. Defaults to \code{FALSE} (C3 photoynthesis temperature resposne following
+#' Bernacchi et al., 2003 is used). 
 #'
-#' @details The temperature factor is calculated as 
+#' @details The temperature factor for C3 photosynthesis (argument \code{c4 = FALSE}) is calculated 
+#' based on Bernacchi et al. (2003) as 
 #' 			\deqn{
 #' 				\phi(T) = 0.352 + 0.022 T - 0.00034 T^2
-#' }
+#'       }
+#' 
+#' The temperature factor for C4 (argument \code{c4 = TRUE}) photosynthesis is calculated based on 
+#' unpublished work as
+#' 			\deqn{
+#' 				\phi(T) = -0.008 + 0.00375 T - 0.58e-4 T^2
+#'       }
+#' 
 #' The factor \eqn{\phi(T)} is to be multiplied with leaf absorptance and the fraction 
 #' of absorbed light that reaches photosystem II. In the P-model these additional factors
 #' are lumped into a single apparent quantum yield efficiency parameter (argument \code{kphio} 
@@ -28,9 +39,13 @@
 #'
 #' @export
 #' 
-calc_ftemp_kphio <- function( tc ){
+calc_ftemp_kphio <- function( tc, c4 = FALSE ){
 
-  ftemp <- 0.352 + 0.022 * tc - 3.4e-4 * tc^2
+	if (c4){
+    ftemp = -0.008 + 0.00375 * tc - 0.58e-4 * tc^2   # Based on calibrated values by Shirley
+	} else {
+	  ftemp <- 0.352 + 0.022 * tc - 3.4e-4 * tc^2		
+	}
 
   return(ftemp)
 }

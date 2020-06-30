@@ -174,10 +174,7 @@ photosynthesis model, P-model predictions, including all its corollary). This in
                       \deqn{
                            Vcmax = \phi(T) \phi0 Iabs n
                       }
-                      where \eqn{n} is given by \eqn{n=m/mc}, or
-                      \deqn{
-                          n = (ci + K) / (ci + 2 \Gamma*)
-                      }
+                      where \eqn{n} is given by \eqn{n=m'/mc}.
         \item \code{vcmax25}: Maximum carboxylation capacity \eqn{Vcmax} (mol C m-2) normalised to 25 deg C
                      following a modified Arrhenius equation, calculated as \eqn{Vcmax25 = Vcmax / fv},
                      where \eqn{fv} is the instantaneous temperature response by Vcmax and is implemented
