@@ -92,7 +92,14 @@ calc_optimal_gs_vcmax_jmax <- function( kmm, gammastar, ns_star, ca, vpd, ppfd, 
     control    = list( maxit = 100000 )
   )
   
-  varlist <- optimise_this_gs_vcmax_jmax( par=out_optim$par, args=c(kmm, gammastar, ns_star, ca, vpd), iabs=(fapar*ppfd), kphio, beta, c_cost/4, maximize=FALSE, return_all=TRUE )
+  varlist <- optimise_this_gs_vcmax_jmax( 
+    par=out_optim$par, 
+    args=c(kmm, gammastar, ns_star, ca, vpd), 
+    iabs=(fapar*ppfd), 
+    kphio, beta, c_cost/4, 
+    maximize=FALSE, 
+    return_all=TRUE 
+    )
 
   return(varlist)
 }

@@ -1,0 +1,181 @@
+---
+title: "P-model for diurnal cycles"
+author: "Benjamin D. Stocker"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 3
+---
+
+
+```{r setup}
+library(dplyr)
+library(rsofun)
+library(ggplot2)
+library(ingestr)
+```
+
+## Get data
+
+Use the ingestr package to get daily and sub-daily data for one site (FR-Pue).
+```{r}
+siteinfo <- ingestr::siteinfo_fluxnet2015 %>%
+  dplyr::filter(sitename == "FR-Pue") %>% 
+  # dplyr::filter(sitename == "NL-Loo") %>% 
+  dplyr::mutate(date_start = lubridate::ymd(paste0(year_start, "-01-01"))) %>%
+  dplyr::mutate(date_end = lubridate::ymd(paste0(year_end, "-12-31")))
+
+ddf_fluxnet <- ingestr::ingest(
+  siteinfo  = siteinfo,
+  source    = "fluxnet",
+  getvars   = list(temp = "TA_F_DAY", prec = "P_F", vpd  = "VPD_F_DAY", ppfd =  "SW_IN_F", patm = "PA_F"),
+  dir       = "~/data/FLUXNET-2015_Tier1/20191024/DD/",
+  settings  = list(dir_hh = "~/data/FLUXNET-2015_Tier1/20191024/HH/", getswc = FALSE),
+  timescale = "d"
+  )
+
+hdf_fluxnet <- ingestr::ingest(
+  siteinfo  = siteinfo,
+  source    = "fluxnet",
+  getvars   = list(temp = "TA_F", prec = "P_F", vpd  = "VPD_F", ppfd =  "SW_IN_F", patm = "PA_F"),
+  dir       = "~/data/FLUXNET-2015_Tier1/20191024/HH/",
+  settings  = list(getswc = FALSE),
+  timescale = "hh"
+  )
+```
+
+## P-model test
+
+Compare the analytical solution of the P-model with results from the numerical optimization (of the same criterion) for a single time step (daytime data).
+```{r}
+## analytical solver
+out_pmodel_ana <- rpmodel( 
+  tc             = 20,           # temperature, deg C
+  vpd            = 1000,         # Pa,
+  co2            = 400,          # ppm,
+  fapar          = 1,            # fraction  ,
+  ppfd           = 300,          # mol/m2/d,
+  elv            = 0,            # m.a.s.l.,
+  kphio          = 0.05,         # quantum yield efficiency,
+  beta           = 146,          # unit cost ratio a/b,
+  method_optci   = "prentice14",
+  method_jmaxlim = "wang17",
+  do_ftemp_kphio = FALSE,
+  do_soilmstress = FALSE,
+  verbose        = TRUE
+  )
+out_pmodel_ana$chi
+out_pmodel_ana$gpp
+
+## numerical solver
+out_pmodel_num <- rpmodel( 
+  tc             = 20,           # temperature, deg C
+  vpd            = 1000,         # Pa,
+  co2            = 400,          # ppm,
+  fapar          = 1,            # fraction  ,
+  ppfd           = 300,          # mol/m2/d,
+  elv            = 0,            # m.a.s.l.,
+  kphio          = 0.05,         # quantum yield efficiency,
+  beta           = 146,          # unit cost ratio a/b,
+  method_optci   = "prentice14_num",
+  do_ftemp_kphio = FALSE,
+  do_soilmstress = FALSE,
+  verbose        = TRUE
+  )
+out_pmodel_num$chi
+out_pmodel_num$gpp
+
+print(paste0("Chi, relative difference: ", format(((out_pmodel_num$chi / out_pmodel_ana$chi) - 1.0 )* 100, digits = 3), "%"))
+print(paste0("GPP, relative difference: ", format(((out_pmodel_num$gpp / out_pmodel_ana$gpp) - 1.0 )* 100, digits = 3), "%"))
+```
+
+## P-model on time series
+
+In order to implement an acclimation time scale of $N$ days, we can smooth the forcing following a damping function:
+$$
+S_{t} = S_{t-1} + \frac{T_t-S_{t-1}}{\tau}
+$$
+
+This is implemented in the following function:
+```{r}
+dampen <- function(vec, tau){
+  len <- length(vec)
+  vec_damped <- rep(NA, len)
+  vec_damped[1] <- vec[1]
+  for (idx in 2:len){
+    vec_damped[idx] <- vec_damped[idx-1] + (vec[idx] - vec_damped[idx-1]) / tau
+  }
+  return(vec_damped)
+}
+```
+
+Show example: damped daily temperature.
+```{r}
+ddf_fluxnet$data[[1]] %>% 
+  slice(1:730) %>% 
+  mutate(temp_damped = dampen(temp, tau = 15)) %>% 
+  ggplot() + 
+  geom_line(aes(date, temp)) +
+  geom_line(aes(date, temp_damped), col = "red")
+```
+
+Let's dampen all P-model forcings and apply the P-model function on them.
+```{r}
+ddf_out_ana <- ddf_fluxnet$data[[1]] %>% 
+  mutate(tc = dampen(temp, tau = 15),
+         vpd = dampen(vpd, tau = 15),
+         co2 = 400,
+         fapar = 1.0,
+         ppfd = ppfd,
+         patm = dampen(patm, tau = 15)) %>% 
+  mutate( out_pmodel = purrr::pmap(
+    dplyr::select(., tc, vpd, co2, fapar, ppfd, patm), 
+    rpmodel, 
+    kphio          = 0.05,         # quantum yield efficiency,
+    beta           = 146,          # unit cost ratio a/b,
+    method_optci   = "prentice14",
+    method_jmaxlim = "wang17",
+    do_ftemp_kphio = FALSE,
+    do_soilmstress = FALSE
+    ) ) %>% 
+  mutate( out_pmodel = purrr::map(out_pmodel, ~as_tibble(.))) %>% 
+  unnest(out_pmodel) 
+
+ddf_out_num <- ddf_fluxnet$data[[1]] %>% 
+  mutate(tc = dampen(temp, tau = 15),
+         vpd = dampen(vpd, tau = 15),
+         co2 = 400,
+         fapar = 1.0,
+         ppfd = ppfd,
+         patm = dampen(patm, tau = 15)) %>% 
+  mutate( out_pmodel = purrr::pmap(
+    dplyr::select(., tc, vpd, co2, fapar, ppfd, patm), 
+    rpmodel, 
+    kphio          = 0.05,         # quantum yield efficiency,
+    beta           = 146,          # unit cost ratio a/b,
+    method_optci   = "prentice14_num",
+    do_ftemp_kphio = FALSE,
+    do_soilmstress = FALSE
+    ) ) %>% 
+  mutate( out_pmodel = purrr::map(out_pmodel, ~as_tibble(.))) %>% 
+  unnest(out_pmodel)   
+```
+
+Plot GPP.
+```{r}
+df_test <- ddf_out_ana %>% 
+  dplyr::select(date, chi_ana = chi) %>% 
+  left_join(
+    ddf_out_num %>% 
+      dplyr::select(date, chi_num = chi),
+    by = "date"
+  )
+
+df_test %>% rbeni::analyse_modobs2("chi_ana", "chi_num")
+
+  # slice(1:730) %>% 
+  # ggplot() +
+  # geom_line(aes(date, gpp))
+```

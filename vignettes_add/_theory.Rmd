@@ -541,7 +541,7 @@ varlist_ll <- calc_optimal_gs_vcmax_jmax( out_analytical_none$kmm, out_analytica
 ## Invoke function with optimised Vcmax and gs (in out_optim$par), now returning all variables
 print( paste("Optimal chi from P-model:", out_analytical_none$chi ) )
 print( paste("Optimal chi from Vcmax-gs optimization:", jmax_chi_opt$chi_opt ) )
-print( paste("Optimal chi from Vcmax-gs opt. with light limit.:", varlist_ll$chi ) )
+print( paste("Optimal chi from Vcmax-gs opt. with light limit.:", varlist_ll$chi_mine ) )
 ```
 
 ### Response to the environment

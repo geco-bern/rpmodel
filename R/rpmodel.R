@@ -25,6 +25,7 @@
 #' fitted value as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'BRC', 'FULL', and 'ORG'
 #' respectively.
 #' @param beta Unit cost ratio. Defaults to 146.0 (see Stocker et al., 2019).
+#' @param c_cost Jmax cost parameter. Defaults to 0.41 (see Wang et al, 2017).
 #' @param soilm (Optional, used only if \code{do_soilmstress==TRUE}) Relative soil moisture as a fraction
 #' of field capacity (unitless). Defaults to 1.0 (no soil moisture stress). This information is used to calculate
 #' an empirical soil moisture stress factor (\link{calc_soilmstress}) whereby the sensitivity is determined
@@ -196,7 +197,7 @@
 #'
 rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
                      kphio = ifelse(do_ftemp_kphio, ifelse(do_soilmstress, 0.087182, 0.081785), 0.049977),
-                     beta = 146.0, soilm = 1.0, meanalpha = 1.0, apar_soilm = 0.0, bpar_soilm = 0.73300,
+                     beta = 146.0, c_cost = 0.41, soilm = 1.0, meanalpha = 1.0, apar_soilm = 0.0, bpar_soilm = 0.73300,
                      c4 = FALSE, method_optci = "prentice14", method_jmaxlim = "wang17",
                      do_ftemp_kphio = TRUE, do_soilmstress = FALSE, returnvar = NULL, verbose = FALSE ){
 
@@ -269,6 +270,40 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
     ##-----------------------------------------------------------------------
     out_optchi <- calc_optimal_chi( kmm, gammastar, ns_star, ca, vpd, beta )
 
+  } else if (method_optci=="prentice14_num"){
+    
+    ## Numerical simultaneous optimisation of gs, vcmax, and jmax
+    ## Is equivalent to method_optci = "prentice14" and method_jmaxlim = "wang17"
+    ##-----------------------------------------------------------------------    
+    out_optim_num <- calc_optim_num( 
+      kmm         = kmm, 
+      gammastar   = gammastar, 
+      ns_star     = ns_star, 
+      ca          = ca, 
+      vpd         = vpd, 
+      ppfd        = ppfd, 
+      fapar       = fapar, 
+      kphio       = kphio, 
+      beta        = beta, 
+      c_cost      = c_cost, 
+      vcmax_start = 30.0, 
+      gs_start    = 0.8, 
+      jmax_start  = 40.0
+      )
+
+    ## alternative variables
+    gamma <- gammastar / ca
+    kappa <- kmm / ca
+
+    out_optchi <- list(
+      chi  = out_optim_num$chi,
+      mj   = (out_optim_num$chi - gamma) / (out_optim_num$chi + 2 * gamma),
+      mc   = (out_optim_num$chi - gamma) / (out_optim_num$chi + kappa),
+      mjoc = (out_optim_num$chi + kappa) / (out_optim_num$chi + 2 * gamma)
+      )
+
+    ## this already takes into account Jmax limitation. 
+    method_jmaxlim <- "prentice14_num"
 
   } else {
 
@@ -296,8 +331,7 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
 
   } else if (method_jmaxlim=="wang17"){
 
-
-    out_lue_vcmax <- calc_lue_vcmax_wang17(out_optchi, kphio, ftemp_kphio, c_molmass, soilmstress)
+    out_lue_vcmax <- calc_lue_vcmax_wang17(out_optchi, kphio, ftemp_kphio, c_molmass, soilmstress, c_cost)
 
 
   } else if (method_jmaxlim=="smith19"){
@@ -312,11 +346,36 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
     out_lue_vcmax <- calc_lue_vcmax_none(out_optchi, kphio, ftemp_kphio, c_molmass, soilmstress)
 
 
+  } else if (method_jmaxlim=="prentice14_num"){
+
+    ## Nothing more to be done here. Just translating.
+    out_lue_vcmax <- list(
+      vcmax_unitiabs = out_optim_num$vcmax / (fapar * ppfd),
+      lue            = c_molmass * out_optim_num$assim / (fapar * ppfd)
+      )
+
   } else {
 
     rlang::abort("rpmodel(): argument method_jmaxlim not idetified.")
 
   }
+
+  # ----------------------------------------------------------------
+  #  xxx test
+  # ----------------------------------------------------------------
+  # light-limited assimilation rate
+  fact_jmaxlim = 1.0 / sqrt(1.0 + (4.0 * kphio * fapar * ppfd / out_optim_num$jmax)**2)
+  a_j = kphio * fapar * ppfd * (out_optim_num$ci - gammastar)/(out_optim_num$ci + 2 * gammastar) * fact_jmaxlim
+
+  # Rubisco-limited assimilation rate
+  a_c = out_optim_num$vcmax * (out_optim_num$ci - gammastar)/(out_optim_num$ci + kmm)
+
+  # output from pmodel()
+  a_returned = out_optim_num$gpp / c_molmass
+
+  print*,'a_j, a_c, a_returned, dgpp : ', a_j, a_c, a_returned, dgpp / c_molmass
+  # ----------------------------------------------------------------
+
 
 
   ##-----------------------------------------------------------------------
@@ -438,11 +497,11 @@ calc_optimal_chi <- function( kmm, gammastar, ns_star, ca, vpd, beta ){
 }
 
 
-calc_lue_vcmax_wang17 <- function(out_optchi, kphio, ftemp_kphio, c_molmass, soilmstress){
+calc_lue_vcmax_wang17 <- function(out_optchi, kphio, ftemp_kphio, c_molmass, soilmstress, c_cost){
 
   ## Include effect of Jmax limitation
   len <- length(out_optchi[[1]])
-  mprime <- calc_mprime( out_optchi$mj )
+  mprime <- calc_mprime( out_optchi$mj, c_cost )
 
   out <- list(
 
@@ -565,14 +624,12 @@ calc_chi_c4 <- function(){
 }
 
 
-calc_mprime <- function( mc ){
+calc_mprime <- function( mc, kc ){
   #-----------------------------------------------------------------------
   # Input:  mc   (unitless): factor determining LUE
   # Output: mpi (unitless): modiefied m accounting for the co-limitation
   #                         hypothesis after Prentice et al. (2014)
   #-----------------------------------------------------------------------
-  kc <- 0.41          # Jmax cost coefficient
-
   mpi <- mc^2 - kc^(2.0/3.0) * (mc^(4.0/3.0))
 
   # Check for negatives:
@@ -594,4 +651,123 @@ co2_to_ca <- function( co2, patm ){
 }
 
 
+calc_optim_num <- function( kmm, gammastar, ns_star, ca, vpd, ppfd, fapar, kphio, beta, c_cost, vcmax_start, gs_start, jmax_start ){
+
+  optimise_this_gs_vcmax_jmax <- function( par, args, iabs, kphio, beta, c_cost, maximize=FALSE, return_all=FALSE ){
+    
+    kmm       <- args[1]
+    gammastar <- args[2]
+    ns_star   <- args[3]
+    ca        <- args[4]
+    vpd       <- args[5]
+    
+    vcmax <- par[1]
+    gs    <- par[2]
+    jmax  <- par[3]
+    
+    ## Electron transport is limiting
+    ## Solve Eq. system
+    ## A = gs (ca- ci)
+    ## A = kphio * iabs (ci-gammastar)/ci+2*gammastar) * L
+    ## L = 1 / sqrt(1 + ((4 * kphio * iabs)/jmax)^2)
+    
+    ## This leads to a quadratic equation:
+    ## A * ci^2 + B * ci + C  = 0
+    ## 0 = a + b*x + c*x^2
+    
+    ## with
+    L <- 1.0 / sqrt(1.0 + ((4.0 * kphio * iabs)/jmax)^2)
+    A <- -gs
+    B <- gs * ca - 2 * gammastar * gs - L * kphio * iabs
+    C <- 2 * gammastar * gs * ca + L * kphio * iabs * gammastar
+    
+    ci_j <- QUADM(A, B, C)
+    a_j  <- kphio * iabs * (ci_j - gammastar)/(ci_j + 2 * gammastar) * L
+    
+    ## Rubisco is limiting
+    ## Solve Eq. system
+    ## A = gs (ca- ci)
+    ## A = Vcmax * (ci - gammastar)/(ci + Kmm)
+    
+    ## This leads to a quadratic equation:
+    ## A * ci^2 + B * ci + C  = 0
+    ## 0 = a + b*x + c*x^2
+    
+    ## with
+    A <- -1.0 * gs
+    B <- gs * ca - gs * kmm - vcmax
+    C <- gs * ca * kmm + vcmax * gammastar
+    
+    ci_c <- QUADM(A, B, C)
+    a_c <- vcmax * (ci_c - gammastar) / (ci_c + kmm)
+    
+    ## Take minimum of the two assimilation rates and maximum of the two ci
+    assim <- min( a_j, a_c )
+    ci <- max(ci_c, ci_j)
+    
+    ## only cost ratio is defined. for this here we need absolute values. Set randomly
+    cost_transp <- 1.6 * ns_star * gs * vpd
+    cost_vcmax  <- beta * vcmax
+    cost_jmax   <- c_cost * jmax
+    
+    ## Option B: This is equivalent to the P-model with its optimization of ci:ca.
+    if (assim<=0) {
+      net_assim <- -(999999999.9)
+    } else {
+      net_assim <- -(cost_transp + cost_vcmax + cost_jmax) / assim
+    }
+    
+    if (maximize) net_assim <- -net_assim
+
+    # print(par)
+    # print(net_assim)
+
+    if (return_all){
+      return( list( 
+        vcmax       = vcmax, 
+        jmax        = jmax, 
+        gs          = gs, 
+        ci          = ci, 
+        chi         = ci/ca, 
+        a_c         = a_c, 
+        a_j         = a_j, 
+        assim       = assim, 
+        ci_c        = ci_c, 
+        ci_j        = ci_j, 
+        cost_transp = cost_transp, 
+        cost_vcmax  = cost_vcmax, 
+        cost_jmax   = cost_jmax, 
+        net_assim   = net_assim  
+        ) )
+    } else {
+      return( net_assim )
+    }
+  }
+  
+  out_optim <- optimr::optimr(
+    par        = c( vcmax_start, gs_start, jmax_start ), # starting values
+    lower      = c( vcmax_start*0.001, gs_start*0.001, jmax_start*0.001 ),
+    upper      = c( vcmax_start*1000, gs_start*1000, jmax_start*1000 ),
+    fn         = optimise_this_gs_vcmax_jmax,
+    args       = c(kmm, gammastar, ns_star, ca, vpd),
+    iabs       = (ppfd * fapar),
+    kphio      = kphio,
+    beta       = beta,
+    c_cost     = c_cost/4,
+    method     = "L-BFGS-B",
+    maximize   = TRUE,
+    control    = list( maxit = 100000 )
+  )
+  
+  varlist <- optimise_this_gs_vcmax_jmax( 
+    par        = out_optim$par, 
+    args       = c(kmm, gammastar, ns_star, ca, vpd), 
+    iabs       = (fapar * ppfd), 
+    kphio, beta, c_cost/4, 
+    maximize   = FALSE, 
+    return_all = TRUE 
+    )
+
+  return(varlist)
+}
 
