@@ -93,7 +93,9 @@ df_out <- df %>%
                                 inst_rpmodel,
                                 elv = 0, 
                                 kphio = 0.05))
+```
 
+```{r echo=FALSE}
 df_out <- df_out %>% 
   mutate( out_pmodel = purrr::map(out_pmodel, ~as_tibble(.)),
           out_inst = purrr::map(out_inst, ~as_tibble(.))) %>% 
@@ -101,9 +103,7 @@ df_out <- df_out %>%
   rename(vcmax_inst = vcmax, jmax_inst = jmax, assim_inst = assim, gpp_inst = gpp, ci_inst = ci, rd_inst = rd) %>% 
   unnest(out_pmodel) %>% 
   rename(vcmax_acclim = vcmax, jmax_acclim = jmax, gpp_acclim = gpp, ci_acclim = ci, rd_acclim = rd)
-```
 
-```{r echo=FALSE}
 df_out %>% 
   rename(Hypothetical_instantaneously_acclimated = gpp_acclim, Actual_instantaneous = gpp_inst) %>% 
   pivot_longer(cols = c(Actual_instantaneous, Hypothetical_instantaneously_acclimated), names_to = "Type", values_to = "GPP") %>% 
