@@ -330,7 +330,6 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
   ftemp_inst_rd <- calc_ftemp_inst_rd( tc )
   rd_unitiabs  <- rd_to_vcmax * (ftemp_inst_rd / ftemp25_inst_vcmax) * out_lue_vcmax$vcmax_unitiabs
 
-
   ##-----------------------------------------------------------------------
   ## Quantities that scale linearly with absorbed light
   ##-----------------------------------------------------------------------
@@ -355,8 +354,15 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
                          vcmax * (ci + 2.0 * gammastar) / (kphio * iabs * (ci + kmm)),
                          rep(NA, len))
   jmax <- ifelse(!is.na(iabs),
-                 4.0 * kphio * iabs / sqrt( (1.0/fact_jmaxlim)**2 - 1.0 ),
+                 4.0 * kphio * iabs / sqrt( (1.0/fact_jmaxlim)^2 - 1.0 ),
                  rep(NA, len))
+
+  ## at this stage, verify if A_J = A_C
+  a_j <- kphio * iabs * (ci - gammastar)/(ci + 2 * gammastar) * fact_jmaxlim
+  a_c <- vcmax * (ci - gammastar) / (ci + kmm)
+
+  ## stomatal conductance
+  gs <- (gpp / c_molmass) / (ca - ci)
 
   ## construct list for output
   out <- list(
@@ -371,7 +377,7 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
               lue             = out_lue_vcmax$lue,
               gpp             = gpp,
               iwue            = iwue,
-              gs              = (gpp / c_molmass) / (ca - ci),
+              gs              = gs,
               vcmax           = vcmax,
               vcmax25         = vcmax25,
               jmax            = jmax,
@@ -397,7 +403,7 @@ calc_optimal_chi <- function( kmm, gammastar, ns_star, ca, vpd, beta ){
   #           - ns
   #           - vpd
   #-----------------------------------------------------------------------
-  
+
   ## Avoid negative VPD (dew conditions), resolves issue #2 (https://github.com/stineb/rpmodel/issues/2)
   vpd <- ifelse(vpd < 0, 0, vpd)
 
@@ -452,7 +458,7 @@ calc_lue_vcmax_wang17 <- function(out_optchi, kphio, ftemp_kphio, c_molmass, soi
     ## Vcmax normalised per unit absorbed PPFD (assuming iabs=1), with Jmax limitation
     vcmax_unitiabs = kphio * ftemp_kphio * out_optchi$mjoc * mprime / out_optchi$mj * soilmstress,
 
-    ## complement for non-smith19 
+    ## complement for non-smith19
     omega      = rep(NA, len),
     omega_star = rep(NA, len)
 
@@ -579,18 +585,6 @@ calc_mprime <- function( mc ){
   mpi <- ifelse(mpi>0, sqrt(mpi), NA)
 
   return(mpi)
-}
-
-
-co2_to_ca <- function( co2, patm ){
-  #-----------------------------------------------------------------------
-  # Input:    - float, annual atm. CO2, ppm (co2)
-  #           - float, monthly atm. pressure, Pa (patm)
-  # Output:   - ca in units of Pa
-  # Features: Converts ca (ambient CO2) from ppm to Pa.
-  #-----------------------------------------------------------------------
-  ca   <- ( 1.0e-6 ) * co2 * patm         # Pa, atms. CO2
-  return( ca )
 }
 
 
