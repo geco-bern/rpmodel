@@ -28,6 +28,8 @@ This explicit separateion allows for a clear application of the P-model to time 
 
 ## Example
 
+### Synthetic data
+
 We first create a data frame of daily inputs $X(t)$ for one year. This is some syntetic data with a seasonality.
 ```{r}
 library(dplyr)
@@ -48,6 +50,8 @@ df %>%
   ggplot(aes(doy, ppfd)) + geom_line()
 ```
 
+### Dampen inputs
+
 Next, calculated temporally damped input time series. This can be done with the function `dampen_vec` (newly added for rpmodel package version 1.2).
 ```{r}
 library(rpmodel)
@@ -58,6 +62,8 @@ ggplot() +
   geom_line(data = df, aes(doy, tc)) +
   geom_line(data = df_damped, aes(doy, tc), color = "red")
 ```
+
+### Calculate acclimated response
 
 Now, we can apply the P-model to the damped time series.
 ```{r}
@@ -85,7 +91,9 @@ df_out %>%
   geom_line(aes(doy, Vcmax, color = Variable))
 ```
 
-Using the acclimated quantities, we can now calculate daily instantaneous rates using the same underlying parametrisations (for assimilation, etc.)
+### Calculate instantaneous response 
+
+Using the acclimated quantities, we can now calculate daily instantaneous rates using the same underlying parametrisations (for assimilation, etc.). This uses acclimated Vcmax, Jmax, and the average "set-point" canopy conductance from the `rpmodel` call and applies the FvCB photosynthesis parametrisation (the same as is underlying the P-model theory), with its non-linear dependency of $A_J$ to absorbed light. The P-model application as described here thus describes the non-linearity of absorbed light and assimilation and the strong temperature dependency of respiration at the fast time scale (at which photosynthesis is not acclimated), and at the same time the emergent linearity between absorbed light and assimilation and acclimating respiration at the longer time scale. This emergent behaviour follows from the P-model theory.
 ```{r}
 df_out <- df %>% 
   left_join(dplyr::select(df_out, doy, out_pmodel), by = "doy") %>% 
@@ -96,7 +104,7 @@ df_out <- df %>%
 ```
 
 ```{r echo=FALSE}
-df_out <- df_out %>% 
+df_tmp <- df_out %>% 
   mutate( out_pmodel = purrr::map(out_pmodel, ~as_tibble(.)),
           out_inst = purrr::map(out_inst, ~as_tibble(.))) %>% 
   unnest(out_inst) %>% 
@@ -104,17 +112,56 @@ df_out <- df_out %>%
   unnest(out_pmodel) %>% 
   rename(vcmax_acclim = vcmax, jmax_acclim = jmax, gpp_acclim = gpp, ci_acclim = ci, rd_acclim = rd)
 
-df_out %>% 
+df_tmp %>% 
   rename(Hypothetical_instantaneously_acclimated = gpp_acclim, Actual_instantaneous = gpp_inst) %>% 
   pivot_longer(cols = c(Actual_instantaneous, Hypothetical_instantaneously_acclimated), names_to = "Type", values_to = "GPP") %>% 
   ggplot() +
   geom_line(aes(doy, GPP, color = Type)) +
   labs(title = "GPP")
 
-df_out %>% 
+df_tmp %>% 
   rename(light_limited = a_j, rubisco_limited = a_c) %>% 
   pivot_longer(cols = c(light_limited, rubisco_limited), names_to = "Limitation", values_to = "Assimilation") %>% 
   ggplot() +
   geom_line(aes(doy, Assimilation, color = Limitation)) +
   labs(title = "Assimilation")
+```
+
+The difference between an acclimating respiration (using acclimating Vcmax25 and the instantaneous temperature scaling of Rd), vs. a hypothetical non-acclimating respiration (using a seasonally constant mean Vcmax25 and the same instantaneous temperature scaling of Rd) is illustrated below.
+```{r echo=FALSE}
+## hypothetical non-acclimating respiration
+vcmax25_mean <- df_out %>% 
+  mutate( out_pmodel = purrr::map(out_pmodel, ~as_tibble(.))) %>% 
+  unnest(out_pmodel) %>% 
+  pull(vcmax25) %>% 
+  mean()
+
+df_out2 <- df_out %>% 
+  mutate( out_pmodel = purrr::map(out_pmodel, ~as_tibble(.))) %>% 
+  mutate(out_pmodel = purrr::map(out_pmodel, ~mutate(., vcmax25 = vcmax25_mean)))
+
+df_out2 <- df %>% 
+  left_join(dplyr::select(df_out2, doy, out_pmodel), by = "doy") %>% 
+  mutate(out_inst = purrr::pmap(dplyr::select(., x = out_pmodel, tc, vpd, co2, fapar, ppfd), 
+                                inst_rpmodel,
+                                elv = 0, 
+                                kphio = 0.05))
+
+df_tmp <- df_out %>% 
+  mutate( out_inst = purrr::map(out_inst, ~as_tibble(.))) %>% 
+  unnest(out_inst) %>% 
+  dplyr::select(doy, rd_acclimating_vcmax25 = rd) %>% 
+  left_join(
+    df_out2 %>% 
+      mutate( out_inst = purrr::map(out_inst, ~as_tibble(.))) %>% 
+      unnest(out_inst) %>% 
+      dplyr::select(doy, rd_constant_vcmax25 = rd),
+    by = "doy"
+  )
+
+df_tmp %>% 
+  pivot_longer(cols = c(rd_acclimating_vcmax25, rd_constant_vcmax25), names_to = "Type", values_to = "Rd") %>% 
+  ggplot() +
+  geom_line(aes(doy, Rd, color = Type)) +
+  labs(title = "Dark respiration")
 ```
