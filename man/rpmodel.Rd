@@ -37,7 +37,7 @@ rpmodel(
 \item{fapar}{(Optional) Fraction of absorbed photosynthetically active radiation (unitless, defaults to
 \code{NA})}
 
-\item{ppfd}{(Optional) Photosynthetic photon flux density (mol m-2 d-1, defaults to \code{NA}). Note that
+\item{ppfd}{Incident photosynthetic photon flux density (mol m-2 d-1, defaults to \code{NA}). Note that
 the units of \code{ppfd} (per area and per time) determine the units of outputs \code{lue}, \code{gpp},
 \code{vcmax}, and \code{rd}. For example, if \code{ppfd} is provided in units of mol m-2 month-1, then
 respective output variables are returned as per unit months.}
@@ -207,7 +207,7 @@ Additional variables are contained in the returned list if argument \code{method
 R implementation of the P-model and its corrolary predictions (Prentice et al., 2014; Han et al., 2017).
 }
 \examples{
-rpmodel( tc = 20, vpd = 1000, co2 = 400, fapar = 1, ppfd = 300, elv = 0)
+rpmodel( tc = 20, vpd = 1000, co2 = 400, ppfd = 30, elv = 0)
 
 }
 \references{

@@ -7,7 +7,7 @@
 #' @param co2 Atmospheric CO2 concentration (ppm)
 #' @param fapar (Optional) Fraction of absorbed photosynthetically active radiation (unitless, defaults to
 #' \code{NA})
-#' @param ppfd (Optional) Photosynthetic photon flux density (mol m-2 d-1, defaults to \code{NA}). Note that
+#' @param ppfd Incident photosynthetic photon flux density (mol m-2 d-1, defaults to \code{NA}). Note that
 #' the units of \code{ppfd} (per area and per time) determine the units of outputs \code{lue}, \code{gpp},
 #' \code{vcmax}, and \code{rd}. For example, if \code{ppfd} is provided in units of mol m-2 month-1, then
 #' respective output variables are returned as per unit months.
@@ -192,7 +192,7 @@
 #'
 #' @export
 #'
-#' @examples rpmodel( tc = 20, vpd = 1000, co2 = 400, fapar = 1, ppfd = 300, elv = 0)
+#' @examples rpmodel( tc = 20, vpd = 1000, co2 = 400, ppfd = 30, elv = 0)
 #'
 rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
                      kphio = ifelse(do_ftemp_kphio, ifelse(do_soilmstress, 0.087182, 0.081785), 0.049977),
@@ -288,6 +288,7 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
 
   ##-----------------------------------------------------------------------
   ## Vcmax and light use efficiency
+  ## Jmax limitation comes in only at this step
   ##-----------------------------------------------------------------------
   if (c4){
 
@@ -324,32 +325,24 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
   ##-----------------------------------------------------------------------
   ## Vcmax25 (vcmax normalized to 25 deg C)
   ftemp25_inst_vcmax  <- calc_ftemp_inst_vcmax( tc, tc, tcref = 25.0 )
-  vcmax25_unitiabs  <- out_lue_vcmax$vcmax_unitiabs  / ftemp25_inst_vcmax
+  vcmax25_unitiabs  <- out_lue_vcmax$vcmax_unitiabs / ftemp25_inst_vcmax
 
-  ## Dark respiration at growth temperature
-  ftemp_inst_rd <- calc_ftemp_inst_rd( tc )
-  rd_unitiabs  <- rd_to_vcmax * (ftemp_inst_rd / ftemp25_inst_vcmax) * out_lue_vcmax$vcmax_unitiabs
+  # ## Dark respiration at growth temperature
+  # ftemp_inst_rd <- calc_ftemp_inst_rd( tc )
+  # rd_unitiabs  <- rd_to_vcmax * (ftemp_inst_rd / ftemp25_inst_vcmax) * out_lue_vcmax$vcmax_unitiabs
 
   ##-----------------------------------------------------------------------
   ## Quantities that scale linearly with absorbed light
   ##-----------------------------------------------------------------------
   len <- length(out_lue_vcmax[[1]])
-  iabs <- rep(fapar * ppfd, len)
+  iabs <- ppfd * fapar     # probably should use only ppfd to be representative of sun-exposed leaves
 
-  ## Gross primary productivity
-  gpp <- ifelse(!is.na(iabs), iabs * out_lue_vcmax$lue, rep(NA, len))   # in g C m-2 s-1
-
-  ## Vcmax per unit ground area is the product of the intrinsic quantum
-  ## efficiency, the absorbed PAR, and 'n'
-  vcmax <- ifelse(!is.na(iabs), iabs * out_lue_vcmax$vcmax_unitiabs, rep(NA, len))
-
-  ## (vcmax normalized to 25 deg C)
+  ## vcmax normalized to 25 deg C
+  vcmax   <- ifelse(!is.na(iabs), iabs * out_lue_vcmax$vcmax_unitiabs, rep(NA, len))
   vcmax25 <- ifelse(!is.na(iabs), iabs * vcmax25_unitiabs, rep(NA, len))
 
-  ## Dark respiration
-  rd <- ifelse(!is.na(iabs), iabs * rd_unitiabs, rep(NA, len))
-
-  ## Jmax using again A_J = A_C
+  ## Jmax normalized to 25 deg C
+  ## First, get Jmax using again A_J = A_C
   fact_jmaxlim <- ifelse(!is.na(iabs),
                          vcmax * (ci + 2.0 * gammastar) / (kphio * iabs * (ci + kmm)),
                          rep(NA, len))
@@ -357,12 +350,23 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
                  4.0 * kphio * iabs / sqrt( (1.0/fact_jmaxlim)^2 - 1.0 ),
                  rep(NA, len))
 
+  ## then scale to 25 deg C
+  ftemp25_inst_jmax <- calc_ftemp_inst_jmax( tc, tc, tcref = 25.0 )
+  jmax25 <- ifelse(!is.na(iabs),
+                   jmax / ftemp25_inst_jmax,
+                   rep(NA, len))
+
   ## at this stage, verify if A_J = A_C
   a_j <- kphio * iabs * (ci - gammastar)/(ci + 2 * gammastar) * fact_jmaxlim
   a_c <- vcmax * (ci - gammastar) / (ci + kmm)
+  if (abs(a_j/a_c - 1) > 0.001) rlang::abort("rpmodel(): light and Rubisco-limited assimilation rates are not identical.")
 
-  ## stomatal conductance
-  gs <- (gpp / c_molmass) / (ca - ci)
+  ## assimilation is not returned because it should not be confused with what is usually measured
+  ## should use instantaneous assimilation for comparison to measurements. This is returned by inst_rpmodel().
+  assim <- min(a_j, a_c)
+
+  ## average stomatal conductance
+  gs <- assim / (ca - ci)
 
   ## construct list for output
   out <- list(
@@ -371,17 +375,14 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
               kmm             = rep(kmm, len),
               ns_star         = rep(ns_star, len),
               chi             = out_optchi$chi,
+              xi              = out_optchi$xi,
               mj              = out_optchi$mj,
               mc              = out_optchi$mc,
               ci              = ci,
-              lue             = out_lue_vcmax$lue,
-              gpp             = gpp,
               iwue            = iwue,
               gs              = gs,
-              vcmax           = vcmax,
               vcmax25         = vcmax25,
-              jmax            = jmax,
-              rd              = rd
+              jmax25          = jmax25
               )
 
   if (!is.null(returnvar)) out <- out[returnvar]
@@ -439,7 +440,7 @@ calc_optimal_chi <- function( kmm, gammastar, ns_star, ca, vpd, beta ){
   ## mj:mv
   mjoc <- (chi + kappa) / (chi + 2 * gamma)
 
-  out <- list( chi=chi, mc=mc, mj=mj, mjoc=mjoc )
+  out <- list( xi=xi, chi=chi, mc=mc, mj=mj, mjoc=mjoc )
   return(out)
 }
 

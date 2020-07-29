@@ -41,7 +41,7 @@ df <- tibble(doy = 1:365) %>%
     vpd    = 1000 + rnorm(365, mean = 0, sd = 50),
     co2    = rep(400, 365),
     fapar  = rep(1, 365),
-    ppfd   = 250 * (sin(doy*pi/(365)))^2 + 50
+    ppfd   = 25 * (sin(doy*pi/(365)))^2 + 5
   )
 
 df %>%
@@ -55,8 +55,13 @@ df %>%
 Next, calculated temporally damped input time series. This can be done with the function `dampen_vec` (newly added for rpmodel package version 1.2).
 ```{r}
 library(rpmodel)
-df_damped <- df %>% 
+df_damped <- df %>%
   mutate_at(vars(one_of(c("tc", "vpd", "co2", "fapar", "ppfd"))), dampen_vec, tau = 40)
+
+# ## assume a faster acclimation to light
+# df_damped <- df %>% 
+#   mutate_at(vars(one_of(c("tc", "vpd", "co2", "fapar"))), dampen_vec, tau = 40) %>% 
+#   mutate_at(vars(one_of(c("ppfd"))), dampen_vec, tau = 10)
 
 ggplot() + 
   geom_line(data = df, aes(doy, tc)) +
@@ -82,15 +87,6 @@ df_out <- df_damped %>%
     ) )
 ```
 
-```{r echo=FALSE}
-df_out %>% 
-  mutate( out_pmodel = purrr::map(out_pmodel, ~as_tibble(.))) %>% 
-  unnest(out_pmodel) %>% 
-  pivot_longer(cols = c(vcmax, vcmax25), names_to = "Variable", values_to = "Vcmax") %>% 
-  ggplot() +
-  geom_line(aes(doy, Vcmax, color = Variable))
-```
-
 ### Calculate instantaneous response 
 
 Using the acclimated quantities, we can now calculate daily instantaneous rates using the same underlying parametrisations (for assimilation, etc.). This uses acclimated Vcmax, Jmax, and the average "set-point" canopy conductance from the `rpmodel` call and applies the FvCB photosynthesis parametrisation (the same as is underlying the P-model theory), with its non-linear dependency of $A_J$ to absorbed light. The P-model application as described here thus describes the non-linearity of absorbed light and assimilation and the strong temperature dependency of respiration at the fast time scale (at which photosynthesis is not acclimated), and at the same time the emergent linearity between absorbed light and assimilation and acclimating respiration at the longer time scale. This emergent behaviour follows from the P-model theory.
@@ -109,15 +105,7 @@ df_tmp <- df_out %>%
           out_inst = purrr::map(out_inst, ~as_tibble(.))) %>% 
   unnest(out_inst) %>% 
   rename(vcmax_inst = vcmax, jmax_inst = jmax, assim_inst = assim, gpp_inst = gpp, ci_inst = ci, rd_inst = rd) %>% 
-  unnest(out_pmodel) %>% 
-  rename(vcmax_acclim = vcmax, jmax_acclim = jmax, gpp_acclim = gpp, ci_acclim = ci, rd_acclim = rd)
-
-df_tmp %>% 
-  rename(Hypothetical_instantaneously_acclimated = gpp_acclim, Actual_instantaneous = gpp_inst) %>% 
-  pivot_longer(cols = c(Actual_instantaneous, Hypothetical_instantaneously_acclimated), names_to = "Type", values_to = "GPP") %>% 
-  ggplot() +
-  geom_line(aes(doy, GPP, color = Type)) +
-  labs(title = "GPP")
+  unnest(out_pmodel)
 
 df_tmp %>% 
   rename(light_limited = a_j, rubisco_limited = a_c) %>% 
@@ -165,3 +153,5 @@ df_tmp %>%
   geom_line(aes(doy, Rd, color = Type)) +
   labs(title = "Dark respiration")
 ```
+
+(add acclimating vs. instantaneous light response)

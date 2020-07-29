@@ -27,7 +27,7 @@ out_pmodel <- rpmodel(
   vpd            = 1000,         # Pa,
   co2            = 400,          # ppm,
   fapar          = 1,            # fraction  ,
-  ppfd           = 300,          # mol/m2/d,
+  ppfd           = 30,           # mol/m2/d,
   elv            = 0,            # m.a.s.l.,
   kphio          = 0.05,         # quantum yield efficiency,
   beta           = 146,          # unit cost ratio a/b,
@@ -57,7 +57,7 @@ $$
 ```{r}
 c_molmass <- 12.0107  # molecular mass of carbon
 kphio <- 0.05         # quantum yield efficiency, value as used in the function call to rpmodel()
-ppfd <- 300           # mol/m2/d, value as used in the function call to rpmodel()
+ppfd <- 30            # mol/m2/d, value as used in the function call to rpmodel()
 fapar <- 1            # fraction, value as used in the function call to rpmodel()
 print( out_pmodel$ci )
 print( out_pmodel$ca - (out_pmodel$gpp / c_molmass) / out_pmodel$gs )
@@ -92,7 +92,7 @@ out_ts_pmodel <- rpmodel(
   vpd            = 1000 + rnorm(5, mean = 0, sd = 50),
   co2            = rep(400, 5),
   fapar          = rep(1, 5),
-  ppfd           = 300 + rnorm(5, mean = 0, sd = 30),
+  ppfd           = 30 + rnorm(5, mean = 0, sd = 3),
   elv            = 0,         
   kphio          = 0.05,         
   beta           = 146,
@@ -117,7 +117,7 @@ df <- tibble(
   vpd            = 1000 + rnorm(5, mean = 0, sd = 50),
   co2            = rep(400, 5),
   fapar          = rep(1, 5),
-  ppfd           = 300 + rnorm(5, mean = 0, sd = 30)
+  ppfd           = 30 + rnorm(5, mean = 0, sd = 3)
   ) %>%
   mutate( out_pmodel = purrr::pmap(., rpmodel, 
     elv            = 0,         
@@ -150,13 +150,14 @@ A number of auxiliary functions, which are used within `rpmodel()`, are availabl
 Different instantaneous temperature scaling functions are applied for $V_\text{cmax}$ and dark respiration ($R_d$). 
 
 - `calc_ftemp_inst_vcmax()` calculates the instantaneous temperature response of $V_\text{cmax}$. Let's run the P-model for `tc = 10` (degrees C). The ratio of $V_\text{cmax}/V_\text{cmax25}$ should equal the instantaneous temperature scaling function for $V_\text{cmax}$ at 10 degrees C (calculated by `calc_ftemp_inst_vcmax(10)`):
+
 ```{r}
 out_pmodel <- rpmodel( 
   tc             = 10,           # temperature, deg C
   vpd            = 1000,         # Pa,
   co2            = 400,          # ppm,
   fapar          = 1,            # fraction  ,
-  ppfd           = 300,          # mol/m2/d,
+  ppfd           = 30,           # mol/m2/d,
   elv            = 0,            # m.a.s.l.,
   kphio          = 0.05,         # quantum yield efficiency,
   beta           = 146,          # unit cost ratio a/b,
@@ -199,7 +200,7 @@ out_pmodel_ftemp_kphio_ON <- rpmodel(
   vpd            = 1000,         # Pa,
   co2            = 400,          # ppm,
   fapar          = 1,            # fraction  ,
-  ppfd           = 300,          # mol/m2/d,
+  ppfd           = 30,           # mol/m2/d,
   elv            = 0,            # m.a.s.l.,
   do_ftemp_kphio = TRUE
   )
@@ -208,7 +209,7 @@ out_pmodel_ftemp_kphio_OFF <- rpmodel(
   vpd            = 1000,         # Pa,
   co2            = 400,          # ppm,
   fapar          = 1,            # fraction  ,
-  ppfd           = 300,          # mol/m2/d,
+  ppfd           = 30,           # mol/m2/d,
   elv            = 0,            # m.a.s.l.,
   do_ftemp_kphio = FALSE
   )
@@ -228,7 +229,7 @@ out_pmodel_soilmstress_OFF <- rpmodel(
   vpd            = 1000,         # Pa,
   co2            = 400,          # ppm,
   fapar          = 1,            # fraction  ,
-  ppfd           = 300,          # mol/m2/d,
+  ppfd           = 30,           # mol/m2/d,
   elv            = 0,            # m.a.s.l.,
   do_ftemp_kphio = FALSE,
   do_soilmstress = TRUE
@@ -238,7 +239,7 @@ out_pmodel_soilmstress_ON <- rpmodel(
   vpd            = 1000,         # Pa,
   co2            = 400,          # ppm,
   fapar          = 1,            # fraction  ,
-  ppfd           = 300,          # mol/m2/d,
+  ppfd           = 30,           # mol/m2/d,
   elv            = 0,            # m.a.s.l.,
   do_ftemp_kphio = FALSE,
   do_soilmstress = TRUE,
