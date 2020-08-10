@@ -78,57 +78,71 @@ inst_rpmodel <- function( x, tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA, kph
   kmm <- calc_kmm( tc, patm )   ## XXX Todo: replace 'NA' here with 'patm'
 
   ##--------------------------------
-  ## Vcmax
+  ## Vcmax, at current temperature
   ##--------------------------------
   ftemp25_inst_vcmax  <- calc_ftemp_inst_vcmax( tc, tc, tcref = 25.0 )
-  out_inst$vcmax <- x$vcmax25 * ftemp25_inst_vcmax
+  vcmax <- x$vcmax25 * ftemp25_inst_vcmax
 
   ##--------------------------------
   ## Rd: Dark respiration
   ##--------------------------------
   ftemp_inst_rd <- calc_ftemp_inst_rd( tc )
-  out_inst$rd <- rd_to_vcmax * x$vcmax25 * ftemp_inst_rd
+  rd <- rd_to_vcmax * x$vcmax25 * ftemp_inst_rd
 
   ##--------------------------------
-  ## Jmax
+  ## Jmax, at current temperature
   ##--------------------------------
-  # xxx don't know; using damped variable instead xxx
-  out_inst$jmax <- x$jmax
+  ftemp25_inst_jmax  <- calc_ftemp_inst_jmax( tc, tc, tcref = 25.0 )
+  jmax <- x$jmax25 * ftemp25_inst_vcmax
 
   ##--------------------------------
   ## Ac
   ##--------------------------------
   A <- -1.0 * x$gs
-  B <- x$gs * ca - x$gs * kmm - out_inst$vcmax
-  C <- x$gs * ca * kmm + out_inst$vcmax * gammastar
+  B <- x$gs * ca - x$gs * kmm - vcmax
+  C <- x$gs * ca * kmm + vcmax * gammastar
 
-  out_inst$ci_c <- QUADM(A, B, C)
-  out_inst$a_c <- out_inst$vcmax * (out_inst$ci_c - gammastar) / (out_inst$ci_c + kmm)
+  ci_c <- QUADM(A, B, C)
+  a_c <- vcmax * (ci_c - gammastar) / (ci_c + kmm)
 
   ##--------------------------------
   ## Aj
   ##--------------------------------
-  L <- 1.0 / sqrt(1.0 + ((4.0 * kphio * iabs)/out_inst$jmax)^2)
+  L <- 1.0 / sqrt(1.0 + ((4.0 * kphio * iabs)/jmax)^2)
   A <- -x$gs
   B <- x$gs * ca - 2 * gammastar * x$gs - L * kphio * iabs
   C <- 2 * gammastar * x$gs * ca + L * kphio * iabs * gammastar
 
-  out_inst$ci_j <- QUADM(A, B, C)
-  out_inst$a_j  <- kphio * iabs * (out_inst$ci_j - gammastar)/(out_inst$ci_j + 2 * gammastar) * L
+  ci_j <- QUADM(A, B, C)
+  a_j  <- kphio * iabs * (ci_j - gammastar)/(ci_j + 2 * gammastar) * L
 
   ##--------------------------------
   ## A
   ##--------------------------------
   ## Take minimum of the two assimilation rates and maximum of the two ci
-  out_inst$assim <- min( out_inst$a_j, out_inst$a_c )
-  out_inst$ci <- max(out_inst$ci_c, out_inst$ci_j)
+  assim <- min( a_j, a_c )
+  ci <- max(ci_c, ci_j)
 
   ##--------------------------------
   ## GPP
   ##--------------------------------
-  out_inst$gpp <- out_inst$assim * c_molmass
+  gpp <- assim * c_molmass * fapar
 
-  return( out_inst )
+  ## construct list for output
+  out <- list(
+              gpp = gpp,
+              assim = assim,
+              vcmax = vcmax,
+              jmax = jmax,
+              rd = rd,
+              ci = ci,
+              a_j = a_j,
+              a_c = a_c,
+              ci_j = ci_j,
+              ci_c = ci_c
+              )
+
+  return( out )
 }
 
 
