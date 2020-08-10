@@ -52,7 +52,7 @@ df %>%
 
 ### Dampen inputs
 
-Next, calculated temporally damped input time series. This can be done with the function `dampen_vec` (newly added for rpmodel package version 1.2).
+Next, calculated temporally damped input time series. This can be done with the function `dampen_vec` (newly added for rpmodel package version 1.2). Here we chose a dampening (e-folding) time scale of 40 days (`tau = 40`).
 ```{r}
 library(rpmodel)
 df_damped <- df %>% 
