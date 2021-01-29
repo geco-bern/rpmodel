@@ -15,6 +15,10 @@ vignette: >
 
 The rpmodel package implements the P-model as described in Stocker et al. (2019) *Geosci. Mod. Dev.* The main function available through the package is `rpmodel()`, which returns a list of quantities (see `?rpmodel`) for a given set of inputs. An additional set of important functions that are used within `rpmodel()` are also available through this package. Usage examples are given below.
 
+**Important note:**
+
+The P-model predicts how photosynthesis acclimates to a changing environment, coordinating stomatal conductance, Vcmax and Jmax. This yields a model that has the form of a light use efficiency model, where gross primary production scales linearly with absorbed light, as described in [Stocker et al. 2020](https://doi.org/10.5194/gmd-13-1545-2020). It is important to note that this implies that the P-model is valid only for simulating responses to the environment that evolve over the time scale at which the photosynthetic machinery (e.g., Rubisco) can be assumed to acclimate. Sensible choices are on the order of a couple of weeks to a month. In other words, the arguments (climatic forcing), provided to `rpmodel()` should represent typical daytime mean values, averaged across a couple of weeks. The output is then representative also for average values across the same time scale.
+
 ## Example P-model run
 
 Let's run the P-model, without $J_{\text{max}}$ limitation (argument `method_jmaxlim = "none"`), for one point. The set of inputs, being temperature (`tc`), photosynthetic photon flux density (`ppfd`), vapour pressure deficit (`vpd`), ambient CO$_2$ (`co2`), elevation (`elv`), and fraction of absorbed photosynthetically active radiation (`fapar`). The quantum yield efficiency parameter is provided as an argument (`kphio`) and corresponds to $\widehat{\varphi_0}$ in Stocker et al. (2019) if the temperature-dependence of this parameter is ignored (argument `do_ftemp_kphio = FALSE`, corresponding to simulation setup 'ORG' in Stocker et al. (2019)), or to $\widehat{c_L}$ if the temperature-dependence of the quantum yield efficiency is included (argument `do_ftemp_kphio = TRUE`, used in simulation setups 'BRC' and 'FULL' in Stocker et al. (2019)). By default the optional argument `do_soilmstress` is set to `FALSE`, meaning that the empirical soil moisture stress function is not included. The unit cost ratio ($\beta$ in Stocker et al. (2019)) is given by argument `beta`.
@@ -29,19 +33,19 @@ out_pmodel <- rpmodel(
   fapar          = 1,            # fraction  ,
   ppfd           = 300,          # mol/m2/d,
   elv            = 0,            # m.a.s.l.,
-  kphio          = 0.05,         # quantum yield efficiency,
+  kphio          = 0.049977,     # quantum yield efficiency as calibrated for setup ORG by Stocker et al. 2020 GMD,
   beta           = 146,          # unit cost ratio a/b,
   c4             = FALSE,
   method_optci   = "prentice14",
   method_jmaxlim = "none",
-  do_ftemp_kphio = FALSE,
-  do_soilmstress = FALSE,
+  do_ftemp_kphio = FALSE,        # corresponding to setup ORG
+  do_soilmstress = FALSE,        # corresponding to setup ORG
   verbose        = TRUE
   )
 print(out_pmodel)
 ```
 
-Here, we specified the model paramters (arguments `beta` and `kphio`). This overrides the defaults, where `rpmodel()` uses the parameters as calibrated by Stocker et al. (2019), depending on the choices for arguments `do_ftemp_kphio` and `do_soilmstress`:
+Above, we specified the model paramters (arguments `beta` and `kphio`). This overrides the defaults, where `rpmodel()` uses the parameters as calibrated by Stocker et al. (2019), depending on the choices for arguments `do_ftemp_kphio` and `do_soilmstress`:
 ```{r eval=FALSE}
 kphio = ifelse(do_ftemp_kphio, ifelse(do_soilmstress, 0.087182, 0.081785), 0.049977)
 beta = 146.0
@@ -95,7 +99,7 @@ out_ts_pmodel <- rpmodel(
   fapar          = rep(1, 5),
   ppfd           = 300 + rnorm(5, mean = 0, sd = 30),
   elv            = 0,         
-  kphio          = 0.05,         
+  kphio          = 0.049977,
   beta           = 146,
   c4             = FALSE,
   method_optci   = "prentice14",
@@ -124,7 +128,7 @@ df <- tibble(
   ) %>%
   mutate( out_pmodel = purrr::pmap(., rpmodel, 
     elv            = 0,         
-    kphio          = 0.05,         
+    kphio          = 0.049977,
     beta           = 146,
     c4             = FALSE,
     method_optci   = "prentice14",
@@ -161,7 +165,7 @@ out_pmodel <- rpmodel(
   fapar          = 1,            # fraction  ,
   ppfd           = 300,          # mol/m2/d,
   elv            = 0,            # m.a.s.l.,
-  kphio          = 0.05,         # quantum yield efficiency,
+  kphio          = 0.049977,     # quantum yield efficiency as calibrated for setup ORG by Stocker et al. 2020 GMD,
   beta           = 146,          # unit cost ratio a/b,
   method_optci   = "prentice14",
   method_jmaxlim = "none",

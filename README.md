@@ -2,23 +2,31 @@
 
 `rpmodel` provides an implementation of the P-model (Prentice et al., 2014; Wang et al., 2017; Stocker et al., 2020) for predicting acclimated photosynthetic parameters, assimilation, and dark respiration rates as a function of the environment. The main function is `rpmodel()` which returns a list of variables that are mutually consistent within the theory of the P-model (see [Usage](./articles/usage.html) ). Further functions used within `rpmodel()` are also provided through the package.
 
+**Important note:**
+
+The P-model predicts how photosynthesis acclimates to a changing environment, coordinating stomatal conductance, Vcmax and Jmax. This yields a model that has the form of a light use efficiency model, where gross primary production scales linearly with absorbed light, as described in [Stocker et al. 2020](https://doi.org/10.5194/gmd-13-1545-2020). It is important to note that this implies that the P-model is valid only for simulating responses to the environment that evolve over the time scale at which the photosynthetic machinery (e.g., Rubisco) can be assumed to acclimate. Sensible choices are on the order of a couple of weeks to a month. In other words, the arguments (climatic forcing), provided to `rpmodel()` should represent typical daytime mean values, averaged across a couple of weeks. The output is then representative also for average values across the same time scale.
+
+
 ## Usage
 
 This loads the `rpmodel` package and executes the `rpmodel()` function without $J_{\text{max}}$ limitation (argument `method_jmaxlim = "none"`), and with a temperature-independent quantum yield efficiency (argument `do_ftemp_kphio = FALSE`):
 ```r
 library(rpmodel)
 out_pmodel <- rpmodel( 
-  tc             = 20           # temperature, deg C
-  vpd            = 1000         # Pa,
-  co2            = 400          # ppm,
-  elv            = 0            # m.a.s.l.,
-  kphio          = 0.05         # quantum yield efficiency,
-  beta           = 146,         # unit cost ratio a/b,
-  fapar          = 1            # fraction  ,
-  ppfd           = 300          # mol/m2/d,
+  tc             = 20,           # temperature, deg C
+  vpd            = 1000,         # Pa,
+  co2            = 400,          # ppm,
+  fapar          = 1,            # fraction  ,
+  ppfd           = 300,          # mol/m2/d,
+  elv            = 0,            # m.a.s.l.,
+  kphio          = 0.049977,     # quantum yield efficiency as calibrated for setup ORG by Stocker et al. 2020 GMD,
+  beta           = 146,          # unit cost ratio a/b,
+  c4             = FALSE,
   method_optci   = "prentice14",
   method_jmaxlim = "none",
-  do_ftemp_kphio = FALSE 
+  do_ftemp_kphio = FALSE,        # corresponding to setup ORG
+  do_soilmstress = FALSE,        # corresponding to setup ORG
+  verbose        = TRUE
   )
 ```
 
