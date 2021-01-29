@@ -25,3 +25,7 @@
 ## rpmodel 1.0.6
 
 * Set negative VPD values to zero. Resolves issue [issue #2](https://github.com/stineb/rpmodel/issues/2).
+
+## rpmodel 1.1.0
+
+* Corrected vectorization. This fixes wrong treatment of vector arguments and solves [issue #3](https://github.com/stineb/rpmodel/issues/3).

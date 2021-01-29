@@ -330,40 +330,46 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
   ftemp_inst_rd <- calc_ftemp_inst_rd( tc )
   rd_unitiabs  <- rd_to_vcmax * (ftemp_inst_rd / ftemp25_inst_vcmax) * out_lue_vcmax$vcmax_unitiabs
 
-
   ##-----------------------------------------------------------------------
   ## Quantities that scale linearly with absorbed light
   ##-----------------------------------------------------------------------
   len <- length(out_lue_vcmax[[1]])
-  iabs <- rep(fapar * ppfd, len)
+  iabs <- fapar * ppfd
 
   ## Gross primary productivity
-  gpp <- ifelse(!is.na(iabs), iabs * out_lue_vcmax$lue, rep(NA, len))   # in g C m-2 s-1
-
+  # gpp <- ifelse(any(is.na(iabs)), rep(NA, len), iabs * out_lue_vcmax$lue)   # in g C m-2 s-1
+  gpp <- iabs * out_lue_vcmax$lue   # in g C m-2 s-1
+  
   ## Vcmax per unit ground area is the product of the intrinsic quantum
   ## efficiency, the absorbed PAR, and 'n'
-  vcmax <- ifelse(!is.na(iabs), iabs * out_lue_vcmax$vcmax_unitiabs, rep(NA, len))
-
+  # vcmax <- ifelse(any(is.na(iabs)), rep(NA, len), iabs * out_lue_vcmax$vcmax_unitiabs)
+  vcmax <- iabs * out_lue_vcmax$vcmax_unitiabs
+  
   ## (vcmax normalized to 25 deg C)
-  vcmax25 <- ifelse(!is.na(iabs), iabs * vcmax25_unitiabs, rep(NA, len))
-
+  # vcmax25 <- ifelse(any(is.na(iabs)), rep(NA, len), iabs * vcmax25_unitiabs)
+  vcmax25 <- iabs * vcmax25_unitiabs
+  
   ## Dark respiration
-  rd <- ifelse(!is.na(iabs), iabs * rd_unitiabs, rep(NA, len))
-
+  # rd <- ifelse(!is.na(iabs), iabs * rd_unitiabs, rep(NA, len))
+  rd <- iabs * rd_unitiabs
+  
   ## Jmax using again A_J = A_C
-  fact_jmaxlim <- ifelse(!is.na(iabs),
-                         vcmax * (ci + 2.0 * gammastar) / (kphio * iabs * (ci + kmm)),
-                         rep(NA, len))
-  jmax <- ifelse(!is.na(iabs),
-                 4.0 * kphio * iabs / sqrt( (1.0/fact_jmaxlim)**2 - 1.0 ),
-                 rep(NA, len))
-
+  # fact_jmaxlim <- ifelse(!is.na(iabs),
+  #                        vcmax * (ci + 2.0 * gammastar) / (kphio * iabs * (ci + kmm)),
+  #                        rep(NA, len))
+  fact_jmaxlim <- vcmax * (ci + 2.0 * gammastar) / (kphio * iabs * (ci + kmm))
+  
+  # jmax <- ifelse(!is.na(iabs),
+  #                4.0 * kphio * iabs / sqrt( (1.0/fact_jmaxlim)**2 - 1.0 ),
+  #                rep(NA, len))
+  jmax <- 4.0 * kphio * iabs / sqrt( (1.0/fact_jmaxlim)**2 - 1.0 )
+  
   ## construct list for output
   out <- list(
-              ca              = rep(ca, len),
-              gammastar       = rep(gammastar, len),
-              kmm             = rep(kmm, len),
-              ns_star         = rep(ns_star, len),
+              ca              = ca,
+              gammastar       = gammastar,
+              kmm             = kmm,
+              ns_star         = ns_star,
               chi             = out_optchi$chi,
               mj              = out_optchi$mj,
               mc              = out_optchi$mc,
@@ -397,7 +403,6 @@ calc_optimal_chi <- function( kmm, gammastar, ns_star, ca, vpd, beta ){
   #           - ns
   #           - vpd
   #-----------------------------------------------------------------------
-  
   ## Avoid negative VPD (dew conditions), resolves issue #2 (https://github.com/stineb/rpmodel/issues/2)
   vpd <- ifelse(vpd < 0, 0, vpd)
 
@@ -405,27 +410,24 @@ calc_optimal_chi <- function( kmm, gammastar, ns_star, ca, vpd, beta ){
   xi  <- sqrt( (beta * ( kmm + gammastar ) ) / ( 1.6 * ns_star ) )
   chi <- gammastar / ca + ( 1.0 - gammastar / ca ) * xi / ( xi + sqrt(vpd) )
 
-  # Define variable substitutes:
-  vdcg <- ca - gammastar
-  vacg <- ca + 2.0 * gammastar
-  vbkg <- beta * (kmm + gammastar)
-
-  ## wrap if condition in a function to allow vectorization
-  calc_mj <- function(ns_star, vpd, vbkg){
-    vsr <- sqrt( 1.6 * ns_star * vpd / vbkg )
-
-    # Based on the mc' formulation (see Regressing_LUE.pdf)
-    mj <- vdcg / ( vacg + 3.0 * gammastar * vsr )
-
-    return(mj)
-  }
-
-  # Check for negatives, vectorized
-  mj <- ifelse(ns_star>0 & vpd>0 & vbkg>0, calc_mj(ns_star, vpd, vbkg), rep(NA, length(vpd)))
+  ## more sensible to use chi for calculating mj - equivalent to code below
+  # # Define variable substitutes:
+  # vdcg <- ca - gammastar
+  # vacg <- ca + 2.0 * gammastar
+  # vbkg <- beta * (kmm + gammastar)
+  # 
+  # # Check for negatives, vectorized
+  # mj <- ifelse(ns_star>0 & vpd>0 & vbkg>0,
+  #              calc_mj(ns_star, vpd, vacg, vbkg, vdcg, gammastar),
+  #              rep(NA, max(length(vpd), length(ca)))
+  #              )
 
   ## alternative variables
   gamma <- gammastar / ca
   kappa <- kmm / ca
+  
+  ## use chi for calculating mj
+  mj <- (chi - gamma) / (chi + 2 * gamma)
 
   ## mc
   mc <- (chi - gamma) / (chi + kappa)
@@ -436,6 +438,18 @@ calc_optimal_chi <- function( kmm, gammastar, ns_star, ca, vpd, beta ){
   out <- list( chi=chi, mc=mc, mj=mj, mjoc=mjoc )
   return(out)
 }
+
+
+# ## wrap if condition in a function to allow vectorization
+# calc_mj <- function(ns_star, vpd, vacg, vbkg, vdcg, gammastar){
+#   
+#   vsr <- sqrt( 1.6 * ns_star * vpd / vbkg )
+#   
+#   # Based on the mc' formulation (see Regressing_LUE.pdf)
+#   mj <- vdcg / ( vacg + 3.0 * gammastar * vsr )
+#   
+#   return(mj)
+# }
 
 
 calc_lue_vcmax_wang17 <- function(out_optchi, kphio, ftemp_kphio, c_molmass, soilmstress){

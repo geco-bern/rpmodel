@@ -82,7 +82,7 @@ in light-adapted tobacco leaves, determined by Bernacchi et al. (2003)" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rpmodel</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
       </span>
     </div>
 
@@ -90,7 +90,7 @@ in light-adapted tobacco leaves, determined by Bernacchi et al. (2003)" />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -116,7 +116,7 @@ in light-adapted tobacco leaves, determined by Bernacchi et al. (2003)" />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/stineb/rpmodel/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -144,7 +144,7 @@ following the temperature dependence of the maximum quantum yield of photosystem
 in light-adapted tobacco leaves, determined by Bernacchi et al. (2003)</p>
     </div>
 
-    <pre class="usage"><span class='fu'>calc_ftemp_kphio</span>(<span class='no'>tc</span>)</pre>
+    <pre class="usage"><span class='fu'>calc_ftemp_kphio</span><span class='op'>(</span><span class='va'>tc</span>, c4 <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -153,6 +153,12 @@ in light-adapted tobacco leaves, determined by Bernacchi et al. (2003)</p>
       <th>tc</th>
       <td><p>Temperature, relevant for photosynthesis (degrees Celsius)</p></td>
     </tr>
+    <tr>
+      <th>c4</th>
+      <td><p>Boolean specifying whether fitted temperature response for C4 plants
+is used. Defaults to <code>FALSE</code> (C3 photoynthesis temperature resposne following
+Bernacchi et al., 2003 is used).</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -160,11 +166,17 @@ in light-adapted tobacco leaves, determined by Bernacchi et al. (2003)</p>
     <p>A numeric value for \(\phi(T)\)</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The temperature factor is calculated as 
+    <p>The temperature factor for C3 photosynthesis (argument <code>c4 = FALSE</code>) is calculated 
+based on Bernacchi et al. (2003) as 
 			$$
 				\phi(T) = 0.352 + 0.022 T - 0.00034 T^2
-$$
-The factor \(\phi(T)\) is to be multiplied with leaf absorptance and the fraction 
+      $$</p>
+<p>The temperature factor for C4 (argument <code>c4 = TRUE</code>) photosynthesis is calculated based on 
+unpublished work as
+			$$
+				\phi(T) = -0.008 + 0.00375 T - 0.58e-4 T^2
+      $$</p>
+<p>The factor \(\phi(T)\) is to be multiplied with leaf absorptance and the fraction 
 of absorbed light that reaches photosystem II. In the P-model these additional factors
 are lumped into a single apparent quantum yield efficiency parameter (argument <code>kphio</code> 
 to function <a href='rpmodel.html'>rpmodel</a>).</p>
@@ -177,7 +189,8 @@ to function <a href='rpmodel.html'>rpmodel</a>).</p>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## Relative change in the quantum yield efficiency </span>
 <span class='co'>## between 5 and 25 degrees celsius (percent change):</span>
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>((<span class='fu'>calc_ftemp_kphio</span>(<span class='fl'>25.0</span>)/<span class='fu'>calc_ftemp_kphio</span>(<span class='fl'>5.0</span>)-<span class='fl'>1</span>)*<span class='fl'>100</span> ))</div><div class='output co'>#&gt; [1] "52.0396912899669"</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='op'>(</span><span class='fu'>calc_ftemp_kphio</span><span class='op'>(</span><span class='fl'>25.0</span><span class='op'>)</span><span class='op'>/</span><span class='fu'>calc_ftemp_kphio</span><span class='op'>(</span><span class='fl'>5.0</span><span class='op'>)</span><span class='op'>-</span><span class='fl'>1</span><span class='op'>)</span><span class='op'>*</span><span class='fl'>100</span> <span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "52.0396912899669"</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -194,7 +207,7 @@ to function <a href='rpmodel.html'>rpmodel</a>).</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

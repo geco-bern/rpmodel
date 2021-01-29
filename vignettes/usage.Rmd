@@ -87,6 +87,7 @@ Above, atmospheric pressure (`patm`) was not provided as an argument, but elevat
 
 The `rpmodel()` function can also be invoked for time series, where `tc`, `vpd`, `co2`, `fapar`, `patm`, and `ppfd` are vectors.
 ```{r}
+set.seed(1982)
 out_ts_pmodel <- rpmodel( 
   tc             = 20 + rnorm(5, mean = 0, sd = 5),
   vpd            = 1000 + rnorm(5, mean = 0, sd = 50),
@@ -112,6 +113,8 @@ We can create a data frame (in [tidyverse](https://www.tidyverse.org/) this is a
 ```{r}
 library(dplyr)
 library(purrr)
+set.seed(1982)
+
 df <- tibble(
   tc             = 20 + rnorm(5, mean = 0, sd = 5),
   vpd            = 1000 + rnorm(5, mean = 0, sd = 50),
