@@ -30,7 +30,7 @@ out_pmodel <- rpmodel(
   )
 ```
 
-For more information and examples see [Usage](./articles/usage.html).
+For more information and examples see [Usage](articles/usage.html).
 
 ## Installation
 

@@ -10,7 +10,7 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
 Imports: rlang
-Suggests: dplyr, purrr, tidyr, knitr
-VignetteBuilder: knitr
+Suggests: dplyr, purrr, tidyr, knitr, markdown
+VignetteBuilder: knitr, markdown
 URL: https://github.com/stineb/rpmodel
 BugReports: https://github.com/stineb/rpmodel/issues
