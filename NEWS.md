@@ -32,6 +32,6 @@
 
 * Corrected vectorization. This fixes wrong treatment of vector arguments and solves [issue #3](https://github.com/stineb/rpmodel/issues/3).
 
-### rpmodel 1.0.1
+### rpmodel 1.1.1
 
 * Corrected the argument description for `kphio` in the manual of `rpmodel()`.
