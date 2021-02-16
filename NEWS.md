@@ -35,3 +35,7 @@
 ### rpmodel 1.1.1
 
 * Corrected the argument description for `kphio` in the manual of `rpmodel()`.
+
+### rpmodel 1.1.2
+
+* Set negative values of the temperature-dependent `kphio` to zero.
