@@ -38,7 +38,7 @@ out_pmodel <- rpmodel(
   beta           = 146,          # unit cost ratio a/b,
   c4             = FALSE,
   method_optci   = "prentice14",
-  method_jmaxlim = "none",
+  method_jmaxlim = "wang17",
   do_ftemp_kphio = FALSE,        # corresponding to setup ORG
   do_soilmstress = FALSE,        # corresponding to setup ORG
   verbose        = TRUE

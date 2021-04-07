@@ -2,6 +2,7 @@
 
 export(calc_density_h2o)
 export(calc_ftemp_arrh)
+export(calc_ftemp_inst_jmax)
 export(calc_ftemp_inst_rd)
 export(calc_ftemp_inst_vcmax)
 export(calc_ftemp_kphio)
