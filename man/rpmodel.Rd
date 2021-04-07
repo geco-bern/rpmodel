@@ -51,9 +51,9 @@ standard atmosphere (101325 Pa), corrected for elevation (argument \code{elv}), 
 \link{calc_patm}), if argument \code{patm} is not provided. If argument \code{patm} is provided,
 \code{elv} is overridden.}
 
-\item{kphio}{Apparent quantum yield efficiency (unitless). Defaults to 0.0817 for
-\code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=FALSE}, 0.0870 for
-\code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE}, and 0.0492 for
+\item{kphio}{Apparent quantum yield efficiency (unitless). Defaults to 0.081785 for
+\code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=FALSE}, 0.087182 for
+\code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE}, and 0.049977 for
 \code{method_jmaxlim="wang17", do_ftemp_kphio=FALSE, do_soilmstress=FALSE}, corresponding to the empirically
 fitted value as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'BRC', 'FULL', and 'ORG'
 respectively.}

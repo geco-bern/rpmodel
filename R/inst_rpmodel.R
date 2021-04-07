@@ -66,7 +66,7 @@ inst_rpmodel <- function( x, tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA, kph
   ##--------------------------------
   ## Required quantities
   ##--------------------------------
-  iabs <- ppfd * fapar
+  iabs <- ppfd   # leaf-level quantity - no fapar
 
   ## ambient CO2 partial pression (Pa)
   ca <- co2_to_ca( co2, patm )
@@ -93,7 +93,7 @@ inst_rpmodel <- function( x, tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA, kph
   ## Jmax, at current temperature
   ##--------------------------------
   ftemp25_inst_jmax  <- calc_ftemp_inst_jmax( tc, tc, tcref = 25.0 )
-  jmax <- x$jmax25 * ftemp25_inst_vcmax
+  jmax <- x$jmax25 * ftemp25_inst_jmax
 
   ##--------------------------------
   ## Ac

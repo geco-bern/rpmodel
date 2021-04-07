@@ -47,7 +47,7 @@ df <- tibble(doy = 1:365) %>%
 df %>%
   ggplot(aes(doy, tc)) + geom_line()
 df %>%
-  ggplot(aes(doy, ppfd)) + geom_line()
+  ggplot(aes(doy, ppfd)) + geom_line() + ylim(0, 30)
 ```
 
 ### Dampen inputs
@@ -114,6 +114,53 @@ df_tmp %>%
   geom_line(aes(doy, Assimilation, color = Limitation)) +
   labs(title = "Assimilation")
 ```
+
+```{r echo=FALSE}
+c_molmass <- 12.0107 
+
+df_tmp <- df_out %>% 
+  mutate( out_pmodel = purrr::map(out_pmodel, ~as_tibble(.)),
+          out_inst = purrr::map(out_inst, ~as_tibble(.))) %>% 
+  unnest(out_inst) %>% 
+  dplyr::select(doy, assim_inst = assim, out_pmodel) %>% 
+  unnest(out_pmodel) %>% 
+  mutate(assim = gpp / c_molmass)
+
+df_tmp %>% 
+  pivot_longer(cols = c(assim_inst, assim), names_to = "Scale", values_to = "Assimilation") %>% 
+  ggplot() +
+  geom_line(aes(doy, Assimilation, color = Scale)) +
+  labs(title = "Assimilation")
+```
+
+The curves should be identical if the damped forcing is provided as input to `inst_rpmodel()`.
+```{r}
+## using damped inputs here
+df_out2 <- df_damped %>% 
+  left_join(dplyr::select(df_out, doy, out_pmodel), by = "doy") %>% 
+  mutate(out_inst = purrr::pmap(dplyr::select(., x = out_pmodel, tc, vpd, co2, fapar, ppfd), 
+                                inst_rpmodel,
+                                elv = 0, 
+                                kphio = 0.05))
+```
+
+```{r, echo=FALSE}
+df_tmp <- df_out2 %>% 
+  mutate( out_pmodel = purrr::map(out_pmodel, ~as_tibble(.)),
+          out_inst = purrr::map(out_inst, ~as_tibble(.))) %>% 
+  unnest(out_inst) %>% 
+  dplyr::select(doy, assim_inst = assim, out_pmodel) %>% 
+  unnest(out_pmodel) %>% 
+  mutate(assim = gpp / c_molmass)
+
+df_tmp %>% 
+  pivot_longer(cols = c(assim_inst, assim), names_to = "Scale", values_to = "Assimilation") %>% 
+  ggplot() +
+  geom_line(aes(doy, Assimilation, color = Scale)) +
+  labs(title = "Assimilation")
+```
+Ok.
+
 
 The difference between an acclimating respiration (using acclimating Vcmax25 and the instantaneous temperature scaling of Rd), vs. a hypothetical non-acclimating respiration (using a seasonally constant mean Vcmax25 and the same instantaneous temperature scaling of Rd) is illustrated below.
 ```{r echo=FALSE}

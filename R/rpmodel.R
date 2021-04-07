@@ -18,9 +18,9 @@
 #' standard atmosphere (101325 Pa), corrected for elevation (argument \code{elv}), using the function
 #' \link{calc_patm}), if argument \code{patm} is not provided. If argument \code{patm} is provided,
 #' \code{elv} is overridden.
-#' @param kphio Apparent quantum yield efficiency (unitless). Defaults to 0.0817 for
-#' \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=FALSE}, 0.0870 for
-#' \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE}, and 0.0492 for
+#' @param kphio Apparent quantum yield efficiency (unitless). Defaults to 0.081785 for
+#' \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=FALSE}, 0.087182 for
+#' \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE}, and 0.049977 for
 #' \code{method_jmaxlim="wang17", do_ftemp_kphio=FALSE, do_soilmstress=FALSE}, corresponding to the empirically
 #' fitted value as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'BRC', 'FULL', and 'ORG'
 #' respectively.
@@ -276,7 +276,6 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
 
   }
 
-
   ## leaf-internal CO2 partial pressure (Pa)
   ci <- out_optchi$chi * ca
 
@@ -285,6 +284,7 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
   ##-----------------------------------------------------------------------
   ## intrinsic water use efficiency (in Pa)
   iwue = ( ca - ci ) / 1.6
+
 
   ##-----------------------------------------------------------------------
   ## Vcmax and light use efficiency
@@ -297,9 +297,16 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
 
   } else if (method_jmaxlim=="wang17"){
 
-
+    ## apply correction by Jmax limitation
     out_lue_vcmax <- calc_lue_vcmax_wang17(out_optchi, kphio, ftemp_kphio, c_molmass, soilmstress)
 
+    # ## XXX exploratory to correct ci after accounting for Jmax limitation
+    # assim_test <- ppfd * kphio * out_lue_vcmax$mprime
+    # kc <- 0.41
+    # L <- sqrt(1 - (kc/out_optchi$mj)^(2/3))
+    # assim_test2 <- ppfd * kphio * out_optchi$mj * L
+    # ci_test <- gammastar * (2.0 * assim_test + kphio * ppfd * L)/(kphio * ppfd * L - assim_test)
+    # jmax_test <- (4.0 * kphio * ppfd) / sqrt(out_optchi$mj^(2/3) / (out_optchi$mj^(2/3) - kc^(2/3)) - 1.0)
 
   } else if (method_jmaxlim=="smith19"){
 
@@ -327,53 +334,67 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
   ftemp25_inst_vcmax  <- calc_ftemp_inst_vcmax( tc, tc, tcref = 25.0 )
   vcmax25_unitiabs  <- out_lue_vcmax$vcmax_unitiabs / ftemp25_inst_vcmax
 
-  # ## Dark respiration at growth temperature
-  # ftemp_inst_rd <- calc_ftemp_inst_rd( tc )
-  # rd_unitiabs  <- rd_to_vcmax * (ftemp_inst_rd / ftemp25_inst_vcmax) * out_lue_vcmax$vcmax_unitiabs
+  ## Dark respiration at growth temperature
+  ftemp_inst_rd <- calc_ftemp_inst_rd( tc )
+  rd_unitiabs  <- rd_to_vcmax * (ftemp_inst_rd / ftemp25_inst_vcmax) * out_lue_vcmax$vcmax_unitiabs
 
   ##-----------------------------------------------------------------------
   ## Quantities that scale linearly with absorbed light
   ##-----------------------------------------------------------------------
-  len <- length(out_lue_vcmax[[1]])
-  iabs <- ppfd * fapar     # probably should use only ppfd to be representative of sun-exposed leaves
+  # len <- length(out_lue_vcmax[[1]])
+  iabs <- fapar * ppfd
 
-  ## vcmax normalized to 25 deg C
-  vcmax   <- ifelse(!is.na(iabs), iabs * out_lue_vcmax$vcmax_unitiabs, rep(NA, len))
-  vcmax25 <- ifelse(!is.na(iabs), iabs * vcmax25_unitiabs, rep(NA, len))
+  ## Gross primary productivity
+  # gpp <- ifelse(any(is.na(iabs)), rep(NA, len), iabs * out_lue_vcmax$lue)   # in g C m-2 s-1
+  gpp <- iabs * out_lue_vcmax$lue   # in g C m-2 s-1
 
-  ## Jmax normalized to 25 deg C
-  ## First, get Jmax using again A_J = A_C
-  fact_jmaxlim <- ifelse(!is.na(iabs),
-                         vcmax * (ci + 2.0 * gammastar) / (kphio * iabs * (ci + kmm)),
-                         rep(NA, len))
-  jmax <- ifelse(!is.na(iabs),
-                 4.0 * kphio * iabs / sqrt( (1.0/fact_jmaxlim)^2 - 1.0 ),
-                 rep(NA, len))
+  ## Vcmax per unit ground area is the product of the intrinsic quantum
+  ## efficiency, the absorbed PAR, and 'n'
+  # vcmax <- ifelse(any(is.na(iabs)), rep(NA, len), iabs * out_lue_vcmax$vcmax_unitiabs)
+  vcmax <- iabs * out_lue_vcmax$vcmax_unitiabs
 
-  ## then scale to 25 deg C
+  ## (vcmax normalized to 25 deg C)
+  # vcmax25 <- ifelse(any(is.na(iabs)), rep(NA, len), iabs * vcmax25_unitiabs)
+  vcmax25 <- iabs * vcmax25_unitiabs
+
+  ## Dark respiration
+  # rd <- ifelse(!is.na(iabs), iabs * rd_unitiabs, rep(NA, len))
+  rd <- iabs * rd_unitiabs
+
+  ## Jmax using again A_J = A_C
+  # fact_jmaxlim <- ifelse(!is.na(iabs),
+  #                        vcmax * (ci + 2.0 * gammastar) / (kphio * iabs * (ci + kmm)),
+  #                        rep(NA, len))
+  fact_jmaxlim <- vcmax * (ci + 2.0 * gammastar) / (kphio * iabs * (ci + kmm))
+
+  # jmax <- ifelse(!is.na(iabs),
+  #                4.0 * kphio * iabs / sqrt( (1.0/fact_jmaxlim)**2 - 1.0 ),
+  #                rep(NA, len))
+  jmax <- 4.0 * kphio * iabs / sqrt( (1.0/fact_jmaxlim)^2 - 1.0 )
+
   ftemp25_inst_jmax <- calc_ftemp_inst_jmax( tc, tc, tcref = 25.0 )
-  jmax25 <- ifelse(!is.na(iabs),
-                   jmax / ftemp25_inst_jmax,
-                   rep(NA, len))
+  jmax25 <- jmax / ftemp25_inst_jmax
 
-  ## at this stage, verify if A_J = A_C
+  ## Test: at this stage, verify if A_J = A_C
   a_j <- kphio * iabs * (ci - gammastar)/(ci + 2 * gammastar) * fact_jmaxlim
   a_c <- vcmax * (ci - gammastar) / (ci + kmm)
   if (abs(a_j/a_c - 1) > 0.001) rlang::abort("rpmodel(): light and Rubisco-limited assimilation rates are not identical.")
 
-  ## assimilation is not returned because it should not be confused with what is usually measured
+  ## Assimilation is not returned because it should not be confused with what is usually measured
   ## should use instantaneous assimilation for comparison to measurements. This is returned by inst_rpmodel().
   assim <- min(a_j, a_c)
+  if (abs(assim - gpp / c_molmass) > 0.001) rlang::abort("rpmodel(): Assimilation and GPP are not identical.")
 
   ## average stomatal conductance
   gs <- assim / (ca - ci)
 
   ## construct list for output
   out <- list(
-              ca              = rep(ca, len),
-              gammastar       = rep(gammastar, len),
-              kmm             = rep(kmm, len),
-              ns_star         = rep(ns_star, len),
+              gpp             = gpp,   # remove this again later
+              ca              = ca,
+              gammastar       = gammastar,
+              kmm             = kmm,
+              ns_star         = ns_star,
               chi             = out_optchi$chi,
               xi              = out_optchi$xi,
               mj              = out_optchi$mj,
@@ -381,11 +402,14 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
               ci              = ci,
               iwue            = iwue,
               gs              = gs,
+              vcmax           = vcmax,
               vcmax25         = vcmax25,
-              jmax25          = jmax25
+              jmax            = jmax,
+              jmax25          = jmax25,
+              rd              = rd
               )
 
-  if (!is.null(returnvar)) out <- out[returnvar]
+  # if (!is.null(returnvar)) out <- out[returnvar]
 
   return( out )
 
@@ -404,7 +428,6 @@ calc_optimal_chi <- function( kmm, gammastar, ns_star, ca, vpd, beta ){
   #           - ns
   #           - vpd
   #-----------------------------------------------------------------------
-
   ## Avoid negative VPD (dew conditions), resolves issue #2 (https://github.com/stineb/rpmodel/issues/2)
   vpd <- ifelse(vpd < 0, 0, vpd)
 
@@ -412,27 +435,24 @@ calc_optimal_chi <- function( kmm, gammastar, ns_star, ca, vpd, beta ){
   xi  <- sqrt( (beta * ( kmm + gammastar ) ) / ( 1.6 * ns_star ) )
   chi <- gammastar / ca + ( 1.0 - gammastar / ca ) * xi / ( xi + sqrt(vpd) )
 
-  # Define variable substitutes:
-  vdcg <- ca - gammastar
-  vacg <- ca + 2.0 * gammastar
-  vbkg <- beta * (kmm + gammastar)
-
-  ## wrap if condition in a function to allow vectorization
-  calc_mj <- function(ns_star, vpd, vbkg){
-    vsr <- sqrt( 1.6 * ns_star * vpd / vbkg )
-
-    # Based on the mc' formulation (see Regressing_LUE.pdf)
-    mj <- vdcg / ( vacg + 3.0 * gammastar * vsr )
-
-    return(mj)
-  }
-
-  # Check for negatives, vectorized
-  mj <- ifelse(ns_star>0 & vpd>0 & vbkg>0, calc_mj(ns_star, vpd, vbkg), rep(NA, length(vpd)))
+  ## more sensible to use chi for calculating mj - equivalent to code below
+  # # Define variable substitutes:
+  # vdcg <- ca - gammastar
+  # vacg <- ca + 2.0 * gammastar
+  # vbkg <- beta * (kmm + gammastar)
+  #
+  # # Check for negatives, vectorized
+  # mj <- ifelse(ns_star>0 & vpd>0 & vbkg>0,
+  #              calc_mj(ns_star, vpd, vacg, vbkg, vdcg, gammastar),
+  #              rep(NA, max(length(vpd), length(ca)))
+  #              )
 
   ## alternative variables
   gamma <- gammastar / ca
   kappa <- kmm / ca
+
+  ## use chi for calculating mj
+  mj <- (chi - gamma) / (chi + 2 * gamma)
 
   ## mc
   mc <- (chi - gamma) / (chi + kappa)
@@ -445,6 +465,18 @@ calc_optimal_chi <- function( kmm, gammastar, ns_star, ca, vpd, beta ){
 }
 
 
+# ## wrap if condition in a function to allow vectorization
+# calc_mj <- function(ns_star, vpd, vacg, vbkg, vdcg, gammastar){
+#
+#   vsr <- sqrt( 1.6 * ns_star * vpd / vbkg )
+#
+#   # Based on the mc' formulation (see Regressing_LUE.pdf)
+#   mj <- vdcg / ( vacg + 3.0 * gammastar * vsr )
+#
+#   return(mj)
+# }
+
+
 calc_lue_vcmax_wang17 <- function(out_optchi, kphio, ftemp_kphio, c_molmass, soilmstress){
 
   ## Include effect of Jmax limitation
@@ -452,6 +484,8 @@ calc_lue_vcmax_wang17 <- function(out_optchi, kphio, ftemp_kphio, c_molmass, soi
   mprime <- calc_mprime( out_optchi$mj )
 
   out <- list(
+
+    mprime = mprime,
 
     ## Light use efficiency (gpp per unit absorbed light)
     lue = kphio * ftemp_kphio * mprime * c_molmass * soilmstress,

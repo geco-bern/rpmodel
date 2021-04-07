@@ -80,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rpmodel</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.2</span>
       </span>
     </div>
 
@@ -88,7 +88,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -114,7 +114,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/stineb/rpmodel/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -140,28 +140,28 @@
     <p>R implementation of the P-model and its corrolary predictions (Prentice et al., 2014; Han et al., 2017).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>rpmodel</span>(
-  <span class='no'>tc</span>,
-  <span class='no'>vpd</span>,
-  <span class='no'>co2</span>,
-  <span class='no'>fapar</span>,
-  <span class='no'>ppfd</span>,
-  <span class='kw'>patm</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
-  <span class='kw'>elv</span> <span class='kw'>=</span> <span class='fl'>NA</span>,
-  <span class='kw'>kphio</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span>(<span class='no'>do_ftemp_kphio</span>, <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span>(<span class='no'>do_soilmstress</span>, <span class='fl'>0.087182</span>, <span class='fl'>0.081785</span>), <span class='fl'>0.049977</span>),
-  <span class='kw'>beta</span> <span class='kw'>=</span> <span class='fl'>146</span>,
-  <span class='kw'>soilm</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>meanalpha</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>apar_soilm</span> <span class='kw'>=</span> <span class='fl'>0</span>,
-  <span class='kw'>bpar_soilm</span> <span class='kw'>=</span> <span class='fl'>0.733</span>,
-  <span class='kw'>c4</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>method_optci</span> <span class='kw'>=</span> <span class='st'>"prentice14"</span>,
-  <span class='kw'>method_jmaxlim</span> <span class='kw'>=</span> <span class='st'>"wang17"</span>,
-  <span class='kw'>do_ftemp_kphio</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>do_soilmstress</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>returnvar</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>rpmodel</span><span class='op'>(</span>
+  <span class='va'>tc</span>,
+  <span class='va'>vpd</span>,
+  <span class='va'>co2</span>,
+  <span class='va'>fapar</span>,
+  <span class='va'>ppfd</span>,
+  patm <span class='op'>=</span> <span class='cn'>NA</span>,
+  elv <span class='op'>=</span> <span class='cn'>NA</span>,
+  kphio <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='va'>do_ftemp_kphio</span>, <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='va'>do_soilmstress</span>, <span class='fl'>0.087182</span>, <span class='fl'>0.081785</span><span class='op'>)</span>, <span class='fl'>0.049977</span><span class='op'>)</span>,
+  beta <span class='op'>=</span> <span class='fl'>146</span>,
+  soilm <span class='op'>=</span> <span class='fl'>1</span>,
+  meanalpha <span class='op'>=</span> <span class='fl'>1</span>,
+  apar_soilm <span class='op'>=</span> <span class='fl'>0</span>,
+  bpar_soilm <span class='op'>=</span> <span class='fl'>0.733</span>,
+  c4 <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  method_optci <span class='op'>=</span> <span class='st'>"prentice14"</span>,
+  method_jmaxlim <span class='op'>=</span> <span class='st'>"wang17"</span>,
+  do_ftemp_kphio <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  do_soilmstress <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  returnvar <span class='op'>=</span> <span class='cn'>NULL</span>,
+  verbose <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -205,9 +205,9 @@ standard atmosphere (101325 Pa), corrected for elevation (argument <code>elv</co
     </tr>
     <tr>
       <th>kphio</th>
-      <td><p>Apparent quantum yield efficiency (unitless). Defaults to 0.0817 for
-<code>method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=FALSE</code>, 0.0870 for
-<code>method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE</code>, and 0.0492 for
+      <td><p>Apparent quantum yield efficiency (unitless). Defaults to 0.081785 for
+<code>method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=FALSE</code>, 0.087182 for
+<code>method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE</code>, and 0.049977 for
 <code>method_jmaxlim="wang17", do_ftemp_kphio=FALSE, do_soilmstress=FALSE</code>, corresponding to the empirically
 fitted value as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'BRC', 'FULL', and 'ORG'
 respectively.</p></td>
@@ -354,10 +354,7 @@ photosynthesis model, P-model predictions, including all its corollary). This in
                       $$
                            Vcmax = \phi(T) \phi0 Iabs n
                       $$
-                      where \(n\) is given by \(n=m/mc\), or
-                      $$
-                          n = (ci + K) / (ci + 2 \Gamma*)
-                      $$</p></li>
+                      where \(n\) is given by \(n=m'/mc\).</p></li>
 <li><p><code>vcmax25</code>: Maximum carboxylation capacity \(Vcmax\) (mol C m-2) normalised to 25 deg C
                      following a modified Arrhenius equation, calculated as \(Vcmax25 = Vcmax / fv\),
                      where \(fv\) is the instantaneous temperature response by Vcmax and is implemented
@@ -413,7 +410,8 @@ photosynthesis model, P-model predictions, including all its corollary). This in
 <p>Stocker, B. et al. Geoscientific Model Development Discussions (in prep.)</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>rpmodel</span>( <span class='kw'>tc</span> <span class='kw'>=</span> <span class='fl'>20</span>, <span class='kw'>vpd</span> <span class='kw'>=</span> <span class='fl'>1000</span>, <span class='kw'>co2</span> <span class='kw'>=</span> <span class='fl'>400</span>, <span class='kw'>fapar</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>ppfd</span> <span class='kw'>=</span> <span class='fl'>300</span>, <span class='kw'>elv</span> <span class='kw'>=</span> <span class='fl'>0</span>)</div><div class='output co'>#&gt; $ca
+    <pre class="examples"><div class='input'><span class='fu'>rpmodel</span><span class='op'>(</span> tc <span class='op'>=</span> <span class='fl'>20</span>, vpd <span class='op'>=</span> <span class='fl'>1000</span>, co2 <span class='op'>=</span> <span class='fl'>400</span>, fapar <span class='op'>=</span> <span class='fl'>1</span>, ppfd <span class='op'>=</span> <span class='fl'>300</span>, elv <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; $ca
 #&gt; [1] 40.53
 #&gt; 
 #&gt; $gammastar
@@ -477,7 +475,7 @@ photosynthesis model, P-model predictions, including all its corollary). This in
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
