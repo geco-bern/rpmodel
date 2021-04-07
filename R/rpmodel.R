@@ -362,8 +362,26 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
   # jmax <- ifelse(!is.na(iabs),
   #                4.0 * kphio * iabs / sqrt( (1.0/fact_jmaxlim)**2 - 1.0 ),
   #                rep(NA, len))
-  jmax <- 4.0 * kphio * iabs / sqrt( (1.0/fact_jmaxlim)**2 - 1.0 )
+  jmax <- 4.0 * kphio * iabs / sqrt( (1.0/fact_jmaxlim)^2 - 1.0 )
   
+  ftemp25_inst_jmax <- calc_ftemp_inst_jmax( tc, tc, tcref = 25.0 )
+  jmax25 <- jmax / ftemp25_inst_jmax
+
+  ## at this stage, verify if A_J = A_C
+  a_j <- kphio * iabs * (ci - gammastar)/(ci + 2 * gammastar) * fact_jmaxlim
+  a_c <- vcmax * (ci - gammastar) / (ci + kmm)
+  if (abs(a_j/a_c - 1) > 0.001) rlang::abort("rpmodel(): light and Rubisco-limited assimilation rates are not identical.")
+
+  ## assimilation is not returned because it should not be confused with what is usually measured
+  ## should use instantaneous assimilation for comparison to measurements. This is returned by inst_rpmodel().
+  assim <- min(a_j, a_c)
+
+  if (abs(assim - gpp / c_molmass) > 0.001) rlang::abort("rpmodel(): Assimilation and GPP are not identical.")
+
+  ## average stomatal conductance
+  gs <- assim / (ca - ci)
+
+
   ## construct list for output
   out <- list(
               ca              = ca,
@@ -377,10 +395,11 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
               lue             = out_lue_vcmax$lue,
               gpp             = gpp,
               iwue            = iwue,
-              gs              = (gpp / c_molmass) / (ca - ci),
+              gs              = gs, #(gpp / c_molmass) / (ca - ci),
               vcmax           = vcmax,
               vcmax25         = vcmax25,
               jmax            = jmax,
+              jmax25          = jmax,
               rd              = rd
               )
 

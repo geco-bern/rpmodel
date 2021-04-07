@@ -18,35 +18,35 @@ A numeric value for \eqn{\phi(T)}
 }
 \description{
 Calculates the temperature dependence of the quantum yield efficiency
-following the temperature dependence of the maximum quantum yield of photosystem II 
+following the temperature dependence of the maximum quantum yield of photosystem II
 in light-adapted tobacco leaves, determined by Bernacchi et al. (2003)
 }
 \details{
-The temperature factor for C3 photosynthesis (argument \code{c4 = FALSE}) is calculated 
-based on Bernacchi et al. (2003) as 
+The temperature factor for C3 photosynthesis (argument \code{c4 = FALSE}) is calculated
+based on Bernacchi et al. (2003) as
 			\deqn{
 				\phi(T) = 0.352 + 0.022 T - 0.00034 T^2
       }
 
-The temperature factor for C4 (argument \code{c4 = TRUE}) photosynthesis is calculated based on 
+The temperature factor for C4 (argument \code{c4 = TRUE}) photosynthesis is calculated based on
 unpublished work as
 			\deqn{
 				\phi(T) = -0.008 + 0.00375 T - 0.58e-4 T^2
       }
 
-The factor \eqn{\phi(T)} is to be multiplied with leaf absorptance and the fraction 
+The factor \eqn{\phi(T)} is to be multiplied with leaf absorptance and the fraction
 of absorbed light that reaches photosystem II. In the P-model these additional factors
-are lumped into a single apparent quantum yield efficiency parameter (argument \code{kphio} 
+are lumped into a single apparent quantum yield efficiency parameter (argument \code{kphio}
 to function \link{rpmodel}).
 }
 \examples{
-## Relative change in the quantum yield efficiency 
+## Relative change in the quantum yield efficiency
 ## between 5 and 25 degrees celsius (percent change):
 print(paste((calc_ftemp_kphio(25.0)/calc_ftemp_kphio(5.0)-1)*100 ))
 
 }
 \references{
-Bernacchi, C. J., Pimentel, C., and Long, S. P.:  In vivo temperature 
-				response func-tions  of  parameters required  to  model  RuBP-limited  
+Bernacchi, C. J., Pimentel, C., and Long, S. P.:  In vivo temperature
+				response func-tions  of  parameters required  to  model  RuBP-limited
 				photosynthesis,  Plant  Cell Environ., 26, 1419–1430, 2003
 }
