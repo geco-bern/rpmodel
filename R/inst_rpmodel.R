@@ -95,6 +95,25 @@ inst_rpmodel <- function( x, tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA, kph
   ftemp25_inst_jmax  <- calc_ftemp_inst_jmax( tc, tc, tcref = 25.0 )
   jmax <- x$jmax25 * ftemp25_inst_vcmax
 
+  xxxxx
+
+  ##--------------------------------
+  ## Aj, gs free
+  ##--------------------------------
+  L <- 1.0 / sqrt(1.0 + ((4.0 * kphio * iabs)/jmax)^2)
+  kv <- (ca - gammastar) / (1 + x$xi / sqrt(vpd))
+  ci <- ca - kv
+  a_j <- L * kphio * iabs * (ci - gammastar)/(ci + 2 * gammastar)
+  gs_j <- a_j / kv
+
+  ##--------------------------------
+  ## Ac, gs free
+  ##--------------------------------
+  a_c <- vcmax * (ci - gammastar)/(ci + kmm)
+  gs_c <- a_j / kv
+
+  xxxxx
+
   ##--------------------------------
   ## Ac
   ##--------------------------------
