@@ -95,45 +95,42 @@ inst_rpmodel <- function( x, tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA, kph
   ftemp25_inst_jmax  <- calc_ftemp_inst_jmax( tc, tc, tcref = 25.0 )
   jmax <- x$jmax25 * ftemp25_inst_jmax
 
-  xxxxx
-
   ##--------------------------------
   ## Aj, gs free
   ##--------------------------------
   L <- 1.0 / sqrt(1.0 + ((4.0 * kphio * iabs)/jmax)^2)
   kv <- (ca - gammastar) / (1 + x$xi / sqrt(vpd))
-  ci <- ca - kv
-  a_j <- L * kphio * iabs * (ci - gammastar)/(ci + 2 * gammastar)
+  ci_j <- ca - kv
+  a_j <- L * kphio * iabs * (ci_j - gammastar)/(ci_j + 2 * gammastar)
   gs_j <- a_j / kv
 
   ##--------------------------------
   ## Ac, gs free
   ##--------------------------------
-  a_c <- vcmax * (ci - gammastar)/(ci + kmm)
+  ci_c <- ci_j
+  a_c <- vcmax * (ci_c - gammastar)/(ci_c + kmm)
   gs_c <- a_j / kv
 
-  xxxxx
-
-  ##--------------------------------
-  ## Ac
-  ##--------------------------------
-  A <- -1.0 * x$gs
-  B <- x$gs * ca - x$gs * kmm - vcmax
-  C <- x$gs * ca * kmm + vcmax * gammastar
-
-  ci_c <- QUADM(A, B, C)
-  a_c <- vcmax * (ci_c - gammastar) / (ci_c + kmm)
-
-  ##--------------------------------
-  ## Aj
-  ##--------------------------------
-  L <- 1.0 / sqrt(1.0 + ((4.0 * kphio * iabs)/jmax)^2)
-  A <- -x$gs
-  B <- x$gs * ca - 2 * gammastar * x$gs - L * kphio * iabs
-  C <- 2 * gammastar * x$gs * ca + L * kphio * iabs * gammastar
-
-  ci_j <- QUADM(A, B, C)
-  a_j  <- kphio * iabs * (ci_j - gammastar)/(ci_j + 2 * gammastar) * L
+  # ##--------------------------------
+  # ## Ac
+  # ##--------------------------------
+  # A <- -1.0 * x$gs
+  # B <- x$gs * ca - x$gs * kmm - vcmax
+  # C <- x$gs * ca * kmm + vcmax * gammastar
+  #
+  # ci_c <- QUADM(A, B, C)
+  # a_c <- vcmax * (ci_c - gammastar) / (ci_c + kmm)
+  #
+  # ##--------------------------------
+  # ## Aj
+  # ##--------------------------------
+  # L <- 1.0 / sqrt(1.0 + ((4.0 * kphio * iabs)/jmax)^2)
+  # A <- -x$gs
+  # B <- x$gs * ca - 2 * gammastar * x$gs - L * kphio * iabs
+  # C <- 2 * gammastar * x$gs * ca + L * kphio * iabs * gammastar
+  #
+  # ci_j <- QUADM(A, B, C)
+  # a_j  <- kphio * iabs * (ci_j - gammastar)/(ci_j + 2 * gammastar) * L
 
   ##--------------------------------
   ## A

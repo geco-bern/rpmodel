@@ -159,8 +159,8 @@ df_tmp %>%
   geom_line(aes(doy, Assimilation, color = Scale)) +
   labs(title = "Assimilation")
 ```
-Ok.
 
+Ok.
 
 The difference between an acclimating respiration (using acclimating Vcmax25 and the instantaneous temperature scaling of Rd), vs. a hypothetical non-acclimating respiration (using a seasonally constant mean Vcmax25 and the same instantaneous temperature scaling of Rd) is illustrated below.
 ```{r echo=FALSE}
