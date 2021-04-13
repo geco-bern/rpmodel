@@ -71,7 +71,8 @@ print( out_pmodel$ca * out_pmodel$chi )
 
 Yes.
 
-And for... $$
+And for... 
+$$
 A = V_{\text{cmax}} \frac{c_i-\Gamma^{\ast}}{c_i + K} = \phi_0 I_{\text{abs}} \frac{c_i-\Gamma^{\ast}}{c_i + 2 \Gamma^{\ast}} = g_s (c_a - c_i)
 $$
 

@@ -10,7 +10,7 @@ output:
 vignette: >
   %\VignetteEngine{knitr::knitr}
   %\usepackage[utf8]{inputenc}
-  %\VignetteIndexEntry{Running the P-model in R}
+  %\VignetteIndexEntry{Acclimated vs instantaneous response}
 ---
 
 ## Motivation
@@ -28,7 +28,29 @@ This explicit separation allows for a clear application of the P-model to time s
 
 ## Theory
 
-The derivation of acclimated quantities Vcmax, Jmax, and $\xi$ are described in [Stocker et al., 2020](https://doi.org/10.5194/gmd-13-1545-2020). They can be used to calculate stomatal conductance $g_s$, leaf internal CO2 concentration $c_i$, and the assimilation rates $A_J$ and $A_C$ by simulataneously solving  Eqs. C1, 5, in [Stocker et al., 2020](https://doi.org/10.5194/gmd-13-1545-2020) and the standard FvCB equations for $A_J$ and $A_C$.
+The derivation of acclimated quantities Vcmax, Jmax, and $\xi$ are described in [Stocker et al., 2020](https://doi.org/10.5194/gmd-13-1545-2020). They can be used to calculate stomatal conductance $g_s$, leaf internal CO2 concentration $c_i$, and the assimilation rates $A_J$ and $A_C$ by simulataneously solving  Eqs. C1, 5, in [Stocker et al., 2020](https://doi.org/10.5194/gmd-13-1545-2020) and the standard FvCB equations for $A_J$ and $A_C$. These are:
+
+$$
+g_s = \left( 1 + \frac{\xi}{\sqrt{D}} \right) \frac{A}{c_a - \Gamma^{\ast}}
+$$
+
+$$
+A = g_s(c_a - c_i)
+$$
+
+$$
+A_J = I_\text{abs} \; \varphi_0 \frac{c_i - \Gamma^\ast}{c_i + 2 \Gamma^\ast} L
+$$
+$$
+A_C = V_\text{cmax}  \frac{c_i - \Gamma^\ast}{c_i + K}
+$$
+$$
+A = \min(A_C, A_J)
+$$
+
+
+With $L = \frac{1}{\sqrt{1 + \left( \frac{4\varphi_0 I_\text{abs}}{J_\text{max}} \right)^2}}$
+
 
 ## Example
 
