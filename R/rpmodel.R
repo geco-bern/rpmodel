@@ -37,7 +37,7 @@
 #' as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'FULL' (corresponding to a setup
 #' with \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE}).
 #' @param bpar_soilm (Optional, used only if \code{do_soilmstress==TRUE}) Parameter determining the
-#' sensitivity of the empirical soil moisture stress function. Defaults to 0.685, the empirically fitted value
+#' sensitivity of the empirical soil moisture stress function. Defaults to 0.7330, the empirically fitted value
 #' as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'FULL' (corresponding to a setup
 #' with \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE}).
 #' @param c4 (Optional) A logical value specifying whether the C3 or C4 photosynthetic pathway is followed.
@@ -196,7 +196,7 @@
 #'
 rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
                      kphio = ifelse(do_ftemp_kphio, ifelse(do_soilmstress, 0.087182, 0.081785), 0.049977),
-                     beta = 146.0, soilm = 1.0, meanalpha = 1.0, apar_soilm = 0.0, bpar_soilm = 0.73300,
+                     beta = 146.0, soilm = stopifnot(!do_soilmstress), meanalpha = 1.0, apar_soilm = 0.0, bpar_soilm = 0.73300,
                      c4 = FALSE, method_optci = "prentice14", method_jmaxlim = "wang17",
                      do_ftemp_kphio = TRUE, do_soilmstress = FALSE, returnvar = NULL, verbose = FALSE ){
 
@@ -374,7 +374,7 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
 
   ## assimilation is not returned because it should not be confused with what is usually measured
   ## should use instantaneous assimilation for comparison to measurements. This is returned by inst_rpmodel().
-  assim <- min(a_j, a_c)
+  assim <- ifelse(a_j < a_c, a_j, a_c)
 
   if (abs(assim - gpp / c_molmass) > 0.001) rlang::abort("rpmodel(): Assimilation and GPP are not identical.")
 

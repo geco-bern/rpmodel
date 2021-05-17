@@ -107,13 +107,15 @@ out_ts_pmodel <- rpmodel(
   c4             = FALSE,
   method_optci   = "prentice14",
   method_jmaxlim = "none",
-  do_ftemp_kphio = FALSE,
+  do_ftemp_kphio = TRUE,
+  do_soilmstress = FALSE,
   verbose        = FALSE
   )
 print(out_ts_pmodel$gpp)
 ```
 
 Note that `gpp` (as well as all other returned variables) are now vectors of the same length as the vectors provided as inputs.
+
 
 ### P-model in the tidyverse
 
@@ -241,7 +243,14 @@ print(paste("calc_ftemp_kphio(20) =", calc_ftemp_kphio(20)))
 
 ### Soil moisture stress
 
-Similar to above (), the soil moisture dependence of LUE (and hence GPP, and Vcmax) can be calculated directly using the function `calc_soilmstress()` and affects several quantities returned by the `rpmodel()` call (GPP, LUE, Vcmax):
+The soil moisture stress function is available as a separate public function.
+```{r}
+vec_soilm <- seq(from = 1.0, to = 0.0, by = -0.05)
+vec_soilmstress <- calc_soilmstress( vec_soilm, meanalpha = 1.0, apar_soilm = 0.0, bpar_soilm = 0.7330 )
+plot(vec_soilm, vec_soilmstress)
+```
+
+Similar to above, the soil moisture dependence of LUE (and hence GPP, and Vcmax) can be calculated directly using the function `calc_soilmstress()` and affects several quantities returned by the `rpmodel()` call (GPP, LUE, Vcmax):
 
 ```{r}
 out_pmodel_soilmstress_OFF <- rpmodel( 
@@ -252,7 +261,7 @@ out_pmodel_soilmstress_OFF <- rpmodel(
   ppfd           = 300,          # mol/m2/d,
   elv            = 0,            # m.a.s.l.,
   do_ftemp_kphio = FALSE,
-  do_soilmstress = TRUE
+  do_soilmstress = FALSE
   )
 out_pmodel_soilmstress_ON <- rpmodel( 
   tc             = 20,           # temperature, deg C

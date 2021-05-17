@@ -48,7 +48,7 @@ calc_ftemp_kphio <- function( tc, c4 = FALSE ){
 	}
 
   ## avoid negative values
-  ftemp <- max(ftemp, 0.0)
+  ftemp <- ifelse(ftemp < 0.0, 0.0, ftemp)
 
   return(ftemp)
 }

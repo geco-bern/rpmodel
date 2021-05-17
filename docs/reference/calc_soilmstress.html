@@ -47,7 +47,7 @@
 
 
 <meta property="og:title" content="Calculates an empirical soil moisture stress factor — calc_soilmstress" />
-<meta property="og:description" content="Calculates an empirical soil moisture stress factor as a function of relative 
+<meta property="og:description" content="Calculates an empirical soil moisture stress factor as a function of relative
 soil moisture (fraction of field capacity)." />
 <meta property="og:image" content="/logo.png" />
 
@@ -81,7 +81,7 @@ soil moisture (fraction of field capacity)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rpmodel</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.3</span>
       </span>
     </div>
 
@@ -138,7 +138,7 @@ soil moisture (fraction of field capacity)." />
     </div>
 
     <div class="ref-description">
-    <p>Calculates an empirical soil moisture stress factor as a function of relative 
+    <p>Calculates an empirical soil moisture stress factor as a function of relative
 soil moisture (fraction of field capacity).</p>
     </div>
 
@@ -149,24 +149,24 @@ soil moisture (fraction of field capacity).</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>soilm</th>
-      <td><p>Relative soil moisture as a fraction 
+      <td><p>Relative soil moisture as a fraction
 of field capacity (unitless). Defaults to 1.0 (no soil moisture stress).</p></td>
     </tr>
     <tr>
       <th>meanalpha</th>
-      <td><p>Local annual mean ratio of 
+      <td><p>Local annual mean ratio of
 actual over potential evapotranspiration, measure for average aridity. Defaults to 1.0.</p></td>
     </tr>
     <tr>
       <th>apar_soilm</th>
-      <td><p>(Optional, used only if <code>do_calc_soilmstress==TRUE</code>) Parameter determining the 
+      <td><p>(Optional, used only if <code>do_calc_soilmstress==TRUE</code>) Parameter determining the
 sensitivity of the empirical soil moisture stress function. Defaults to 0.0, the empirically fitted value
 as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'FULL' (corresponding to a setup
 with <code>method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_calc_soilmstress=TRUE</code>).</p></td>
     </tr>
     <tr>
       <th>bpar_soilm</th>
-      <td><p>(Optional, used only if <code>do_calc_soilmstress==TRUE</code>) Parameter determining the 
+      <td><p>(Optional, used only if <code>do_calc_soilmstress==TRUE</code>) Parameter determining the
 sensitivity of the empirical soil moisture stress function. Defaults to 0.685, the empirically fitted value
 as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'FULL' (corresponding to a setup
 with <code>method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_calc_soilmstress=TRUE</code>).</p></td>
@@ -179,19 +179,19 @@ with <code>method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_calc_soilmstress=TRU
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>The soil moisture stress factor is calculated using a quadratic function that
-is 1 above <code>soilm</code> = 0.6 and has a sensitivity, given by the y-axis cutoff, 
+is 1 above <code>soilm</code> = 0.6 and has a sensitivity, given by the y-axis cutoff,
 (zero soil moisture), determined  by average aridity (argument <code>meanalpha</code>) as:
 $$
     \beta = q(\theta - \theta*)^2 + 1
 $$
 for \(\theta &lt; \theta*\) and \(\beta = 1.0\) otherwise. \(\theta*\) is fixed at 0.6.
-\(q\) is the sensitivity parameter and is calculated as a linear function of average aridity, 
-quantified by the local annual mean ratio of actual over potential evapotranspiration, termed 
+\(q\) is the sensitivity parameter and is calculated as a linear function of average aridity,
+quantified by the local annual mean ratio of actual over potential evapotranspiration, termed
 \(\alpha\):
 $$
      q=(\beta0-1)/(\theta*-\theta0)^2
 $$
-\(\theta0\) is 0.0, and 
+\(\theta0\) is 0.0, and
 $$
      \beta0 = a + b \alpha
 $$
@@ -201,10 +201,10 @@ $$
     <p>Stocker, B. et al. Geoscientific Model Development Discussions (in prep.)</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>## Relative reduction (%) in GPP due to soil moisture stress at </span>
+    <pre class="examples"><div class='input'><span class='co'>## Relative reduction (%) in GPP due to soil moisture stress at</span>
 <span class='co'>## relative soil water content ('soilm') of 0.2:</span>
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='op'>(</span><span class='fu'>calc_soilmstress</span><span class='op'>(</span><span class='fl'>0.2</span><span class='op'>)</span><span class='op'>-</span><span class='fl'>1</span><span class='op'>)</span><span class='op'>*</span><span class='fl'>100</span> <span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] -14</div><div class='input'>
+</div><div class='output co'>#&gt; [1] -11.86667</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

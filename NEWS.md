@@ -39,3 +39,7 @@
 ### rpmodel 1.1.2
 
 * Set negative values of the temperature-dependent `kphio` to zero.
+
+### rpmodel 1.1.3
+
+* Corrected vectorization. This solves issue [#6](https://github.com/stineb/rpmodel/issues/6)
