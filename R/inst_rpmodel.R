@@ -136,8 +136,8 @@ inst_rpmodel <- function( x, tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA, kph
   ## A
   ##--------------------------------
   ## Take minimum of the two assimilation rates and maximum of the two ci
-  assim <- min( a_j, a_c )
-  ci <- max(ci_c, ci_j)
+  assim <- ifelse(a_j < a_c, a_j, a_c)
+  ci <- ifelse(ci_c > ci_j, ci_c, ci_j)
 
   ##--------------------------------
   ## GPP
