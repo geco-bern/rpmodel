@@ -47,7 +47,8 @@
 
 
 <meta property="og:title" content="Invokes a P-model function call — rpmodel" />
-<meta property="og:description" content="R implementation of the P-model and its corrolary predictions (Prentice et al., 2014; Han et al., 2017)." />
+<meta property="og:description" content="R implementation of the P-model and its 
+corollary predictions (Prentice et al., 2014; Han et al., 2017)." />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -103,6 +104,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/accl_inst.html">Acclimated versus instantaneous response</a>
+    </li>
+    <li>
       <a href="../articles/usage.html">Usage</a>
     </li>
   </ul>
@@ -137,7 +141,8 @@
     </div>
 
     <div class="ref-description">
-    <p>R implementation of the P-model and its corrolary predictions (Prentice et al., 2014; Han et al., 2017).</p>
+    <p>R implementation of the P-model and its 
+corollary predictions (Prentice et al., 2014; Han et al., 2017).</p>
     </div>
 
     <pre class="usage"><span class='fu'>rpmodel</span><span class='op'>(</span>
@@ -150,7 +155,7 @@
   elv <span class='op'>=</span> <span class='cn'>NA</span>,
   kphio <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='va'>do_ftemp_kphio</span>, <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='va'>do_soilmstress</span>, <span class='fl'>0.087182</span>, <span class='fl'>0.081785</span><span class='op'>)</span>, <span class='fl'>0.049977</span><span class='op'>)</span>,
   beta <span class='op'>=</span> <span class='fl'>146</span>,
-  soilm <span class='op'>=</span> <span class='fl'>1</span>,
+  soilm <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/stopifnot.html'>stopifnot</a></span><span class='op'>(</span><span class='op'>!</span><span class='va'>do_soilmstress</span><span class='op'>)</span>,
   meanalpha <span class='op'>=</span> <span class='fl'>1</span>,
   apar_soilm <span class='op'>=</span> <span class='fl'>0</span>,
   bpar_soilm <span class='op'>=</span> <span class='fl'>0.733</span>,
@@ -180,36 +185,42 @@
     </tr>
     <tr>
       <th>fapar</th>
-      <td><p>(Optional) Fraction of absorbed photosynthetically active radiation (unitless, defaults to
-<code>NA</code>)</p></td>
+      <td><p>(Optional) Fraction of absorbed photosynthetically active
+radiation (unitless, defaults to <code>NA</code>)</p></td>
     </tr>
     <tr>
       <th>ppfd</th>
-      <td><p>(Optional) Photosynthetic photon flux density (mol m-2 d-1, defaults to <code>NA</code>). Note that
-the units of <code>ppfd</code> (per area and per time) determine the units of outputs <code>lue</code>, <code>gpp</code>,
-<code>vcmax</code>, and <code>rd</code>. For example, if <code>ppfd</code> is provided in units of mol m-2 month-1, then
+      <td><p>Incident photosynthetic photon flux density 
+(mol m-2 d-1, defaults to <code>NA</code>). Note that the units of 
+<code>ppfd</code> (per area and per time) determine the units of outputs 
+<code>lue</code>, <code>gpp</code>, <code>vcmax</code>, and <code>rd</code>. For example, 
+if <code>ppfd</code> is provided in units of mol m-2 month-1, then
 respective output variables are returned as per unit months.</p></td>
     </tr>
     <tr>
       <th>patm</th>
-      <td><p>Atmospheric pressure (Pa). When provided, overrides <code>elv</code>, otherwise <code>patm</code>
-is calculated using standard atmosphere (101325 Pa), corrected for elevation (argument <code>elv</code>),
+      <td><p>Atmospheric pressure (Pa). When provided, overrides
+<code>elv</code>, otherwise <code>patm</code> is calculated using standard
+atmosphere (101325 Pa), corrected for elevation (argument <code>elv</code>),
 using the function <a href='calc_patm.html'>calc_patm</a>.</p></td>
     </tr>
     <tr>
       <th>elv</th>
-      <td><p>Elevation above sea-level (m.a.s.l.). Is used only for calculating atmospheric pressure (using
-standard atmosphere (101325 Pa), corrected for elevation (argument <code>elv</code>), using the function
-<a href='calc_patm.html'>calc_patm</a>), if argument <code>patm</code> is not provided. If argument <code>patm</code> is provided,
-<code>elv</code> is overridden.</p></td>
+      <td><p>Elevation above sea-level (m.a.s.l.). Is used only for 
+ calculating atmospheric pressure (using standard atmosphere (101325 Pa),
+ corrected for elevation (argument <code>elv</code>), using the function
+<a href='calc_patm.html'>calc_patm</a>), if argument <code>patm</code> is not provided. If argument
+<code>patm</code> is provided, <code>elv</code> is overridden.</p></td>
     </tr>
     <tr>
       <th>kphio</th>
-      <td><p>Apparent quantum yield efficiency (unitless). Defaults to 0.081785 for
-<code>method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=FALSE</code>, 0.087182 for
-<code>method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE</code>, and 0.049977 for
-<code>method_jmaxlim="wang17", do_ftemp_kphio=FALSE, do_soilmstress=FALSE</code>, corresponding to the empirically
-fitted value as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'BRC', 'FULL', and 'ORG'
+      <td><p>Apparent quantum yield efficiency (unitless). Defaults to
+0.081785 for <code>method_jmaxlim="wang17", do_ftemp_kphio=TRUE, 
+do_soilmstress=FALSE</code>, 0.087182 for <code>method_jmaxlim="wang17",
+do_ftemp_kphio=TRUE, do_soilmstress=TRUE</code>, and 0.049977 for 
+<code>method_jmaxlim="wang17", do_ftemp_kphio=FALSE, do_soilmstress=FALSE</code>,
+corresponding to the empirically fitted value as presented in Stocker et al.
+(2019) Geosci. Model Dev. for model setup 'BRC', 'FULL', and 'ORG' 
 respectively.</p></td>
     </tr>
     <tr>
@@ -218,95 +229,115 @@ respectively.</p></td>
     </tr>
     <tr>
       <th>soilm</th>
-      <td><p>(Optional, used only if <code>do_soilmstress==TRUE</code>) Relative soil moisture as a fraction
-of field capacity (unitless). Defaults to 1.0 (no soil moisture stress). This information is used to calculate
-an empirical soil moisture stress factor (<a href='calc_soilmstress.html'>calc_soilmstress</a>) whereby the sensitivity is determined
-by average aridity, defined by the local annual mean ratio of actual over potential evapotranspiration,
-supplied by argument <code>meanalpha</code>.</p></td>
+      <td><p>(Optional, used only if <code>do_soilmstress==TRUE</code>) Relative 
+soil moisture as a fraction of field capacity (unitless). Defaults to 1.0 
+(no soil moisture stress). This information is used to calculate
+an empirical soil moisture stress factor (<a href='calc_soilmstress.html'>calc_soilmstress</a>) whereby
+the sensitivity is determined by average aridity, defined by the local 
+annual mean ratio of actual over potential evapotranspiration, supplied by
+argument <code>meanalpha</code>.</p></td>
     </tr>
     <tr>
       <th>meanalpha</th>
-      <td><p>(Optional, used only if <code>do_soilmstress==TRUE</code>) Local annual mean ratio of
-actual over potential evapotranspiration, measure for average aridity. Defaults to 1.0.</p></td>
+      <td><p>(Optional, used only if <code>do_soilmstress==TRUE</code>) Local 
+annual mean ratio of actual over potential evapotranspiration, measure for 
+average aridity. Defaults to 1.0.</p></td>
     </tr>
     <tr>
       <th>apar_soilm</th>
-      <td><p>(Optional, used only if <code>do_soilmstress==TRUE</code>) Parameter determining the
-sensitivity of the empirical soil moisture stress function. Defaults to 0.0, the empirically fitted value
-as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'FULL' (corresponding to a setup
-with <code>method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE</code>).</p></td>
+      <td><p>(Optional, used only if <code>do_soilmstress==TRUE</code>) 
+Parameter determining the sensitivity of the empirical soil moisture stress 
+function. Defaults to 0.0, the empirically fitted value as presented in 
+Stocker et al. (2019) Geosci. Model Dev. for model setup 'FULL' 
+(corresponding to a setup with <code>method_jmaxlim="wang17", 
+do_ftemp_kphio=TRUE, do_soilmstress=TRUE</code>).</p></td>
     </tr>
     <tr>
       <th>bpar_soilm</th>
-      <td><p>(Optional, used only if <code>do_soilmstress==TRUE</code>) Parameter determining the
-sensitivity of the empirical soil moisture stress function. Defaults to 0.685, the empirically fitted value
-as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'FULL' (corresponding to a setup
-with <code>method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE</code>).</p></td>
+      <td><p>(Optional, used only if <code>do_soilmstress==TRUE</code>) 
+Parameter determining the sensitivity of the empirical soil moisture stress
+function. Defaults to 0.7330, the empirically fitted value as presented in 
+Stocker et al. (2019) Geosci. Model Dev. for model setup 'FULL' 
+(corresponding to a setup with <code>method_jmaxlim="wang17", 
+do_ftemp_kphio=TRUE, do_soilmstress=TRUE</code>).</p></td>
     </tr>
     <tr>
       <th>c4</th>
-      <td><p>(Optional) A logical value specifying whether the C3 or C4 photosynthetic pathway is followed.
-Defaults to <code>FALSE</code>. If <code>TRUE</code>, the leaf-internal CO2 concentration is assumed to be very large
-and \(m\) (returned variable <code>mj</code>) tends to 1, and \(m'\) tends to 0.669 (with <code>c = 0.41</code>).</p></td>
+      <td><p>(Optional) A logical value specifying whether the C3 or C4 
+photosynthetic pathway is followed.Defaults to <code>FALSE</code>. If <code>TRUE</code>,
+the leaf-internal CO2 concentration is assumed to be very large and 
+\(m\) (returned variable <code>mj</code>) tends to 1, and \(m'\) tends to 
+0.669 (with <code>c = 0.41</code>).</p></td>
     </tr>
     <tr>
       <th>method_optci</th>
-      <td><p>(Optional) A character string specifying which method is to be used for calculating
-optimal ci:ca. Defaults to <code>"prentice14"</code>.</p></td>
+      <td><p>(Optional) A character string specifying which method is
+to be used for calculating optimal ci:ca. Defaults to <code>"prentice14"</code>.
+Available also <code>"prentice14_num"</code> for a numerical solution to the same
+optimization criterium as used for <code>"prentice14"</code>.</p></td>
     </tr>
     <tr>
       <th>method_jmaxlim</th>
-      <td><p>(Optional) A character string specifying which method is to be used for factoring in
-Jmax limitation. Defaults to <code>"wang17"</code>,
-based on Wang Han et al. 2017 Nature Plants and (Smith 1937). Available is also <code>"smith19"</code>, following
-the method by Smith et al., 2019 Ecology Letters,
-and <code>"none"</code> for ignoring effects of Jmax limitation.</p></td>
+      <td><p>(Optional) A character string specifying which method 
+is to be used for factoring in Jmax limitation. Defaults to <code>"wang17"</code>,
+based on Wang Han et al. 2017 Nature Plants and (Smith 1937). Available is 
+also <code>"smith19"</code>, following the method by Smith et al., 2019 Ecology 
+Letters, and <code>"none"</code> for ignoring effects of Jmax limitation.</p></td>
     </tr>
     <tr>
       <th>do_ftemp_kphio</th>
-      <td><p>(Optional) A logical specifying whether temperature-dependence of quantum yield
-efficiency after Bernacchi et al., 2003 is to be accounted for. Defaults to <code>TRUE</code>.</p></td>
+      <td><p>(Optional) A logical specifying whether 
+temperature-dependence of quantum yield efficiency after Bernacchi et al., 
+2003 is to be accounted for. Defaults to <code>TRUE</code>.</p></td>
     </tr>
     <tr>
       <th>do_soilmstress</th>
-      <td><p>(Optional) A logical specifying whether an empirical soil moisture stress factor
-is to be applied to down-scale light use efficiency (and only light use efficiency). Defaults to <code>FALSE</code>.</p></td>
+      <td><p>(Optional) A logical specifying whether an empirical 
+soil moisture stress factor is to be applied to down-scale light use 
+efficiency (and only light use efficiency). Defaults to <code>FALSE</code>.</p></td>
     </tr>
     <tr>
       <th>returnvar</th>
-      <td><p>(Optional) A character string of vector of character strings specifying which variables
-are to be returned (see return below).</p></td>
+      <td><p>(Optional) A character string of vector of character strings
+specifying which variables are to be returned (see return below).</p></td>
     </tr>
     <tr>
       <th>verbose</th>
-      <td><p>Logical, defines whether verbose messages are printed. Defaults to <code>FALSE</code>.</p></td>
+      <td><p>Logical, defines whether verbose messages are printed. 
+Defaults to <code>FALSE</code>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A named list of numeric values (including temperature and pressure dependent parameters of the
-photosynthesis model, P-model predictions, including all its corollary). This includes :</p><ul>
+    <p>A named list of numeric values (including temperature and pressure 
+dependent parameters of the photosynthesis model, P-model predictions, 
+including all its corollary). This includes :</p>
+<ul>
 <li><p><code>ca</code>: Ambient CO2 expressed as partial pressure (Pa)</p></li>
-<li><p><code>gammastar</code>: Photorespiratory compensation point \(\Gamma*\), (Pa), see <a href='calc_gammastar.html'>calc_gammastar</a>.</p></li>
-<li><p><code>kmm</code>: Michaelis-Menten coefficient \(K\) for photosynthesis (Pa), see <a href='calc_kmm.html'>calc_kmm</a>.</p></li>
-<li><p><code>ns_star</code>: Change in the viscosity of water, relative to its value at 25 deg C (unitless).
-                              $$\eta* = \eta(T) / \eta(25 deg C)$$
-                              This is used to scale the unit cost of transpiration. Calculated following Huber
-                              et al. (2009).</p></li>
-<li><p><code>chi</code>: Optimal ratio of leaf internal to ambient CO2 (unitless). Derived following Prentice et al.
-                         (2014) as:
-                         $$
-                               \chi = \Gamma* / ca + (1- \Gamma* / ca) \xi / (\xi + \sqrt D )
-                         $$
-                         with
-                         $$
-                              \xi = \sqrt (\beta (K+ \Gamma*) / (1.6 \eta*))
-                         $$
-                         \(\beta\) is given by argument <code>beta</code>, \(K\) is <code>kmm</code> (see <a href='calc_kmm.html'>calc_kmm</a>),
-                         \(\Gamma*\) is <code>gammastar</code> (see <a href='calc_gammastar.html'>calc_gammastar</a>). \(\eta*\) is <code>ns_star</code>.
-                         \(D\) is the vapour pressure deficit (argument <code>vpd</code>), \(ca\) is the
-                         ambient CO2 partial pressure in Pa (<code>ca</code>).</p></li>
+<li><p><code>gammastar</code>: Photorespiratory compensation point \(\Gamma*\), 
+  (Pa), see <a href='calc_gammastar.html'>calc_gammastar</a>.</p></li>
+<li><p><code>kmm</code>: Michaelis-Menten coefficient \(K\) for photosynthesis 
+ (Pa), see <a href='calc_kmm.html'>calc_kmm</a>.</p></li>
+<li><p><code>ns_star</code>: Change in the viscosity of water, relative to its 
+  value at 25 deg C (unitless).
+  $$\eta* = \eta(T) / \eta(25 deg C)$$
+  This is used to scale the unit cost of transpiration. 
+  Calculated following Huber et al. (2009).</p></li>
+<li><p><code>chi</code>: Optimal ratio of leaf internal to ambient CO2 (unitless). 
+  Derived following Prentice et al.(2014) as:
+ $$
+  \chi = \Gamma* / ca + (1- \Gamma* / ca) \xi / (\xi + \sqrt D )
+  $$
+  with
+  $$
+   \xi = \sqrt (\beta (K+ \Gamma*) / (1.6 \eta*))
+  $$
+  \(\beta\) is given by argument <code>beta</code>, \(K\) is 
+  <code>kmm</code> (see <a href='calc_kmm.html'>calc_kmm</a>), \(\Gamma*\) is 
+  <code>gammastar</code> (see <a href='calc_gammastar.html'>calc_gammastar</a>). \(\eta*\) is <code>ns_star</code>.
+  \(D\) is the vapour pressure deficit (argument <code>vpd</code>), \(ca\) is 
+  the ambient CO2 partial pressure in Pa (<code>ca</code>).</p></li>
 <li><p><code>ci</code>: Leaf-internal CO2 partial pressure (Pa), calculated as \((\chi ca)\).</p></li>
 <li><p><code>lue</code>: Light use efficiency (g C / mol photons), calculated as
                         $$
@@ -376,92 +407,49 @@ photosynthesis model, P-model predictions, including all its corollary). This in
 </ul>
 
 <p>Additional variables are contained in the returned list if argument <code>method_jmaxlim=="smith19"</code></p><ul>
-<li><p><code>omega</code>: Term corresponding to \(\omega\), defined by Eq. 16 in Smith et al. (2019),
-        and Eq. E19 in Stocker et al. (2019).</p></li>
-<li><p><code>omega_star</code>: Term corresponding to \(\omega^\ast\), defined by Eq. 18 in Smith et al.
-        (2019), and Eq. E21 in Stocker et al. (2019).</p></li>
+<li><p><code>omega</code>: Term corresponding to \(\omega\), defined by Eq. 16 in
+  Smith et al. (2019), and Eq. E19 in Stocker et al. (2019).</p></li>
+<li><p><code>omega_star</code>: Term corresponding to \(\omega^\ast\), defined by
+  Eq. 18 in Smith et al. (2019), and Eq. E21 in Stocker et al. (2019).</p></li>
 </ul>
 
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Bernacchi, C. J., Pimentel, C., and Long, S. P.:  In vivo temperature response func-tions  of  parameters
-             required  to  model  RuBP-limited  photosynthesis,  Plant  Cell Environ., 26, 1419–1430, 2003</p>
+ required  to  model  RuBP-limited  photosynthesis,  Plant  Cell Environ., 26, 1419–1430, 2003</p>
 <p>Heskel,  M.,  O’Sullivan,  O.,  Reich,  P.,  Tjoelker,  M.,  Weerasinghe,  L.,  Penillard,  A.,Egerton, J.,
-             Creek, D., Bloomfield, K., Xiang, J., Sinca, F., Stangl, Z., Martinez-De La Torre, A., Griffin, K.,
-             Huntingford, C., Hurry, V., Meir, P., Turnbull, M.,and Atkin, O.:  Convergence in the temperature response
-             of leaf respiration across biomes and plant functional types, Proceedings of the National Academy of Sciences,
-             113,  3832–3837,  doi:10.1073/pnas.1520282113,2016.</p>
+ Creek, D., Bloomfield, K., Xiang, J., Sinca, F., Stangl, Z., Martinez-De La Torre, A., Griffin, K.,
+ Huntingford, C., Hurry, V., Meir, P., Turnbull, M.,and Atkin, O.:  Convergence in the temperature response
+ of leaf respiration across biomes and plant functional types, Proceedings of the National Academy of Sciences,
+ 113,  3832–3837,  doi:10.1073/pnas.1520282113,2016.</p>
 <p>Huber,  M.  L.,  Perkins,  R.  A.,  Laesecke,  A.,  Friend,  D.  G.,  Sengers,  J.  V.,  Assael,M. J.,
-             Metaxa, I. N., Vogel, E., Mares, R., and Miyagawa, K.:  New international formulation for the viscosity
-             of H2O, Journal of Physical and Chemical ReferenceData, 38, 101–125, 2009</p>
+ Metaxa, I. N., Vogel, E., Mares, R., and Miyagawa, K.:  New international formulation for the viscosity
+ of H2O, Journal of Physical and Chemical ReferenceData, 38, 101–125, 2009</p>
 <p>Prentice,  I. C.,  Dong,  N.,  Gleason,  S. M.,  Maire,  V.,  and Wright,  I. J.:  Balancing the costs
-             of carbon gain and water transport:  testing a new theoretical frameworkfor  plant  functional  ecology,
-             Ecology  Letters,  17,  82–91,  10.1111/ele.12211,http://dx.doi.org/10.1111/ele.12211, 2014.</p>
+ of carbon gain and water transport:  testing a new theoretical frameworkfor  plant  functional  ecology,
+ Ecology  Letters,  17,  82–91,  10.1111/ele.12211,http://dx.doi.org/10.1111/ele.12211, 2014.</p>
 <p>Wang, H., Prentice, I. C., Keenan, T. F., Davis, T. W., Wright, I. J., Cornwell, W. K.,Evans, B. J.,
-             and Peng, C.:  Towards a universal model for carbon dioxide uptake by plants, Nat Plants, 3, 734–741, 2017.
-             Atkin, O. K., et al.:  Global variability in leaf respiration in relation to climate, plant func-tional
-             types and leaf traits, New Phytologist, 206, 614–636, doi:10.1111/nph.13253,
-             https://nph.onlinelibrary.wiley.com/doi/abs/10.1111/nph.13253.</p>
+ and Peng, C.:  Towards a universal model for carbon dioxide uptake by plants, Nat Plants, 3, 734–741, 2017.
+ Atkin, O. K., et al.:  Global variability in leaf respiration in relation to climate, plant func-tional
+ types and leaf traits, New Phytologist, 206, 614–636, doi:10.1111/nph.13253,
+ https://nph.onlinelibrary.wiley.com/doi/abs/10.1111/nph.13253.</p>
 <p>Smith, N. G., Keenan, T. F., Colin Prentice, I. , Wang, H. , Wright, I. J., Niinemets, U. , Crous, K. Y.,
-             Domingues, T. F., Guerrieri, R. , Yoko Ishida, F. , Kattge, J. , Kruger, E. L., Maire, V. , Rogers, A. ,
-             Serbin, S. P., Tarvainen, L. , Togashi, H. F., Townsend, P. A., Wang, M. , Weerasinghe, L. K. and Zhou, S.
-             (2019), Global photosynthetic capacity is optimized to the environment. Ecol Lett, 22: 506-517.
-             doi:10.1111/ele.13210</p>
+ Domingues, T. F., Guerrieri, R. , Yoko Ishida, F. , Kattge, J. , Kruger, E. L., Maire, V. , Rogers, A. ,
+ Serbin, S. P., Tarvainen, L. , Togashi, H. F., Townsend, P. A., Wang, M. , Weerasinghe, L. K. and Zhou, S.
+ (2019), Global photosynthetic capacity is optimized to the environment. Ecol Lett, 22: 506-517.
+ doi:10.1111/ele.13210</p>
 <p>Stocker, B. et al. Geoscientific Model Development Discussions (in prep.)</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>rpmodel</span><span class='op'>(</span> tc <span class='op'>=</span> <span class='fl'>20</span>, vpd <span class='op'>=</span> <span class='fl'>1000</span>, co2 <span class='op'>=</span> <span class='fl'>400</span>, fapar <span class='op'>=</span> <span class='fl'>1</span>, ppfd <span class='op'>=</span> <span class='fl'>300</span>, elv <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; $ca
-#&gt; [1] 40.53
-#&gt; 
-#&gt; $gammastar
-#&gt; [1] 3.339251
-#&gt; 
-#&gt; $kmm
-#&gt; [1] 46.09928
-#&gt; 
-#&gt; $ns_star
-#&gt; [1] 1.125361
-#&gt; 
-#&gt; $chi
-#&gt; [1] 0.694352
-#&gt; 
-#&gt; $mj
-#&gt; [1] 0.7123038
-#&gt; 
-#&gt; $mc
-#&gt; [1] 0.3340838
-#&gt; 
-#&gt; $ci
-#&gt; [1] 28.14209
-#&gt; 
-#&gt; $lue
-#&gt; [1] 0.2547515
-#&gt; 
-#&gt; $gpp
-#&gt; [1] 76.42545
-#&gt; 
-#&gt; $iwue
-#&gt; [1] 7.742446
-#&gt; 
-#&gt; $gs
-#&gt; [1] 0.513655
-#&gt; 
-#&gt; $vcmax
-#&gt; [1] 19.04646
-#&gt; 
-#&gt; $vcmax25
-#&gt; [1] 29.8967
-#&gt; 
-#&gt; $jmax
-#&gt; [1] 38.36589
-#&gt; 
-#&gt; $jmax25
-#&gt; [1] 38.36589
-#&gt; 
-#&gt; $rd
-#&gt; [1] 0.3025656
-#&gt; </div><div class='input'>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+ <span class='fu'>rpmodel</span><span class='op'>(</span>
+  tc <span class='op'>=</span> <span class='fl'>20</span>,
+  vpd <span class='op'>=</span> <span class='fl'>1000</span>,
+  co2 <span class='op'>=</span> <span class='fl'>400</span>,
+  ppfd <span class='op'>=</span> <span class='fl'>30</span>,
+  elv <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span>
+<span class='op'>}</span>
+
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -474,7 +462,7 @@ photosynthesis model, P-model predictions, including all its corollary). This in
 
       <footer>
       <div class="copyright">
-  <p>Developed by Benjamin Stocker.</p>
+  <p>Developed by Stocker Benjamin.</p>
 </div>
 
 <div class="pkgdown">

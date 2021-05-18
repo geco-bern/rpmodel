@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Calculates the temperature dependence of the quantum yield efficiency — calc_ftemp_kphio • rpmodel</title>
+<title>Minor quadratic root — QUADM • rpmodel</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,10 +46,8 @@
 
 
 
-<meta property="og:title" content="Calculates the temperature dependence of the quantum yield efficiency — calc_ftemp_kphio" />
-<meta property="og:description" content="Calculates the temperature dependence of the quantum yield efficiency
-following the temperature dependence of the maximum quantum yield of photosystem II
-in light-adapted tobacco leaves, determined by Bernacchi et al. (2003)" />
+<meta property="og:title" content="Minor quadratic root — QUADM" />
+<meta property="og:description" content="Solves quadratic equation given by y = a*x^2 + bx + c" />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -136,65 +134,38 @@ in light-adapted tobacco leaves, determined by Bernacchi et al. (2003)" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Calculates the temperature dependence of the quantum yield efficiency</h1>
-    <small class="dont-index">Source: <a href='https://github.com/stineb/rpmodel/blob/master/R/calc_ftemp_kphio.R'><code>R/calc_ftemp_kphio.R</code></a></small>
-    <div class="hidden name"><code>calc_ftemp_kphio.Rd</code></div>
+    <h1>Minor quadratic root</h1>
+    <small class="dont-index">Source: <a href='https://github.com/stineb/rpmodel/blob/master/R/inst_rpmodel.R'><code>R/inst_rpmodel.R</code></a></small>
+    <div class="hidden name"><code>QUADM.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Calculates the temperature dependence of the quantum yield efficiency
-following the temperature dependence of the maximum quantum yield of photosystem II
-in light-adapted tobacco leaves, determined by Bernacchi et al. (2003)</p>
+    <p>Solves quadratic equation given by y = a*x^2 + bx + c</p>
     </div>
 
-    <pre class="usage"><span class='fu'>calc_ftemp_kphio</span><span class='op'>(</span><span class='va'>tc</span>, c4 <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>QUADM</span><span class='op'>(</span><span class='va'>A</span>, <span class='va'>B</span>, <span class='va'>C</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>tc</th>
-      <td><p>Temperature, relevant for photosynthesis (degrees Celsius)</p></td>
+      <th>A</th>
+      <td><p>a parameter in the quadratic equation</p></td>
     </tr>
     <tr>
-      <th>c4</th>
-      <td><p>Boolean specifying whether fitted temperature response for C4 plants
-is used. Defaults to <code>FALSE</code> (C3 photoynthesis temperature resposne following
-Bernacchi et al., 2003 is used).</p></td>
+      <th>B</th>
+      <td><p>b parameter in the quadratic equation</p></td>
+    </tr>
+    <tr>
+      <th>C</th>
+      <td><p>c parameter in the quadratic equation</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A numeric value for \(\phi(T)\)</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <p>minor quardratic root</p>
 
-    <p>The temperature factor for C3 photosynthesis (argument <code>c4 = FALSE</code>) is calculated
-based on Bernacchi et al. (2003) as
-			$$
-				\phi(T) = 0.352 + 0.022 T - 0.00034 T^2
-      $$</p>
-<p>The temperature factor for C4 (argument <code>c4 = TRUE</code>) photosynthesis is calculated based on
-unpublished work as
-			$$
-				\phi(T) = -0.008 + 0.00375 T - 0.58e-4 T^2
-      $$</p>
-<p>The factor \(\phi(T)\) is to be multiplied with leaf absorptance and the fraction
-of absorbed light that reaches photosystem II. In the P-model these additional factors
-are lumped into a single apparent quantum yield efficiency parameter (argument <code>kphio</code>
-to function <a href='rpmodel.html'>rpmodel</a>).</p>
-    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
-
-    <p>Bernacchi, C. J., Pimentel, C., and Long, S. P.:  In vivo temperature
-				response func-tions  of  parameters required  to  model  RuBP-limited
-				photosynthesis,  Plant  Cell Environ., 26, 1419–1430, 2003</p>
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>## Relative change in the quantum yield efficiency</span>
-<span class='co'>## between 5 and 25 degrees celsius (percent change):</span>
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='op'>(</span><span class='fu'>calc_ftemp_kphio</span><span class='op'>(</span><span class='fl'>25.0</span><span class='op'>)</span><span class='op'>/</span><span class='fu'>calc_ftemp_kphio</span><span class='op'>(</span><span class='fl'>5.0</span><span class='op'>)</span><span class='op'>-</span><span class='fl'>1</span><span class='op'>)</span><span class='op'>*</span><span class='fl'>100</span> <span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "52.0396912899669"</div><div class='input'>
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

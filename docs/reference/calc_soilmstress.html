@@ -104,6 +104,9 @@ soil moisture (fraction of field capacity)." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/accl_inst.html">Acclimated versus instantaneous response</a>
+    </li>
+    <li>
       <a href="../articles/usage.html">Usage</a>
     </li>
   </ul>
@@ -154,22 +157,24 @@ of field capacity (unitless). Defaults to 1.0 (no soil moisture stress).</p></td
     </tr>
     <tr>
       <th>meanalpha</th>
-      <td><p>Local annual mean ratio of
-actual over potential evapotranspiration, measure for average aridity. Defaults to 1.0.</p></td>
+      <td><p>Local annual mean ratio of actual over potential 
+evapotranspiration, measure for average aridity. Defaults to 1.0.</p></td>
     </tr>
     <tr>
       <th>apar_soilm</th>
-      <td><p>(Optional, used only if <code>do_calc_soilmstress==TRUE</code>) Parameter determining the
-sensitivity of the empirical soil moisture stress function. Defaults to 0.0, the empirically fitted value
-as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'FULL' (corresponding to a setup
+      <td><p>(Optional, used only if <code>do_calc_soilmstress==TRUE</code>)
+Parameter determining the sensitivity of the empirical soil moisture stress
+function. Defaults to 0.0, the empirically fitted value as presented in Stocker
+et al. (2019) Geosci. Model Dev. for model setup 'FULL' (corresponding to a setup
 with <code>method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_calc_soilmstress=TRUE</code>).</p></td>
     </tr>
     <tr>
       <th>bpar_soilm</th>
-      <td><p>(Optional, used only if <code>do_calc_soilmstress==TRUE</code>) Parameter determining the
-sensitivity of the empirical soil moisture stress function. Defaults to 0.685, the empirically fitted value
-as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'FULL' (corresponding to a setup
-with <code>method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_calc_soilmstress=TRUE</code>).</p></td>
+      <td><p>(Optional, used only if <code>do_calc_soilmstress==TRUE</code>) Parameter
+determining the sensitivity of the empirical soil moisture stress function. Defaults
+to ~0.6, the empirically fitted value as presented in Stocker et al. (2019) Geosci. Model Dev.
+for model setup 'FULL' (corresponding to a setup with <code>method_jmaxlim="wang17",
+do_ftemp_kphio=TRUE, do_calc_soilmstress=TRUE</code>).</p></td>
     </tr>
     </table>
 
@@ -204,7 +209,7 @@ $$
     <pre class="examples"><div class='input'><span class='co'>## Relative reduction (%) in GPP due to soil moisture stress at</span>
 <span class='co'>## relative soil water content ('soilm') of 0.2:</span>
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='op'>(</span><span class='fu'>calc_soilmstress</span><span class='op'>(</span><span class='fl'>0.2</span><span class='op'>)</span><span class='op'>-</span><span class='fl'>1</span><span class='op'>)</span><span class='op'>*</span><span class='fl'>100</span> <span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] -11.86667</div><div class='input'>
+</div><div class='output co'>#&gt; [1] -14</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -217,7 +222,7 @@ $$
 
       <footer>
       <div class="copyright">
-  <p>Developed by Benjamin Stocker.</p>
+  <p>Developed by Stocker Benjamin.</p>
 </div>
 
 <div class="pkgdown">

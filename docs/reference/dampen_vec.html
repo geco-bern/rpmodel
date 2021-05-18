@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Calculates the temperature dependence of the quantum yield efficiency — calc_ftemp_kphio • rpmodel</title>
+<title>Dampen inputs of rpmodel — dampen_vec • rpmodel</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,10 +46,8 @@
 
 
 
-<meta property="og:title" content="Calculates the temperature dependence of the quantum yield efficiency — calc_ftemp_kphio" />
-<meta property="og:description" content="Calculates the temperature dependence of the quantum yield efficiency
-following the temperature dependence of the maximum quantum yield of photosystem II
-in light-adapted tobacco leaves, determined by Bernacchi et al. (2003)" />
+<meta property="og:title" content="Dampen inputs of rpmodel — dampen_vec" />
+<meta property="og:description" content="Applies an exponential dampening input time series with specified time scale." />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -136,64 +134,52 @@ in light-adapted tobacco leaves, determined by Bernacchi et al. (2003)" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Calculates the temperature dependence of the quantum yield efficiency</h1>
-    <small class="dont-index">Source: <a href='https://github.com/stineb/rpmodel/blob/master/R/calc_ftemp_kphio.R'><code>R/calc_ftemp_kphio.R</code></a></small>
-    <div class="hidden name"><code>calc_ftemp_kphio.Rd</code></div>
+    <h1>Dampen inputs of rpmodel</h1>
+    <small class="dont-index">Source: <a href='https://github.com/stineb/rpmodel/blob/master/R/dampen_vec.R'><code>R/dampen_vec.R</code></a></small>
+    <div class="hidden name"><code>dampen_vec.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Calculates the temperature dependence of the quantum yield efficiency
-following the temperature dependence of the maximum quantum yield of photosystem II
-in light-adapted tobacco leaves, determined by Bernacchi et al. (2003)</p>
+    <p>Applies an exponential dampening input time series with specified time scale.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>calc_ftemp_kphio</span><span class='op'>(</span><span class='va'>tc</span>, c4 <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>dampen_vec</span><span class='op'>(</span><span class='va'>vec</span>, <span class='va'>tau</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>tc</th>
-      <td><p>Temperature, relevant for photosynthesis (degrees Celsius)</p></td>
+      <th>vec</th>
+      <td><p>A numeric vector for the time series of a daily meteorological
+variable used as input for <code>rpmodel</code> (temperature, 
+vapour pressure deficit, CO2, or atmospheric pressure). The length of
+<code>x</code> must be at least 365, i.e., corresponding to one year.</p></td>
     </tr>
     <tr>
-      <th>c4</th>
-      <td><p>Boolean specifying whether fitted temperature response for C4 plants
-is used. Defaults to <code>FALSE</code> (C3 photoynthesis temperature resposne following
-Bernacchi et al., 2003 is used).</p></td>
+      <th>tau</th>
+      <td><p>The time scale of dampening (e-folding time scale of a 
+perturbation). Must be smaller or equal to 365 d.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A numeric value for \(\phi(T)\)</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>The temperature factor for C3 photosynthesis (argument <code>c4 = FALSE</code>) is calculated
-based on Bernacchi et al. (2003) as
-			$$
-				\phi(T) = 0.352 + 0.022 T - 0.00034 T^2
-      $$</p>
-<p>The temperature factor for C4 (argument <code>c4 = TRUE</code>) photosynthesis is calculated based on
-unpublished work as
-			$$
-				\phi(T) = -0.008 + 0.00375 T - 0.58e-4 T^2
-      $$</p>
-<p>The factor \(\phi(T)\) is to be multiplied with leaf absorptance and the fraction
-of absorbed light that reaches photosystem II. In the P-model these additional factors
-are lumped into a single apparent quantum yield efficiency parameter (argument <code>kphio</code>
-to function <a href='rpmodel.html'>rpmodel</a>).</p>
-    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
-
-    <p>Bernacchi, C. J., Pimentel, C., and Long, S. P.:  In vivo temperature
-				response func-tions  of  parameters required  to  model  RuBP-limited
-				photosynthesis,  Plant  Cell Environ., 26, 1419–1430, 2003</p>
+    <p>A numeric vector of equal length as <code>x</code> with damped variation.
+ The dampening is calculated as:
+ $$
+  S(t+1) - S(t) = (X(t+1) - S(t)) / \tau
+ $$
+ Where \(X\) is the daily varying time series given by argument <code>x</code>,
+ \(S\) is the dampened time returned by this function, and \(\tau\) is 
+ the decay time scale of a perturbation, given by argument <code>tau</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>## Relative change in the quantum yield efficiency</span>
-<span class='co'>## between 5 and 25 degrees celsius (percent change):</span>
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='op'>(</span><span class='fu'>calc_ftemp_kphio</span><span class='op'>(</span><span class='fl'>25.0</span><span class='op'>)</span><span class='op'>/</span><span class='fu'>calc_ftemp_kphio</span><span class='op'>(</span><span class='fl'>5.0</span><span class='op'>)</span><span class='op'>-</span><span class='fl'>1</span><span class='op'>)</span><span class='op'>*</span><span class='fl'>100</span> <span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "52.0396912899669"</div><div class='input'>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='fu'>dampen_vec</span><span class='op'>(</span>
+ vec <span class='op'>=</span> <span class='fl'>20</span> <span class='op'>*</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Trig.html'>sin</a></span><span class='op'>(</span><span class='va'>doy</span><span class='op'>*</span><span class='va'>pi</span><span class='op'>/</span><span class='op'>(</span><span class='fl'>365</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span><span class='op'>^</span><span class='fl'>2</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>365</span>, mean <span class='op'>=</span> <span class='fl'>0</span>, sd <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span>,
+ tau <span class='op'>=</span> <span class='fl'>40</span> 
+ <span class='op'>)</span>
+<span class='op'>}</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
