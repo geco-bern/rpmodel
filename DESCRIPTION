@@ -35,7 +35,7 @@ Suggests:
     purrr,
     tidyr,
     knitr,
-    rmarkdown
+    markdown
 VignetteBuilder: knitr
 URL: https://github.com/stineb/rpmodel
 BugReports: https://github.com/stineb/rpmodel/issues
