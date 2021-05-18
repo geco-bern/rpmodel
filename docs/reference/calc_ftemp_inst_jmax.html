@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Calculates atmospheric pressure — calc_patm • rpmodel</title>
+<title>Calculates the instantaneous temperature response of Jmax — calc_ftemp_inst_jmax • rpmodel</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,9 +46,13 @@
 
 
 
-<meta property="og:title" content="Calculates atmospheric pressure — calc_patm" />
-<meta property="og:description" content="Calculates atmospheric pressure as a function of elevation, by default assuming 
-standard atmosphere (101325 Pa at sea level)" />
+<meta property="og:title" content="Calculates the instantaneous temperature response of Jmax — calc_ftemp_inst_jmax" />
+<meta property="og:description" content="Given Jmax at a reference temperature (argument tcref)
+this function calculates its temperature-scaling factor following modified Arrhenius
+kinetics based on Kattge &amp;amp; Knorr (2007). Calculates \(f\) for the conversion
+$$
+   V = f Vref
+$$" />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -132,59 +136,76 @@ standard atmosphere (101325 Pa at sea level)" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Calculates atmospheric pressure</h1>
-    <small class="dont-index">Source: <a href='https://github.com/stineb/rpmodel/blob/master/R/calc_patm.R'><code>R/calc_patm.R</code></a></small>
-    <div class="hidden name"><code>calc_patm.Rd</code></div>
+    <h1>Calculates the instantaneous temperature response of Jmax</h1>
+    <small class="dont-index">Source: <a href='https://github.com/stineb/rpmodel/blob/master/R/calc_ftemp_inst_jmax.R'><code>R/calc_ftemp_inst_jmax.R</code></a></small>
+    <div class="hidden name"><code>calc_ftemp_inst_jmax.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Calculates atmospheric pressure as a function of elevation, by default assuming 
-standard atmosphere (101325 Pa at sea level)</p>
+    <p>Given Jmax at a reference temperature (argument <code>tcref</code>)
+this function calculates its temperature-scaling factor following modified Arrhenius
+kinetics based on Kattge &amp; Knorr (2007). Calculates \(f\) for the conversion
+$$
+   V = f Vref
+$$</p>
     </div>
 
-    <pre class="usage"><span class='fu'>calc_patm</span><span class='op'>(</span><span class='va'>elv</span>, patm0 <span class='op'>=</span> <span class='fl'>101325</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>calc_ftemp_inst_jmax</span><span class='op'>(</span><span class='va'>tcleaf</span>, tcgrowth <span class='op'>=</span> <span class='va'>tcleaf</span>, tcref <span class='op'>=</span> <span class='fl'>25</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>elv</th>
-      <td><p>Elevation above sea-level (m.a.s.l.)</p></td>
+      <th>tcleaf</th>
+      <td><p>Leaf temperature, or in general the temperature relevant for photosynthesis
+(degrees Celsius)</p></td>
     </tr>
     <tr>
-      <th>patm0</th>
-      <td><p>(Optional) Atmospheric pressure at sea level (Pa), defaults to 101325 Pa.</p></td>
+      <th>tcgrowth</th>
+      <td><p>(Optional) Growth temperature, in the P-model, taken to be equal to <code>tcleaf</code>
+(in degrees Celsius). Defaults to <code>tcgrowth = tcleaf</code>.</p></td>
+    </tr>
+    <tr>
+      <th>tcref</th>
+      <td><p>Reference temperature (in degrees Celsius)</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A numeric value for \(p\)</p>
+    <p>A numeric value for \(fv\)</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The elevation-dependence of atmospheric pressure is computed by 
-assuming a linear decrease in temperature with elevation and a mean 
-adiabatic lapse rate (Berberan-Santos et al., 1997):
+    <p>The function is given by Kattge &amp; Knorr (2007) as
 $$
-   p(z) = p0 ( 1 - Lz / TK0) ^ ( g M / (RL) )
+		fv = f(T, \Delta Hv) A/B
 $$
-where \(z\) is the elevation above mean sea level (m, argument <code>elv</code>), 
-\(g\) is the gravity constant (9.80665 m s-2), \(p0\) is the atmospheric 
-pressure at 0 m a.s.l. (argument <code>patm0</code>, defaults to 101325 Pa), 
-\(L\) is the mean adiabatic lapse rate (0.0065 K m-2), 
-\(M\) is the molecular weight for dry air (0.028963 kg mol-1), 
-\(R\) is the universal gas constant (8.3145 J mol-1 K-1), and \(TK0\)
-is the standard temperature (298.15 K, corresponds to 25 deg C).</p>
+where \(f(T, \Delta Hv)\) is a regular Arrhenius-type temperature response function (see
+<a href='calc_ftemp_arrh.html'>calc_ftemp_arrh</a>) with \(Hv=49884\) J mol-1,
+$$
+		A = 1 + exp( (T0 \Delta S - Hd) / (T0 R) )
+$$
+and
+$$
+	    B = 1 + exp( (T \Delta S - Hd) / (TK R) )
+$$
+Here, \(T\) is in Kelvin, \(T0=293.15\) K, \(Hd = 200000\) J mol-1 is the deactivation
+energy and \(R\) is the universal gas constant and is 8.3145 J mol-1 K-1, and
+$$
+		\Delta S = aS - bS T
+$$
+with \(aS = 659.70\) J mol-1 K-1, and \(bS = 0.75\) J mol-1 K-2, and \(T\) given in
+degrees Celsius (!)</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>Allen, R. G., Pereira, L. S., Raes, D., Smith, M.: 
-             FAO Irrigation and Drainage Paper No. 56, Food and 
-             Agriculture Organization of the United Nations, 1998</p>
+    <p>Kattge, J. and Knorr, W.:  Temperature acclimation in a biochemical model of
+photosynthesis: a reanalysis of data from 36 species, Plant, Cell and Environment, 30,1176–1190, 2007.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='st'>"Standard atmospheric pressure, in Pa, corrected for 1000 m.a.s.l.:"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "Standard atmospheric pressure, in Pa, corrected for 1000 m.a.s.l.:"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='fu'>calc_patm</span><span class='op'>(</span><span class='fl'>1000</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 90241.54</div><div class='input'>
+    <pre class="examples"><div class='input'><span class='co'>## Relative change in Jmax going (instantaneously, i.e.</span>
+<span class='co'>## not acclimatedly) from 10 to 25 degrees (percent change):</span>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='op'>(</span><span class='fu'>calc_ftemp_inst_jmax</span><span class='op'>(</span><span class='fl'>25</span><span class='op'>)</span><span class='op'>/</span><span class='fu'>calc_ftemp_inst_jmax</span><span class='op'>(</span><span class='fl'>10</span><span class='op'>)</span><span class='op'>-</span><span class='fl'>1</span><span class='op'>)</span><span class='op'>*</span><span class='fl'>100</span> <span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 162.7662</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

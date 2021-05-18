@@ -12,7 +12,7 @@
 #' as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'FULL' (corresponding to a setup
 #' with \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_calc_soilmstress=TRUE}).
 #' @param bpar_soilm (Optional, used only if \code{do_calc_soilmstress==TRUE}) Parameter determining the
-#' sensitivity of the empirical soil moisture stress function. Defaults to 0.685, the empirically fitted value
+#' sensitivity of the empirical soil moisture stress function. Defaults to 0.6, the empirically fitted value
 #' as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'FULL' (corresponding to a setup
 #' with \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_calc_soilmstress=TRUE}).
 #'
@@ -45,7 +45,7 @@
 #' @references  Stocker, B. et al. Geoscientific Model Development Discussions (in prep.)
 #'
 #' @export
-calc_soilmstress <- function( soilm, meanalpha = 1.0, apar_soilm = 0.0, bpar_soilm = 0.685 ){
+calc_soilmstress <- function( soilm, meanalpha = 1.0, apar_soilm = 0.0, bpar_soilm = 0.7330 ){
 
   # Fixed parameters
   x0 <- 0.0
@@ -55,6 +55,7 @@ calc_soilmstress <- function( soilm, meanalpha = 1.0, apar_soilm = 0.0, bpar_soi
 
   beta <- (1.0 - y0) / (x0 - x1)^2
   outstress <- 1.0 - beta * ( soilm - x1 )^2
+
 
   ## bound between 0 and 1
   outstress <- ifelse(outstress > 1.0,
