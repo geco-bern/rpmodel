@@ -16,10 +16,12 @@ test_that("calc_ftemp_kphio",{
   
   # output must be numeric
   temp <- calc_ftemp_kphio(20)
-  expect_type(temp , "numeric")
+  
+  # value is double (single value not numeric = multiple values)
+  expect_type(temp , "double")
   
   temp <- calc_ftemp_kphio(20, c4 = TRUE)
-  expect_type(temp, "numeric")
+  expect_type(temp, "double")
 })
 
 test_that("calc_soilm",{
@@ -32,5 +34,5 @@ test_that("calc_soilm",{
     bpar_soilm = 0.685)
   
   # output must be numeric
-  expect_type(moisture, "numeric")
+  expect_type(moisture, "double")
 })
