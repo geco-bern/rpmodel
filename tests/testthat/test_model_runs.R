@@ -4,7 +4,7 @@ test_that("default model run",{
   skip_on_cran()
   
   # no atmospheric pressure given
-  out_pmodel <- rpmodel( 
+  expect_warning(rpmodel( 
     tc             = 20,
     vpd            = 1000,
     co2            = 400,
@@ -19,10 +19,7 @@ test_that("default model run",{
     do_ftemp_kphio = FALSE,
     do_soilmstress = FALSE,
     verbose        = TRUE
-  )
-  
-  # missing atmosphere warning
-  expect_warning(out_pmodel)
+  ))
   
   out_pmodel <- rpmodel( 
     tc             = 20,
@@ -44,7 +41,6 @@ test_that("default model run",{
   
   # output must be a list (no atmosphere warning)
   expect_type(out_pmodel, "list")
-  
 })
 
 test_that("jmax wang17",{
