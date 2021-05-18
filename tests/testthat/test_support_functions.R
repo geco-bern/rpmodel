@@ -8,7 +8,7 @@ test_that("test dampen function",{
     tau = 40 )
   
   # output must be numeric
-  expect_type(dampen, "numeric")
+  expect_type(dampen, "double")
 })
 
 test_that("calc_ftemp_kphio",{
