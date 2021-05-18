@@ -43,3 +43,4 @@
 ### rpmodel 1.1.3
 
 * Corrected vectorization. This solves issue [#6](https://github.com/stineb/rpmodel/issues/6)
+

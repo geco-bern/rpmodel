@@ -32,7 +32,7 @@ out_pmodel <- rpmodel(
   vpd            = 1000,         # Pa,
   co2            = 400,          # ppm,
   fapar          = 1,            # fraction  ,
-  ppfd           = 300,          # mol/m2/d,
+  ppfd           = 30,           # mol/m2/d,
   elv            = 0,            # m.a.s.l.,
   kphio          = 0.049977,     # quantum yield efficiency as calibrated for setup ORG by Stocker et al. 2020 GMD,
   beta           = 146,          # unit cost ratio a/b,
@@ -62,7 +62,7 @@ $$
 ```{r}
 c_molmass <- 12.0107  # molecular mass of carbon
 kphio <- 0.05         # quantum yield efficiency, value as used in the function call to rpmodel()
-ppfd <- 300           # mol/m2/d, value as used in the function call to rpmodel()
+ppfd <- 30            # mol/m2/d, value as used in the function call to rpmodel()
 fapar <- 1            # fraction, value as used in the function call to rpmodel()
 print( out_pmodel$ci )
 print( out_pmodel$ca - (out_pmodel$gpp / c_molmass) / out_pmodel$gs )
@@ -71,7 +71,8 @@ print( out_pmodel$ca * out_pmodel$chi )
 
 Yes.
 
-And for... $$
+And for... 
+$$
 A = V_{\text{cmax}} \frac{c_i-\Gamma^{\ast}}{c_i + K} = \phi_0 I_{\text{abs}} \frac{c_i-\Gamma^{\ast}}{c_i + 2 \Gamma^{\ast}} = g_s (c_a - c_i)
 $$
 
@@ -100,7 +101,7 @@ out_ts_pmodel <- rpmodel(
   vpd            = 1000 + rnorm(5, mean = 0, sd = 50),
   co2            = rep(400, 5),
   fapar          = rep(1, 5),
-  ppfd           = 300 + rnorm(5, mean = 0, sd = 30),
+  ppfd           = 30 + rnorm(5, mean = 0, sd = 3),
   elv            = 0,         
   kphio          = 0.049977,
   beta           = 146,
@@ -132,7 +133,7 @@ df <- tibble(
   vpd            = 1000 + rnorm(5, mean = 0, sd = 50),
   co2            = rep(400, 5),
   fapar          = rep(1, 5),
-  ppfd           = 300 + rnorm(5, mean = 0, sd = 30)
+  ppfd           = 30 + rnorm(5, mean = 0, sd = 3)
   ) %>%
   mutate( out_pmodel = purrr::pmap(., rpmodel, 
     elv            = 0,         
@@ -175,7 +176,7 @@ out_pmodel <- rpmodel(
   vpd            = 1000,         # Pa,
   co2            = 400,          # ppm,
   fapar          = 1,            # fraction  ,
-  ppfd           = 300,          # mol/m2/d,
+  ppfd           = 30,           # mol/m2/d,
   elv            = 0,            # m.a.s.l.,
   kphio          = 0.049977,     # quantum yield efficiency as calibrated for setup ORG by Stocker et al. 2020 GMD,
   beta           = 146,          # unit cost ratio a/b,
@@ -222,7 +223,7 @@ out_pmodel_ftemp_kphio_ON <- rpmodel(
   vpd            = 1000,         # Pa,
   co2            = 400,          # ppm,
   fapar          = 1,            # fraction  ,
-  ppfd           = 300,          # mol/m2/d,
+  ppfd           = 30,           # mol/m2/d,
   elv            = 0,            # m.a.s.l.,
   do_ftemp_kphio = TRUE
   )
@@ -231,7 +232,7 @@ out_pmodel_ftemp_kphio_OFF <- rpmodel(
   vpd            = 1000,         # Pa,
   co2            = 400,          # ppm,
   fapar          = 1,            # fraction  ,
-  ppfd           = 300,          # mol/m2/d,
+  ppfd           = 30,           # mol/m2/d,
   elv            = 0,            # m.a.s.l.,
   do_ftemp_kphio = FALSE
   )
@@ -258,7 +259,7 @@ out_pmodel_soilmstress_OFF <- rpmodel(
   vpd            = 1000,         # Pa,
   co2            = 400,          # ppm,
   fapar          = 1,            # fraction  ,
-  ppfd           = 300,          # mol/m2/d,
+  ppfd           = 30,           # mol/m2/d,
   elv            = 0,            # m.a.s.l.,
   do_ftemp_kphio = FALSE,
   do_soilmstress = FALSE
@@ -268,7 +269,7 @@ out_pmodel_soilmstress_ON <- rpmodel(
   vpd            = 1000,         # Pa,
   co2            = 400,          # ppm,
   fapar          = 1,            # fraction  ,
-  ppfd           = 300,          # mol/m2/d,
+  ppfd           = 30,           # mol/m2/d,
   elv            = 0,            # m.a.s.l.,
   do_ftemp_kphio = FALSE,
   do_soilmstress = TRUE,

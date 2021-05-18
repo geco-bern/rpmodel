@@ -7,7 +7,7 @@
 #' @param co2 Atmospheric CO2 concentration (ppm)
 #' @param fapar (Optional) Fraction of absorbed photosynthetically active radiation (unitless, defaults to
 #' \code{NA})
-#' @param ppfd (Optional) Photosynthetic photon flux density (mol m-2 d-1, defaults to \code{NA}). Note that
+#' @param ppfd Incident photosynthetic photon flux density (mol m-2 d-1, defaults to \code{NA}). Note that
 #' the units of \code{ppfd} (per area and per time) determine the units of outputs \code{lue}, \code{gpp},
 #' \code{vcmax}, and \code{rd}. For example, if \code{ppfd} is provided in units of mol m-2 month-1, then
 #' respective output variables are returned as per unit months.
@@ -192,7 +192,7 @@
 #'
 #' @export
 #'
-#' @examples rpmodel( tc = 20, vpd = 1000, co2 = 400, fapar = 1, ppfd = 300, elv = 0)
+#' @examples rpmodel( tc = 20, vpd = 1000, co2 = 400, ppfd = 30, elv = 0)
 #'
 rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
                      kphio = ifelse(do_ftemp_kphio, ifelse(do_soilmstress, 0.087182, 0.081785), 0.049977),
@@ -276,7 +276,6 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
 
   }
 
-
   ## leaf-internal CO2 partial pressure (Pa)
   ci <- out_optchi$chi * ca
 
@@ -286,8 +285,10 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
   ## intrinsic water use efficiency (in Pa)
   iwue = ( ca - ci ) / 1.6
 
+
   ##-----------------------------------------------------------------------
   ## Vcmax and light use efficiency
+  ## Jmax limitation comes in only at this step
   ##-----------------------------------------------------------------------
   if (c4){
 
@@ -296,9 +297,16 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
 
   } else if (method_jmaxlim=="wang17"){
 
-
+    ## apply correction by Jmax limitation
     out_lue_vcmax <- calc_lue_vcmax_wang17(out_optchi, kphio, ftemp_kphio, c_molmass, soilmstress)
 
+    # ## XXX exploratory to correct ci after accounting for Jmax limitation
+    # assim_test <- ppfd * kphio * out_lue_vcmax$mprime
+    # kc <- 0.41
+    # L <- sqrt(1 - (kc/out_optchi$mj)^(2/3))
+    # assim_test2 <- ppfd * kphio * out_optchi$mj * L
+    # ci_test <- gammastar * (2.0 * assim_test + kphio * ppfd * L)/(kphio * ppfd * L - assim_test)
+    # jmax_test <- (4.0 * kphio * ppfd) / sqrt(out_optchi$mj^(2/3) / (out_optchi$mj^(2/3) - kc^(2/3)) - 1.0)
 
   } else if (method_jmaxlim=="smith19"){
 
@@ -324,7 +332,7 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
   ##-----------------------------------------------------------------------
   ## Vcmax25 (vcmax normalized to 25 deg C)
   ftemp25_inst_vcmax  <- calc_ftemp_inst_vcmax( tc, tc, tcref = 25.0 )
-  vcmax25_unitiabs  <- out_lue_vcmax$vcmax_unitiabs  / ftemp25_inst_vcmax
+  vcmax25_unitiabs  <- out_lue_vcmax$vcmax_unitiabs / ftemp25_inst_vcmax
 
   ## Dark respiration at growth temperature
   ftemp_inst_rd <- calc_ftemp_inst_rd( tc )
@@ -367,43 +375,41 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
   ftemp25_inst_jmax <- calc_ftemp_inst_jmax( tc, tc, tcref = 25.0 )
   jmax25 <- jmax / ftemp25_inst_jmax
 
-  ## at this stage, verify if A_J = A_C
+  ## Test: at this stage, verify if A_J = A_C
   a_j <- kphio * iabs * (ci - gammastar)/(ci + 2 * gammastar) * fact_jmaxlim
   a_c <- vcmax * (ci - gammastar) / (ci + kmm)
-  if (abs(a_j/a_c - 1) > 0.001) rlang::abort("rpmodel(): light and Rubisco-limited assimilation rates are not identical.")
+  if (any(abs(a_j/a_c - 1) > 0.001)) rlang::abort("rpmodel(): light and Rubisco-limited assimilation rates are not identical.")
 
-  ## assimilation is not returned because it should not be confused with what is usually measured
+  ## Assimilation is not returned because it should not be confused with what is usually measured
   ## should use instantaneous assimilation for comparison to measurements. This is returned by inst_rpmodel().
-  assim <- ifelse(a_j < a_c, a_j, a_c)
-
-  if (abs(assim - gpp / c_molmass) > 0.001) rlang::abort("rpmodel(): Assimilation and GPP are not identical.")
+  assim <- ifelse(a_j < a_c , a_j, a_c)
+  if (any(abs(assim - gpp / c_molmass) > 0.001)) rlang::abort("rpmodel(): Assimilation and GPP are not identical.")
 
   ## average stomatal conductance
   gs <- assim / (ca - ci)
 
-
   ## construct list for output
   out <- list(
+              gpp             = gpp,   # remove this again later
               ca              = ca,
               gammastar       = gammastar,
               kmm             = kmm,
               ns_star         = ns_star,
               chi             = out_optchi$chi,
+              xi              = out_optchi$xi,
               mj              = out_optchi$mj,
               mc              = out_optchi$mc,
               ci              = ci,
-              lue             = out_lue_vcmax$lue,
-              gpp             = gpp,
               iwue            = iwue,
-              gs              = gs, #(gpp / c_molmass) / (ca - ci),
+              gs              = gs,
               vcmax           = vcmax,
               vcmax25         = vcmax25,
               jmax            = jmax,
-              jmax25          = jmax,
+              jmax25          = jmax25,
               rd              = rd
               )
 
-  if (!is.null(returnvar)) out <- out[returnvar]
+  # if (!is.null(returnvar)) out <- out[returnvar]
 
   return( out )
 
@@ -454,7 +460,7 @@ calc_optimal_chi <- function( kmm, gammastar, ns_star, ca, vpd, beta ){
   ## mj:mv
   mjoc <- (chi + kappa) / (chi + 2 * gamma)
 
-  out <- list( chi=chi, mc=mc, mj=mj, mjoc=mjoc )
+  out <- list( xi=xi, chi=chi, mc=mc, mj=mj, mjoc=mjoc )
   return(out)
 }
 
@@ -478,6 +484,8 @@ calc_lue_vcmax_wang17 <- function(out_optchi, kphio, ftemp_kphio, c_molmass, soi
   mprime <- calc_mprime( out_optchi$mj )
 
   out <- list(
+
+    mprime = mprime,
 
     ## Light use efficiency (gpp per unit absorbed light)
     lue = kphio * ftemp_kphio * mprime * c_molmass * soilmstress,
@@ -612,18 +620,6 @@ calc_mprime <- function( mc ){
   mpi <- ifelse(mpi>0, sqrt(mpi), NA)
 
   return(mpi)
-}
-
-
-co2_to_ca <- function( co2, patm ){
-  #-----------------------------------------------------------------------
-  # Input:    - float, annual atm. CO2, ppm (co2)
-  #           - float, monthly atm. pressure, Pa (patm)
-  # Output:   - ca in units of Pa
-  # Features: Converts ca (ambient CO2) from ppm to Pa.
-  #-----------------------------------------------------------------------
-  ca   <- ( 1.0e-6 ) * co2 * patm         # Pa, atms. CO2
-  return( ca )
 }
 
 
