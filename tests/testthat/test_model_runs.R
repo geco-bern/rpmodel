@@ -45,9 +45,6 @@ test_that("default model run",{
 
 test_that("jmax wang17",{
   skip_on_cran()
-
-  # missing atmosphere warning
-  expect_warning(out_pmodel)
   
   out_pmodel <- rpmodel( 
     tc             = 20,
@@ -73,9 +70,6 @@ test_that("jmax wang17",{
 
 test_that("jmax smith19",{
   skip_on_cran()
-  
-  # missing atmosphere warning
-  expect_warning(out_pmodel)
   
   out_pmodel <- rpmodel( 
     tc             = 20,
