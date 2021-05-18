@@ -5,16 +5,18 @@
 #'
 #' @param soilm Relative soil moisture as a fraction
 #' of field capacity (unitless). Defaults to 1.0 (no soil moisture stress).
-#' @param meanalpha Local annual mean ratio of
-#' actual over potential evapotranspiration, measure for average aridity. Defaults to 1.0.
-#' @param apar_soilm (Optional, used only if \code{do_calc_soilmstress==TRUE}) Parameter determining the
-#' sensitivity of the empirical soil moisture stress function. Defaults to 0.0, the empirically fitted value
-#' as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'FULL' (corresponding to a setup
-#' with \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_calc_soilmstress=TRUE}).
-#' @param bpar_soilm (Optional, used only if \code{do_calc_soilmstress==TRUE}) Parameter determining the
-#' sensitivity of the empirical soil moisture stress function. Defaults to 0.6, the empirically fitted value
-#' as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'FULL' (corresponding to a setup
-#' with \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_calc_soilmstress=TRUE}).
+#' @param meanalpha Local annual mean ratio of actual over potential 
+#'  evapotranspiration, measure for average aridity. Defaults to 1.0.
+#' @param apar_soilm (Optional, used only if \code{do_calc_soilmstress==TRUE})
+#'  Parameter determining the sensitivity of the empirical soil moisture stress
+#'  function. Defaults to 0.0, the empirically fitted value as presented in Stocker
+#'  et al. (2019) Geosci. Model Dev. for model setup 'FULL' (corresponding to a setup
+#'  with \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_calc_soilmstress=TRUE}).
+#' @param bpar_soilm (Optional, used only if \code{do_calc_soilmstress==TRUE}) Parameter
+#'  determining the sensitivity of the empirical soil moisture stress function. Defaults
+#'  to ~0.6, the empirically fitted value as presented in Stocker et al. (2019) Geosci. Model Dev.
+#'  for model setup 'FULL' (corresponding to a setup with \code{method_jmaxlim="wang17",
+#'  do_ftemp_kphio=TRUE, do_calc_soilmstress=TRUE}).
 #'
 #' @details The soil moisture stress factor is calculated using a quadratic function that
 #' is 1 above \code{soilm} = 0.6 and has a sensitivity, given by the y-axis cutoff,
@@ -45,7 +47,12 @@
 #' @references  Stocker, B. et al. Geoscientific Model Development Discussions (in prep.)
 #'
 #' @export
-calc_soilmstress <- function( soilm, meanalpha = 1.0, apar_soilm = 0.0, bpar_soilm = 0.7330 ){
+calc_soilmstress <- function(
+  soilm,
+  meanalpha = 1.0,
+  apar_soilm = 0.0,
+  bpar_soilm = 0.685
+  ){
 
   # Fixed parameters
   x0 <- 0.0

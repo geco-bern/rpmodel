@@ -10,18 +10,20 @@ calc_soilmstress(soilm, meanalpha = 1, apar_soilm = 0, bpar_soilm = 0.685)
 \item{soilm}{Relative soil moisture as a fraction
 of field capacity (unitless). Defaults to 1.0 (no soil moisture stress).}
 
-\item{meanalpha}{Local annual mean ratio of
-actual over potential evapotranspiration, measure for average aridity. Defaults to 1.0.}
+\item{meanalpha}{Local annual mean ratio of actual over potential 
+evapotranspiration, measure for average aridity. Defaults to 1.0.}
 
-\item{apar_soilm}{(Optional, used only if \code{do_calc_soilmstress==TRUE}) Parameter determining the
-sensitivity of the empirical soil moisture stress function. Defaults to 0.0, the empirically fitted value
-as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'FULL' (corresponding to a setup
+\item{apar_soilm}{(Optional, used only if \code{do_calc_soilmstress==TRUE})
+Parameter determining the sensitivity of the empirical soil moisture stress
+function. Defaults to 0.0, the empirically fitted value as presented in Stocker
+et al. (2019) Geosci. Model Dev. for model setup 'FULL' (corresponding to a setup
 with \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_calc_soilmstress=TRUE}).}
 
-\item{bpar_soilm}{(Optional, used only if \code{do_calc_soilmstress==TRUE}) Parameter determining the
-sensitivity of the empirical soil moisture stress function. Defaults to 0.685, the empirically fitted value
-as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'FULL' (corresponding to a setup
-with \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_calc_soilmstress=TRUE}).}
+\item{bpar_soilm}{(Optional, used only if \code{do_calc_soilmstress==TRUE}) Parameter
+determining the sensitivity of the empirical soil moisture stress function. Defaults
+to ~0.6, the empirically fitted value as presented in Stocker et al. (2019) Geosci. Model Dev.
+for model setup 'FULL' (corresponding to a setup with \code{method_jmaxlim="wang17",
+do_ftemp_kphio=TRUE, do_calc_soilmstress=TRUE}).}
 }
 \value{
 A numeric value for \eqn{\beta}

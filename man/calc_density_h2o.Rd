@@ -19,8 +19,8 @@ Calculates the density of water as a function of temperature and atmospheric
 pressure, using the Tumlirz Equation.
 }
 \examples{
-print("Density of water at 20 degrees C and standard atmospheric pressure:")
-print(calc_density_h2o(20, 101325))
+ # Density of water at 20 degrees C and standard atmospheric pressure
+ print(calc_density_h2o(20, 101325))
 
 }
 \references{

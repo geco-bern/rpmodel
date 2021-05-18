@@ -8,8 +8,9 @@
 #'
 #' @return numeric, density of water, kg/m^3
 #'
-#' @examples print("Density of water at 20 degrees C and standard atmospheric pressure:")
-#' print(calc_density_h2o(20, 101325))
+#' @examples 
+#'  # Density of water at 20 degrees C and standard atmospheric pressure
+#'  print(calc_density_h2o(20, 101325))
 #'
 #' @references  F.H. Fisher and O.E Dial, Jr. (1975) Equation of state of
 #' pure water and sea water, Tech. Rept., Marine Physical
@@ -17,7 +18,7 @@
 #'
 #' @export
 #'
-calc_density_h2o <- function( tc, p ){
+calc_density_h2o <- function(tc, p){
 
   # Calculate lambda, (bar cm^3)/g:
   my_lambda <- 1788.316 +

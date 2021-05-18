@@ -8,11 +8,10 @@
 #'
 #' @return CO2 partial pressure in Pa.
 #'
-#' @examples
-#'
 #' @export
 #'
 co2_to_ca <- function( co2, patm ){
-  ca   <- ( 1.0e-6 ) * co2 * patm         # Pa, atms. CO2
+  # Pa, atms. CO2
+  ca   <- ( 1.0e-6 ) * co2 * patm
   return( ca )
 }

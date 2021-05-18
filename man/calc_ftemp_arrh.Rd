@@ -18,7 +18,8 @@ A numeric value for \eqn{f}
 }
 \description{
 Given a kinetic rate at a reference temperature (argument \code{tkref})
-this function calculates its temperature-scaling factor following Arrhenius kinetics.
+this function calculates its temperature-scaling factor
+following Arrhenius kinetics.
 }
 \details{
 To correct for effects by temperature following Arrhenius kinetics,
@@ -37,7 +38,7 @@ and is 8.3145 J mol-1 K-1. Note that this is equivalent to
 }
 }
 \examples{
-print("Relative rate change from 25 to 10 degrees Celsius (percent change):")
+# Relative rate change from 25 to 10 degrees Celsius (percent change)
 print( (1.0-calc_ftemp_arrh( 283.15, 100000, tkref = 298.15))*100 )
 
 }

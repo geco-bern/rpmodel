@@ -45,8 +45,12 @@
 #' print((calc_ftemp_inst_vcmax(25)/calc_ftemp_inst_vcmax(10)-1)*100 )
 #'
 #' @export
-#'
-calc_ftemp_inst_vcmax <- function( tcleaf, tcgrowth = tcleaf, tcref = 25.0 ){
+
+calc_ftemp_inst_vcmax <- function(
+  tcleaf,
+  tcgrowth = tcleaf,
+  tcref = 25.0
+  ){
   
   # loal parameters
   Ha    <- 71513  # activation energy (J/mol)

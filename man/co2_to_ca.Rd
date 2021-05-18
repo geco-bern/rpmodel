@@ -17,6 +17,3 @@ CO2 partial pressure in Pa.
 \description{
 Calculates CO2 partial pressure from concentration in ppm.
 }
-\examples{
-
-}

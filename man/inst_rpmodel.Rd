@@ -26,46 +26,55 @@ inst_rpmodel(
 
 \item{co2}{Atmospheric CO2 concentration (ppm)}
 
-\item{fapar}{(Optional) Fraction of absorbed photosynthetically active radiation (unitless, defaults to
-\code{NA})}
+\item{fapar}{(Optional) Fraction of absorbed photosynthetically active 
+radiation (unitless, defaults to \code{NA})}
 
-\item{ppfd}{(Optional) Photosynthetic photon flux density (mol m-2 d-1, defaults to \code{NA}). Note that
-the units of \code{ppfd} (per area and per time) determine the units of outputs \code{lue}, \code{gpp},
-\code{vcmax}, and \code{rd}. For example, if \code{ppfd} is provided in units of mol m-2 month-1, then
+\item{ppfd}{(Optional) Photosynthetic photon flux density (mol m-2 d-1, 
+defaults to \code{NA}). Note that the units of 
+\code{ppfd} (per area and per time) determine the units of outputs 
+\code{lue}, \code{gpp}, \code{vcmax}, and \code{rd}. For example, if 
+\code{ppfd} is provided in units of mol m-2 month-1, then
 respective output variables are returned as per unit months.}
 
-\item{patm}{Atmospheric pressure (Pa). When provided, overrides \code{elv}, otherwise \code{patm}
-is calculated using standard atmosphere (101325 Pa), corrected for elevation (argument \code{elv}),
-using the function \link{calc_patm}.}
+\item{patm}{Atmospheric pressure (Pa). When provided, overrides \code{elv},
+otherwise \code{patm} is calculated using standard atmosphere (101325 Pa),
+corrected for elevation (argument \code{elv}), using the function
+\link{calc_patm}.}
 
-\item{elv}{Elevation above sea-level (m.a.s.l.). Is used only for calculating atmospheric pressure (using
-standard atmosphere (101325 Pa), corrected for elevation (argument \code{elv}), using the function
-\link{calc_patm}), if argument \code{patm} is not provided. If argument \code{patm} is provided,
-\code{elv} is overridden.}
+\item{elv}{Elevation above sea-level (m.a.s.l.). Is used only for calculating
+atmospheric pressure (using standard atmosphere (101325 Pa), corrected for
+elevation (argument \code{elv}), using the function \link{calc_patm}),
+if argument \code{patm} is not provided. If argument \code{patm} is 
+provided, \code{elv} is overridden.}
 
-\item{kphio}{Apparent quantum yield efficiency (unitless). Defaults to 0.0817 for
-\code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=FALSE}, 0.0870 for
-\code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE}, and 0.0492 for
-\code{method_jmaxlim="wang17", do_ftemp_kphio=FALSE, do_soilmstress=FALSE}, corresponding to the empirically
-fitted value as presented in Stocker et al. (2019) Geosci. Model Dev. for model setup 'BRC', 'FULL', and 'ORG'
+\item{kphio}{Apparent quantum yield efficiency (unitless). Defaults to 0.0817
+for \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=FALSE},
+0.0870 for \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE},
+and 0.0492 for \code{method_jmaxlim="wang17", do_ftemp_kphio=FALSE, do_soilmstress=FALSE},
+corresponding to the empirically fitted value as presented in Stocker et al.
+(2019) Geosci. Model Dev. for model setup 'BRC', 'FULL', and 'ORG'
 respectively.}
+
+\item{verbose}{provide verbose feedback (default = FALSE)}
 }
 \value{
-A list containing instantaneous rates calculated from acclimated photosyntetic capacities (Vcmax25,
-Jmax25, "average" gs). This includes :
+A list containing instantaneous rates calculated from acclimated 
+ photosyntetic capacities (Vcmax25,Jmax25, "average" gs). This includes :
 \itemize{
-
 \item \code{vcmax}
 \item \code{jmax}
 \item \code{rd}
-
 }
 }
 \description{
-Calculates instantaneous scaling of rates, given acclimated capacities returned
-by function \code{rpmodel}.
+Calculates instantaneous scaling of rates, given acclimated 
+capacities returned by function \code{rpmodel}.
 }
 \examples{
-dampen_vec( vec = 20 * (sin(doy*pi/(365)))^2 + rnorm(365, mean = 0, sd = 5), tau = 40 )
+\dontrun{
+ dampen_vec(
+  vec = 20 * (sin(doy*pi/(365)))^2 + rnorm(365, mean = 0, sd = 5),
+  tau = 40 )
+}
 
 }
