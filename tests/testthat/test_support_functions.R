@@ -15,19 +15,22 @@ test_that("calc_ftemp_kphio",{
   skip_on_cran()
   
   # output must be numeric
-  expect_type(calc_ftemp_kphio(20), "numeric")
-  expect_type(calc_ftemp_kphio(20, c4 = TRUE), "numeric")
+  temp <- calc_ftemp_kphio(20)
+  expect_type(temp , "numeric")
+  
+  temp <- calc_ftemp_kphio(20, c4 = TRUE)
+  expect_type(temp, "numeric")
 })
 
 test_that("calc_soilm",{
   skip_on_cran()
   
+  moisture <- calc_soilmstress(
+    soilm = 1,
+    meanalpha = 1.0,
+    apar_soilm = 0.0,
+    bpar_soilm = 0.685)
+  
   # output must be numeric
-  expect_type(
-    calc_soilmstress(
-      soilm = 1,
-      meanalpha = 1.0,
-      apar_soilm = 0.0,
-      bpar_soilm = 0.685)
-    , "numeric")
+  expect_type(moisture, "numeric")
 })
