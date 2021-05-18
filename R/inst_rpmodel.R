@@ -68,10 +68,10 @@ inst_rpmodel <- function(
 
   #---- Check arguments ----
   if (identical(NA, elv) && identical(NA, patm)){
-    rlang::abort("Aborted. Provide either elevation (arugment elv) or
+    stop("Aborted. Provide either elevation (arugment elv) or
                  atmospheric pressure (argument patm).")
   } else if (!identical(NA, elv) && identical(NA, patm)){
-    if (verbose) rlang::warn("Atmospheric pressure (patm) not provided. 
+    if (verbose) warning("Atmospheric pressure (patm) not provided. 
                              Calculating it as a function of elevation (elv),
                              assuming standard atmosphere
                              (101325 Pa at sea level).")

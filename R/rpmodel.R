@@ -260,9 +260,9 @@ rpmodel <- function(
 
   # Check arguments
   if (identical(NA, elv) && identical(NA, patm)){
-    rlang::abort("Aborted. Provide either elevation (arugment elv) or atmospheric pressure (argument patm).")
+    stop("Aborted. Provide either elevation (arugment elv) or atmospheric pressure (argument patm).")
   } else if (!identical(NA, elv) && identical(NA, patm)){
-    if (verbose) rlang::warn("Atmospheric pressure (patm) not provided. Calculating it as a function of elevation (elv), assuming standard atmosphere (101325 Pa at sea level).")
+    if (verbose) warning("Atmospheric pressure (patm) not provided. Calculating it as a function of elevation (elv), assuming standard atmosphere (101325 Pa at sea level).")
     patm <- calc_patm(elv)
   }
 
@@ -319,7 +319,7 @@ rpmodel <- function(
 
   } else {
 
-    rlang::abort("rpmodel(): argument method_optci not idetified.")
+    stop("rpmodel(): argument method_optci not idetified.")
 
   }
 
@@ -374,7 +374,7 @@ rpmodel <- function(
 
   } else {
 
-    rlang::abort("rpmodel(): argument method_jmaxlim not idetified.")
+    stop("rpmodel(): argument method_jmaxlim not idetified.")
 
   }
 
@@ -427,7 +427,7 @@ rpmodel <- function(
   a_j <- kphio * iabs * (ci - gammastar)/(ci + 2 * gammastar) * fact_jmaxlim
   a_c <- vcmax * (ci - gammastar) / (ci + kmm)
   if (any(abs(a_j/a_c - 1) > 0.001)){
-    rlang::abort("rpmodel(): light and Rubisco-limited assimilation rates
+    stop("rpmodel(): light and Rubisco-limited assimilation rates
                  are not identical.")
   } 
 
@@ -435,7 +435,7 @@ rpmodel <- function(
   # is usually measured should use instantaneous assimilation for comparison to
   # measurements. This is returned by inst_rpmodel().
   assim <- ifelse(a_j < a_c , a_j, a_c)
-  if (any(abs(assim - gpp / c_molmass) > 0.001)) rlang::abort("rpmodel(): Assimilation and GPP are not identical.")
+  if (any(abs(assim - gpp / c_molmass) > 0.001)) stop("rpmodel(): Assimilation and GPP are not identical.")
 
   ## average stomatal conductance
   gs <- assim / (ca - ci)

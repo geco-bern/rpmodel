@@ -27,14 +27,14 @@ LazyData: true
 RoxygenNote: 7.1.1
 Depends:
     R (>= 3.6)
-Imports:
-    rlang
 Suggests:
     ggplot2,
     dplyr,
     purrr,
     tidyr,
     knitr,
+    testthat,
+    covr,
     markdown
 VignetteBuilder: knitr
 URL: https://github.com/stineb/rpmodel

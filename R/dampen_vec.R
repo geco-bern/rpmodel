@@ -31,8 +31,8 @@ dampen_vec <- function( vec, tau ){
 
   if (length(vec)<365){
 
-    rlang::abort("dampen_vec(): Aborting.
-                 Length of argument 'vec' must be at least 365.")
+    stop("dampen_vec(): Aborting.
+         Length of argument 'vec' must be at least 365.")
 
   } else {
 
