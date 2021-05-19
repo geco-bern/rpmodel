@@ -48,7 +48,47 @@ test_that("quadratic functions",{
     QUADP(6, 2, 1)
     )
   
+  expect_equal(
+    QUADP(0, 0, 0),
+    0
+  )
+  
+  expect_equal(
+    QUADP(NA, 0, 0),
+    NA
+  )
+  
   expect_warning(
     QUADM(6, 2, 1)
     )
+  
+  expect_equal(
+    QUADM(0, 0, 0),
+    0
+  )
+  
+  expect_equal(
+    QUADM(NA, 0, 0),
+    NA
+  )
+  
+  expect_equal(
+    QUADM(0, 0, 6),
+    0
+  )
+  
+  expect_equal(
+    QUADP(0, 0, 6),
+    0
+  )
+  
+  expect_equal(
+    QUADM(0, 5, 5),
+    -1
+  )
+  
+  expect_equal(
+    QUADP(0, 5, 5),
+    -1
+  )
 })
