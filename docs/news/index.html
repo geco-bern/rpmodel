@@ -79,7 +79,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rpmodel</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.0</span>
       </span>
     </div>
 
@@ -101,9 +101,6 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="../articles/accl_inst.html">Acclimated versus instantaneous response</a>
-    </li>
     <li>
       <a href="../articles/usage.html">Usage</a>
     </li>
@@ -137,30 +134,35 @@
       <small>Source: <a href='https://github.com/stineb/rpmodel/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="rpmodel-113" class="section level1">
-<h1 class="page-header" data-toc-text="1.1.3">
-<a href="#rpmodel-113" class="anchor"></a>rpmodel 1.1.3<small> Unreleased </small>
+    <div id="rpmodel-120" class="section level1">
+<h1 class="page-header" data-toc-text="1.2.0">
+<a href="#rpmodel-120" class="anchor"></a>rpmodel 1.2.0<small> Unreleased </small>
 </h1>
+<ul>
+<li>Implemented tests and continuous integration. Refactoring.</li>
+</ul>
+<div id="rpmodel-113" class="section level2">
+<h2 class="hasAnchor">
+<a href="#rpmodel-113" class="anchor"></a>rpmodel 1.1.3</h2>
 <ul>
 <li>Corrected vectorization. This solves issue <a href="https://github.com/stineb/rpmodel/issues/6"><a href='https://github.com/stineb/rpmodel/issues/6'>#6</a></a>
 </li>
 </ul>
 </div>
-    <div id="rpmodel-112" class="section level1">
-<h1 class="page-header" data-toc-text="1.1.2">
-<a href="#rpmodel-112" class="anchor"></a>rpmodel 1.1.2<small> Unreleased </small>
-</h1>
+<div id="rpmodel-112" class="section level2">
+<h2 class="hasAnchor">
+<a href="#rpmodel-112" class="anchor"></a>rpmodel 1.1.2</h2>
 <ul>
 <li>Set negative values of the temperature-dependent <code>kphio</code> to zero.</li>
 </ul>
 </div>
-    <div id="rpmodel-111" class="section level1">
-<h1 class="page-header" data-toc-text="1.1.1">
-<a href="#rpmodel-111" class="anchor"></a>rpmodel 1.1.1<small> Unreleased </small>
-</h1>
+<div id="rpmodel-111" class="section level2">
+<h2 class="hasAnchor">
+<a href="#rpmodel-111" class="anchor"></a>rpmodel 1.1.1</h2>
 <ul>
 <li>Corrected the argument description for <code>kphio</code> in the manual of <code><a href="../reference/rpmodel.html">rpmodel()</a></code>.</li>
 </ul>
+</div>
 </div>
     <div id="rpmodel-110" class="section level1">
 <h1 class="page-header" data-toc-text="1.1.0">
@@ -169,36 +171,31 @@
 <ul>
 <li>Corrected vectorization. This fixes wrong treatment of vector arguments and solves <a href="https://github.com/stineb/rpmodel/issues/3">issue <a href='https://github.com/stineb/rpmodel/issues/3'>#3</a></a>.</li>
 </ul>
-</div>
-    <div id="rpmodel-106" class="section level1">
-<h1 class="page-header" data-toc-text="1.0.6">
-<a href="#rpmodel-106" class="anchor"></a>rpmodel 1.0.6<small> Unreleased </small>
-</h1>
+<div id="rpmodel-106" class="section level2">
+<h2 class="hasAnchor">
+<a href="#rpmodel-106" class="anchor"></a>rpmodel 1.0.6</h2>
 <ul>
 <li>Set negative VPD values to zero. Resolves issue <a href="https://github.com/stineb/rpmodel/issues/2">issue <a href='https://github.com/stineb/rpmodel/issues/2'>#2</a></a>.</li>
 </ul>
 </div>
-    <div id="rpmodel-105" class="section level1">
-<h1 class="page-header" data-toc-text="1.0.5">
-<a href="#rpmodel-105" class="anchor"></a>rpmodel 1.0.5<small> Unreleased </small>
-</h1>
+<div id="rpmodel-105" class="section level2">
+<h2 class="hasAnchor">
+<a href="#rpmodel-105" class="anchor"></a>rpmodel 1.0.5</h2>
 <ul>
 <li>Added <code>jmax</code> (maximum rate of RuBP regeneration) to the list of returned variables by the <code><a href="../reference/rpmodel.html">rpmodel()</a></code> function.</li>
 <li>Made <code>calc_viscosity_h2o()</code> and <code>calc_density_h2o()</code> to public functions, exported as part of the rpmodel package.</li>
 </ul>
 </div>
-    <div id="rpmodel-104" class="section level1">
-<h1 class="page-header" data-toc-text="1.0.4">
-<a href="#rpmodel-104" class="anchor"></a>rpmodel 1.0.4<small> 2019-12-04 </small>
-</h1>
+<div id="rpmodel-104" class="section level2">
+<h2 class="hasAnchor">
+<a href="#rpmodel-104" class="anchor"></a>rpmodel 1.0.4</h2>
 <ul>
 <li>Bugfix: vectorized all outputs from <code><a href="../reference/rpmodel.html">rpmodel()</a></code>.</li>
 </ul>
 </div>
-    <div id="rpmodel-103" class="section level1">
-<h1 class="page-header" data-toc-text="1.0.3">
-<a href="#rpmodel-103" class="anchor"></a>rpmodel 1.0.3<small> Unreleased </small>
-</h1>
+<div id="rpmodel-103" class="section level2">
+<h2 class="hasAnchor">
+<a href="#rpmodel-103" class="anchor"></a>rpmodel 1.0.3</h2>
 <ul>
 <li>Version at final publication of Stocker et al. (2019) GMD.
 <ul>
@@ -207,10 +204,9 @@
 </li>
 </ul>
 </div>
-    <div id="rpmodel-102" class="section level1">
-<h1 class="page-header" data-toc-text="1.0.2">
-<a href="#rpmodel-102" class="anchor"></a>rpmodel 1.0.2<small> 2019-10-28 </small>
-</h1>
+<div id="rpmodel-102" class="section level2">
+<h2 class="hasAnchor">
+<a href="#rpmodel-102" class="anchor"></a>rpmodel 1.0.2</h2>
 <ul>
 <li>Preparations for submission to CRAN
 <ul>
@@ -220,13 +216,13 @@
 </li>
 </ul>
 </div>
-    <div id="rpmodel-101" class="section level1">
-<h1 class="page-header" data-toc-text="1.0.1">
-<a href="#rpmodel-101" class="anchor"></a>rpmodel 1.0.1<small> Unreleased </small>
-</h1>
+<div id="rpmodel-101" class="section level2">
+<h2 class="hasAnchor">
+<a href="#rpmodel-101" class="anchor"></a>rpmodel 1.0.1</h2>
 <ul>
 <li>First version for submission to Geoscientific Model Development. Package available through github (github.com/rpmodel)</li>
 </ul>
+</div>
 </div>
     <div id="rpmodel-10" class="section level1">
 <h1 class="page-header" data-toc-text="1.0">

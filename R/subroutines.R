@@ -121,11 +121,14 @@ soilmstress <- function(
   beta <- (1.0 - y0) / (x0 - x1)^2
   outstress <- 1.0 - beta * ( soilm - x1 )^2
   
-  
-  ## bound between 0 and 1
-  outstress <- ifelse(outstress > 1.0,
+  ## bound between 0 and 1, and set to 1.0 above soil moisture threshold x1.
+  outstress <- ifelse(soilm > x1,
                       1.0,
-                      ifelse(outstress < 0.0, 0.0, outstress))
+                      ifelse(outstress > 1.0,
+                             1.0,
+                             ifelse(outstress < 0.0, 
+                                    0.0, 
+                                    outstress)))
   
   return(outstress)
 }
@@ -984,17 +987,17 @@ mprime <- function( mc ){
   return(mpi)
 }
 
-#' Larger quadratic root
-#' 
-#' Solves quadratic equation given by y = a*x^2 + bx + c
-#  Based on MAESTRA equivalent (B. Medlyn)
-#'
-#' @param A a parameter in the quadratic equation
-#' @param B b parameter in the quadratic equation
-#' @param C c parameter in the quadratic equation
-#'
-#' @return larger quardratic root
-#' @export
+## #' Larger quadratic root
+## #' 
+## #' Solves quadratic equation given by y = a*x^2 + bx + c
+## #  Based on MAESTRA equivalent (B. Medlyn)
+## #'
+## #' @param A a parameter in the quadratic equation
+## #' @param B b parameter in the quadratic equation
+## #' @param C c parameter in the quadratic equation
+## #'
+## #' @return larger quardratic root
+## #' @export
 
 QUADP <- function(A,B,C){
   
@@ -1019,17 +1022,16 @@ QUADP <- function(A,B,C){
   
 }
 
-#' Minor quadratic root
-#' 
-#' Solves quadratic equation given by y = a*x^2 + bx + c
-#  Based on MAESTRA equivalent (B. Medlyn)
-#'
-#' @param A a parameter in the quadratic equation
-#' @param B b parameter in the quadratic equation
-#' @param C c parameter in the quadratic equation
-#'
-#' @return minor quardratic root
-#' @export
+## #' Minor quadratic root
+## #' 
+## #' Solves quadratic equation given by y = a*x^2 + bx + c
+## #' #  Based on MAESTRA equivalent (B. Medlyn)
+## #' @param A a parameter in the quadratic equation
+## #' @param B b parameter in the quadratic equation
+## #' @param C c parameter in the quadratic equation
+## #' 
+## #' @return minor quardratic root
+## #' @export
 
 QUADM <- function(A,B,C){
   

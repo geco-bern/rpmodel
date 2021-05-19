@@ -2,7 +2,6 @@ pandoc: 2.11.2
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
-  accl_inst: accl_inst.html
   usage: usage.html
-last_built: 2021-05-19T09:32Z
+last_built: 2021-05-19T14:18Z
 
