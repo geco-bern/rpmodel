@@ -47,12 +47,12 @@ respective output variables are returned as per unit months.}
 \item{patm}{Atmospheric pressure (Pa). When provided, overrides
 \code{elv}, otherwise \code{patm} is calculated using standard
 atmosphere (101325 Pa), corrected for elevation (argument \code{elv}),
-using the function \link{calc_patm}.}
+using the function \link{patm}.}
 
 \item{elv}{Elevation above sea-level (m.a.s.l.). Is used only for 
  calculating atmospheric pressure (using standard atmosphere (101325 Pa),
  corrected for elevation (argument \code{elv}), using the function
-\link{calc_patm}), if argument \code{patm} is not provided. If argument
+\link{patm}), if argument \code{patm} is not provided. If argument
 \code{patm} is provided, \code{elv} is overridden.}
 
 \item{kphio}{Apparent quantum yield efficiency (unitless). Defaults to
@@ -69,7 +69,7 @@ respectively.}
 \item{soilm}{(Optional, used only if \code{do_soilmstress==TRUE}) Relative 
 soil moisture as a fraction of field capacity (unitless). Defaults to 1.0 
 (no soil moisture stress). This information is used to calculate
-an empirical soil moisture stress factor (\link{calc_soilmstress}) whereby
+an empirical soil moisture stress factor (\link{soilmstress}) whereby
 the sensitivity is determined by average aridity, defined by the local 
 annual mean ratio of actual over potential evapotranspiration, supplied by
 argument \code{meanalpha}.}
@@ -132,10 +132,10 @@ including all its corollary). This includes :
  \item \code{ca}: Ambient CO2 expressed as partial pressure (Pa)
  
  \item \code{gammastar}: Photorespiratory compensation point \eqn{\Gamma*}, 
-  (Pa), see \link{calc_gammastar}.
+  (Pa), see \link{gammastar}.
  
  \item \code{kmm}: Michaelis-Menten coefficient \eqn{K} for photosynthesis 
- (Pa), see \link{calc_kmm}.
+ (Pa), see \link{kmm}.
  
  \item \code{ns_star}: Change in the viscosity of water, relative to its 
   value at 25 deg C (unitless).
@@ -153,8 +153,8 @@ including all its corollary). This includes :
    \xi = \sqrt (\beta (K+ \Gamma*) / (1.6 \eta*))
   }
   \eqn{\beta} is given by argument \code{beta}, \eqn{K} is 
-  \code{kmm} (see \link{calc_kmm}), \eqn{\Gamma*} is 
-  \code{gammastar} (see \link{calc_gammastar}). \eqn{\eta*} is \code{ns_star}.
+  \code{kmm} (see \link{kmm}), \eqn{\Gamma*} is 
+  \code{gammastar} (see \link{gammastar}). \eqn{\eta*} is \code{ns_star}.
   \eqn{D} is the vapour pressure deficit (argument \code{vpd}), \eqn{ca} is 
   the ambient CO2 partial pressure in Pa (\code{ca}).
   
@@ -165,7 +165,7 @@ including all its corollary). This includes :
                              LUE = \phi(T) \phi0 m' Mc
                         }
                         where \eqn{\phi(T)} is the temperature-dependent quantum yield efficiency modifier
-                        (\link{calc_ftemp_kphio}) if \code{do_ftemp_kphio==TRUE}, and 1 otherwise. \eqn{\phi 0}
+                        (\link{ftemp_kphio}) if \code{do_ftemp_kphio==TRUE}, and 1 otherwise. \eqn{\phi 0}
                         is given by argument \code{kphio}.
                         \eqn{m'=m} if \code{method_jmaxlim=="none"}, otherwise
                         \deqn{
@@ -174,7 +174,7 @@ including all its corollary). This includes :
                         with \eqn{c=0.41} (Wang et al., 2017) if \code{method_jmaxlim=="wang17"}. \eqn{Mc} is
                         the molecular mass of C (12.0107 g mol-1). \eqn{m} is given returned variable \code{mj}.
                         If \code{do_soilmstress==TRUE}, \eqn{LUE} is multiplied with a soil moisture stress factor,
-                        calculated with \link{calc_soilmstress}.
+                        calculated with \link{soilmstress}.
         \item \code{mj}: Factor in the light-limited assimilation rate function, given by
                         \deqn{
                             m = (ci - \Gamma*) / (ci + 2 \Gamma*)
@@ -210,7 +210,7 @@ including all its corollary). This includes :
         \item \code{vcmax25}: Maximum carboxylation capacity \eqn{Vcmax} (mol C m-2) normalised to 25 deg C
                      following a modified Arrhenius equation, calculated as \eqn{Vcmax25 = Vcmax / fv},
                      where \eqn{fv} is the instantaneous temperature response by Vcmax and is implemented
-                     by function \link{calc_ftemp_inst_vcmax}.
+                     by function \link{ftemp_inst_vcmax}.
         \item \code{jmax}: The maximum rate of RuBP regeneration () at growth temperature (argument
                       \code{tc}), calculated using
                       \deqn{
@@ -222,9 +222,9 @@ including all its corollary). This includes :
                      }
                      where \eqn{b0} is a constant and set to 0.015 (Atkin et al., 2015), \eqn{fv} is the
                      instantaneous temperature response by Vcmax and is implemented by function
-                     \link{calc_ftemp_inst_vcmax}, and \eqn{fr} is the instantaneous temperature response
+                     \link{ftemp_inst_vcmax}, and \eqn{fr} is the instantaneous temperature response
                      of dark respiration following Heskel et al. (2016) and is implemented by function
-                     \link{calc_ftemp_inst_rd}.
+                     \link{ftemp_inst_rd}.
 }
 
 Additional variables are contained in the returned list if argument \code{method_jmaxlim=="smith19"}

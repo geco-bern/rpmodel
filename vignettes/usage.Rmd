@@ -168,7 +168,7 @@ A number of auxiliary functions, which are used within `rpmodel()`, are availabl
 
 Different instantaneous temperature scaling functions are applied for $V_\text{cmax}$ and dark respiration ($R_d$).
 
--   `calc_ftemp_inst_vcmax()` calculates the instantaneous temperature response of $V_\text{cmax}$. Let's run the P-model for `tc = 10` (degrees C). The ratio of $V_\text{cmax}/V_\text{cmax25}$ should equal the instantaneous temperature scaling function for $V_\text{cmax}$ at 10 degrees C (calculated by `calc_ftemp_inst_vcmax(10)`):
+-   `ftemp_inst_vcmax()` calculates the instantaneous temperature response of $V_\text{cmax}$. Let's run the P-model for `tc = 10` (degrees C). The ratio of $V_\text{cmax}/V_\text{cmax25}$ should equal the instantaneous temperature scaling function for $V_\text{cmax}$ at 10 degrees C (calculated by `ftemp_inst_vcmax(10)`):
 
 ```{r}
 out_pmodel <- rpmodel( 
@@ -186,36 +186,36 @@ out_pmodel <- rpmodel(
   verbose        = TRUE
   )
 print(paste("Ratio Vcmax/Vcmax25      :", out_pmodel$vcmax/out_pmodel$vcmax25))
-print(paste("calc_ftemp_inst_vcmax(10):", calc_ftemp_inst_vcmax(10)))
+print(paste("ftemp_inst_vcmax(10):", ftemp_inst_vcmax(10)))
 ```
 
--   `calc_ftemp_arrh()` Calculates the Arrhenius-type temperature response and is used inside `calc_ftemp_inst_vcmax()`.
+-   `ftemp_arrh()` Calculates the Arrhenius-type temperature response and is used inside `ftemp_inst_vcmax()`.
 
--   `calc_ftemp_inst_rd()` calculates the temperature response of dark respiration ($R_d$), which is slightly less steep than that for $V_\text{cmax}$:
+-   `ftemp_inst_rd()` calculates the temperature response of dark respiration ($R_d$), which is slightly less steep than that for $V_\text{cmax}$:
 
 ```{r}
-print(paste("calc_ftemp_inst_rd(10):", calc_ftemp_inst_rd(10)))
+print(paste("ftemp_inst_rd(10):", ftemp_inst_rd(10)))
 ```
 
 ### Parameters in the FvCB model
 
--   `calc_gammastar()` calculates the CO$_2$ compensation point ($\Gamma^\ast$) in the Farquhar-von Caemmerer-Berry model as a function of temperature (argument `tc`) and atmospheric pressure (argument `patm`). This is returned by the `rpmodel()` function and by the separate auxiliary function `calc_gammastar()`. `calc_gammastar()` requires atmospheric pressure (`patm`) to be given as an argument (in addition to temperature). Corresponding to the `rpmodel()` call above, let's calculate this using the auxiliary function `calc_patm()` with 0 metres above sea level, and assuming standard atmospheric pressure (101325 Pa at 0 m a.s.l.):
+-   `gammastar()` calculates the CO$_2$ compensation point ($\Gamma^\ast$) in the Farquhar-von Caemmerer-Berry model as a function of temperature (argument `tc`) and atmospheric pressure (argument `patm`). This is returned by the `rpmodel()` function and by the separate auxiliary function `gammastar()`. `gammastar()` requires atmospheric pressure (`patm`) to be given as an argument (in addition to temperature). Corresponding to the `rpmodel()` call above, let's calculate this using the auxiliary function `patm()` with 0 metres above sea level, and assuming standard atmospheric pressure (101325 Pa at 0 m a.s.l.):
 
 ```{r}
 print(paste("From rpmodel call :", out_pmodel$gammastar))
-print(paste("calc_gammastar(10):", calc_gammastar(10, patm = calc_patm(elv = 0))))
+print(paste("gammastar(10):", gammastar(10, patm = patm(elv = 0))))
 ```
 
--   `calc_kmm()` calculates the Michaelis Menten coefficient for Rubisco-limited photosynthesis as a function of temperature (argument `tc`) and atmospheric pressure (argument `patm`). As above, `calc_kmm()` requires atmospheric pressure to be given as an argument (in addition to temperature). Corresponding to the `rpmodel()` call above, let's calculate this using the auxiliary function `calc_patm()` with 0 metres above sea level, and assuming standard atmospheric pressure (101325 Pa at 0 m a.s.l.):
+-   `kmm()` calculates the Michaelis Menten coefficient for Rubisco-limited photosynthesis as a function of temperature (argument `tc`) and atmospheric pressure (argument `patm`). As above, `kmm()` requires atmospheric pressure to be given as an argument (in addition to temperature). Corresponding to the `rpmodel()` call above, let's calculate this using the auxiliary function `patm()` with 0 metres above sea level, and assuming standard atmospheric pressure (101325 Pa at 0 m a.s.l.):
 
 ```{r}
 print(paste("From rpmodel call:", out_pmodel$kmm))
-print(paste("calc_kmm(10)     :", calc_kmm(10, patm = calc_patm(elv = 0))))
+print(paste("kmm(10)     :", kmm(10, patm = patm(elv = 0))))
 ```
 
 ### Temperature dependence of quantum yield efficiency
 
-The temperature dependence of quantum yield efficiency is modelled following Bernacchi et al. (2003), if the argument to the `rpmodel()` call `do_ftemp_kphio = TRUE`. This affects several quantities returned by the `rpmodel()` call (GPP, LUE, Vcmax), and can be calculated direction using `calc_ftemp_kphio()`.
+The temperature dependence of quantum yield efficiency is modelled following Bernacchi et al. (2003), if the argument to the `rpmodel()` call `do_ftemp_kphio = TRUE`. This affects several quantities returned by the `rpmodel()` call (GPP, LUE, Vcmax), and can be calculated direction using `ftemp_kphio()`.
 
 ```{r}
 out_pmodel_ftemp_kphio_ON <- rpmodel( 
@@ -239,7 +239,7 @@ out_pmodel_ftemp_kphio_OFF <- rpmodel(
 print(paste("LUE ftemp_ON /LUE ftemp_OFF =", out_pmodel_ftemp_kphio_ON$lue / out_pmodel_ftemp_kphio_OFF$lue))
 print(paste("GPP ftemp_ON /GPP ftemp_OFF =", out_pmodel_ftemp_kphio_ON$gpp / out_pmodel_ftemp_kphio_OFF$gpp))
 print(paste("Vcmax ftemp_ON /Vcmax ftemp_OFF =", out_pmodel_ftemp_kphio_ON$vcmax / out_pmodel_ftemp_kphio_OFF$vcmax))
-print(paste("calc_ftemp_kphio(20) =", calc_ftemp_kphio(20)))
+print(paste("ftemp_kphio(20) =", ftemp_kphio(20)))
 ```
 
 ### Soil moisture stress
@@ -247,11 +247,11 @@ print(paste("calc_ftemp_kphio(20) =", calc_ftemp_kphio(20)))
 The soil moisture stress function is available as a separate public function.
 ```{r}
 vec_soilm <- seq(from = 1.0, to = 0.0, by = -0.05)
-vec_soilmstress <- calc_soilmstress( vec_soilm, meanalpha = 1.0, apar_soilm = 0.0, bpar_soilm = 0.7330 )
+vec_soilmstress <- soilmstress( vec_soilm, meanalpha = 1.0, apar_soilm = 0.0, bpar_soilm = 0.7330 )
 plot(vec_soilm, vec_soilmstress)
 ```
 
-Similar to above, the soil moisture dependence of LUE (and hence GPP, and Vcmax) can be calculated directly using the function `calc_soilmstress()` and affects several quantities returned by the `rpmodel()` call (GPP, LUE, Vcmax):
+Similar to above, the soil moisture dependence of LUE (and hence GPP, and Vcmax) can be calculated directly using the function `soilmstress()` and affects several quantities returned by the `rpmodel()` call (GPP, LUE, Vcmax):
 
 ```{r}
 out_pmodel_soilmstress_OFF <- rpmodel( 
@@ -281,10 +281,10 @@ out_pmodel_soilmstress_ON <- rpmodel(
 print(paste("LUE soilmstress_ON /LUE soilmstress_OFF =", out_pmodel_soilmstress_ON$lue / out_pmodel_soilmstress_OFF$lue))
 print(paste("GPP soilmstress_ON /GPP soilmstress_OFF =", out_pmodel_soilmstress_ON$gpp / out_pmodel_soilmstress_OFF$gpp))
 print(paste("Vcmax soilmstress_ON /Vcmax soilmstress_OFF =", out_pmodel_soilmstress_ON$vcmax / out_pmodel_soilmstress_OFF$vcmax))
-print(paste("calc_soilmstress(0.2, apar_soilm = 0.1, bpar_soilm = 0.7, meanalpha = 0.2) =", calc_soilmstress(0.2, apar_soilm = 0.1, bpar_soilm = 0.7, meanalpha = 0.2)))
+print(paste("soilmstress(0.2, apar_soilm = 0.1, bpar_soilm = 0.7, meanalpha = 0.2) =", soilmstress(0.2, apar_soilm = 0.1, bpar_soilm = 0.7, meanalpha = 0.2)))
 ```
 
-`calc_ftemp_arrh()` Calculates the Arrhenius-type temperature response.
+`ftemp_arrh()` Calculates the Arrhenius-type temperature response.
 
 <!-- ## Response to CO2 -->
 

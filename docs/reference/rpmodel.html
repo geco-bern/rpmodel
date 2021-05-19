@@ -202,14 +202,14 @@ respective output variables are returned as per unit months.</p></td>
       <td><p>Atmospheric pressure (Pa). When provided, overrides
 <code>elv</code>, otherwise <code>patm</code> is calculated using standard
 atmosphere (101325 Pa), corrected for elevation (argument <code>elv</code>),
-using the function <a href='calc_patm.html'>calc_patm</a>.</p></td>
+using the function <a href='patm.html'>patm</a>.</p></td>
     </tr>
     <tr>
       <th>elv</th>
       <td><p>Elevation above sea-level (m.a.s.l.). Is used only for 
  calculating atmospheric pressure (using standard atmosphere (101325 Pa),
  corrected for elevation (argument <code>elv</code>), using the function
-<a href='calc_patm.html'>calc_patm</a>), if argument <code>patm</code> is not provided. If argument
+<a href='patm.html'>patm</a>), if argument <code>patm</code> is not provided. If argument
 <code>patm</code> is provided, <code>elv</code> is overridden.</p></td>
     </tr>
     <tr>
@@ -232,7 +232,7 @@ respectively.</p></td>
       <td><p>(Optional, used only if <code>do_soilmstress==TRUE</code>) Relative 
 soil moisture as a fraction of field capacity (unitless). Defaults to 1.0 
 (no soil moisture stress). This information is used to calculate
-an empirical soil moisture stress factor (<a href='calc_soilmstress.html'>calc_soilmstress</a>) whereby
+an empirical soil moisture stress factor (<a href='soilmstress.html'>soilmstress</a>) whereby
 the sensitivity is determined by average aridity, defined by the local 
 annual mean ratio of actual over potential evapotranspiration, supplied by
 argument <code>meanalpha</code>.</p></td>
@@ -316,9 +316,9 @@ including all its corollary). This includes :</p>
 <ul>
 <li><p><code>ca</code>: Ambient CO2 expressed as partial pressure (Pa)</p></li>
 <li><p><code>gammastar</code>: Photorespiratory compensation point \(\Gamma*\), 
-  (Pa), see <a href='calc_gammastar.html'>calc_gammastar</a>.</p></li>
+  (Pa), see <a href='gammastar.html'>gammastar</a>.</p></li>
 <li><p><code>kmm</code>: Michaelis-Menten coefficient \(K\) for photosynthesis 
- (Pa), see <a href='calc_kmm.html'>calc_kmm</a>.</p></li>
+ (Pa), see <a href='kmm.html'>kmm</a>.</p></li>
 <li><p><code>ns_star</code>: Change in the viscosity of water, relative to its 
   value at 25 deg C (unitless).
   $$\eta* = \eta(T) / \eta(25 deg C)$$
@@ -334,8 +334,8 @@ including all its corollary). This includes :</p>
    \xi = \sqrt (\beta (K+ \Gamma*) / (1.6 \eta*))
   $$
   \(\beta\) is given by argument <code>beta</code>, \(K\) is 
-  <code>kmm</code> (see <a href='calc_kmm.html'>calc_kmm</a>), \(\Gamma*\) is 
-  <code>gammastar</code> (see <a href='calc_gammastar.html'>calc_gammastar</a>). \(\eta*\) is <code>ns_star</code>.
+  <code>kmm</code> (see <a href='kmm.html'>kmm</a>), \(\Gamma*\) is 
+  <code>gammastar</code> (see <a href='gammastar.html'>gammastar</a>). \(\eta*\) is <code>ns_star</code>.
   \(D\) is the vapour pressure deficit (argument <code>vpd</code>), \(ca\) is 
   the ambient CO2 partial pressure in Pa (<code>ca</code>).</p></li>
 <li><p><code>ci</code>: Leaf-internal CO2 partial pressure (Pa), calculated as \((\chi ca)\).</p></li>
@@ -344,7 +344,7 @@ including all its corollary). This includes :</p>
                              LUE = \phi(T) \phi0 m' Mc
                         $$
                         where \(\phi(T)\) is the temperature-dependent quantum yield efficiency modifier
-                        (<a href='calc_ftemp_kphio.html'>calc_ftemp_kphio</a>) if <code>do_ftemp_kphio==TRUE</code>, and 1 otherwise. \(\phi 0\)
+                        (<a href='ftemp_kphio.html'>ftemp_kphio</a>) if <code>do_ftemp_kphio==TRUE</code>, and 1 otherwise. \(\phi 0\)
                         is given by argument <code>kphio</code>.
                         \(m'=m\) if <code>method_jmaxlim=="none"</code>, otherwise
                         $$
@@ -353,7 +353,7 @@ including all its corollary). This includes :</p>
                         with \(c=0.41\) (Wang et al., 2017) if <code>method_jmaxlim=="wang17"</code>. \(Mc\) is
                         the molecular mass of C (12.0107 g mol-1). \(m\) is given returned variable <code>mj</code>.
                         If <code>do_soilmstress==TRUE</code>, \(LUE\) is multiplied with a soil moisture stress factor,
-                        calculated with <a href='calc_soilmstress.html'>calc_soilmstress</a>.</p></li>
+                        calculated with <a href='soilmstress.html'>soilmstress</a>.</p></li>
 <li><p><code>mj</code>: Factor in the light-limited assimilation rate function, given by
                         $$
                             m = (ci - \Gamma*) / (ci + 2 \Gamma*)
@@ -389,7 +389,7 @@ including all its corollary). This includes :</p>
 <li><p><code>vcmax25</code>: Maximum carboxylation capacity \(Vcmax\) (mol C m-2) normalised to 25 deg C
                      following a modified Arrhenius equation, calculated as \(Vcmax25 = Vcmax / fv\),
                      where \(fv\) is the instantaneous temperature response by Vcmax and is implemented
-                     by function <a href='calc_ftemp_inst_vcmax.html'>calc_ftemp_inst_vcmax</a>.</p></li>
+                     by function <a href='ftemp_inst_vcmax.html'>ftemp_inst_vcmax</a>.</p></li>
 <li><p><code>jmax</code>: The maximum rate of RuBP regeneration () at growth temperature (argument
                       <code>tc</code>), calculated using
                       $$
@@ -401,9 +401,9 @@ including all its corollary). This includes :</p>
                      $$
                      where \(b0\) is a constant and set to 0.015 (Atkin et al., 2015), \(fv\) is the
                      instantaneous temperature response by Vcmax and is implemented by function
-                     <a href='calc_ftemp_inst_vcmax.html'>calc_ftemp_inst_vcmax</a>, and \(fr\) is the instantaneous temperature response
+                     <a href='ftemp_inst_vcmax.html'>ftemp_inst_vcmax</a>, and \(fr\) is the instantaneous temperature response
                      of dark respiration following Heskel et al. (2016) and is implemented by function
-                     <a href='calc_ftemp_inst_rd.html'>calc_ftemp_inst_rd</a>.</p></li>
+                     <a href='ftemp_inst_rd.html'>ftemp_inst_rd</a>.</p></li>
 </ul>
 
 <p>Additional variables are contained in the returned list if argument <code>method_jmaxlim=="smith19"</code></p><ul>

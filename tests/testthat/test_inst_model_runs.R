@@ -35,4 +35,33 @@ test_that("inst model run",{
   
   # output must be a list (no atmosphere warning)
   expect_type(inst_out, "list")
+  
+  # inst call error over patm / elev not provided
+  expect_error(
+    inst_rpmodel(
+      out_pmodel,
+      tc = 20,
+      vpd = 1000,
+      co2 = 400,
+      fapar = 1,
+      ppfd = 300,
+      kphio = 1
+    )
+  )
+  
+  # inst call warning over patm, elev provided
+  expect_warning(
+    inst_rpmodel(
+      out_pmodel,
+      tc = 20,
+      vpd = 1000,
+      co2 = 400,
+      fapar = 1,
+      elv = 0,
+      ppfd = 300,
+      kphio = 1,
+      verbose = TRUE
+    )
+  )
+  
 })

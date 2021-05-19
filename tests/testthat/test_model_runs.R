@@ -30,7 +30,7 @@ test_that("default model run",{
     elv            = 0,
     kphio          = 0.049977,
     beta           = 146,
-    patm = 1024,
+    patm           = 1024,
     c4             = FALSE,
     method_optci   = "prentice14",
     method_jmaxlim = "none",
@@ -39,8 +39,55 @@ test_that("default model run",{
     verbose        = TRUE
   )
   
-  # output must be a list (no atmosphere warning)
+  # output must be a list
   expect_type(out_pmodel, "list")
+  
+  
+  # for c4 run, assimilation and GPP are not identical
+  # results in error (tests routine, not sure if
+  # settings are meaningful)
+  expect_error(
+    rpmodel( 
+      tc             = 20,
+      vpd            = 1000,
+      co2            = 400,
+      fapar          = 1,
+      ppfd           = 300,
+      elv            = 0,
+      kphio          = 0.049977,
+      beta           = 146,
+      patm           = 1024,
+      c4             = TRUE,
+      method_optci   = "prentice14",
+      method_jmaxlim = "none",
+      do_ftemp_kphio = FALSE,
+      do_soilmstress = FALSE,
+      verbose        = TRUE
+    )
+  )
+  
+  # enables soil moisture stress routine
+  out_rpmodel_soilm <- rpmodel( 
+      tc             = 20,
+      vpd            = 1000,
+      co2            = 400,
+      fapar          = 1,
+      ppfd           = 300,
+      elv            = 0,
+      kphio          = 0.049977,
+      beta           = 146,
+      patm           = 1024,
+      c4             = FALSE,
+      soilm          = 1,
+      method_optci   = "prentice14",
+      method_jmaxlim = "wang17",
+      do_ftemp_kphio = FALSE,
+      do_soilmstress = TRUE,
+      verbose        = TRUE
+    )
+  
+  # check model output
+  expect_type(out_rpmodel_soilm, "list")
 })
 
 test_that("jmax wang17",{
@@ -55,7 +102,7 @@ test_that("jmax wang17",{
     elv            = 0,
     kphio          = 0.049977,
     beta           = 146,
-    patm = 1024,
+    patm           = 1024,
     c4             = FALSE,
     method_optci   = "prentice14",
     method_jmaxlim = "wang17",
@@ -80,7 +127,7 @@ test_that("jmax smith19",{
     elv            = 0,
     kphio          = 0.049977,
     beta           = 146,
-    patm = 1024,
+    patm           = 1024,
     c4             = FALSE,
     method_optci   = "prentice14",
     method_jmaxlim = "smith19",

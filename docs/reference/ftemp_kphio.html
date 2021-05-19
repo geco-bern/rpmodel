@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Instantaneous scaling of rates — inst_rpmodel • rpmodel</title>
+<title>Calculates the temperature dependence of the quantum yield efficiency — ftemp_kphio • rpmodel</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,9 +46,10 @@
 
 
 
-<meta property="og:title" content="Instantaneous scaling of rates — inst_rpmodel" />
-<meta property="og:description" content="Calculates instantaneous scaling of rates, given acclimated 
-capacities returned by function rpmodel." />
+<meta property="og:title" content="Calculates the temperature dependence of the quantum yield efficiency — ftemp_kphio" />
+<meta property="og:description" content="Calculates the temperature dependence of the quantum yield efficiency
+following the temperature dependence of the maximum quantum yield of photosystem II
+in light-adapted tobacco leaves, determined by Bernacchi et al. (2003)" />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -135,110 +136,64 @@ capacities returned by function rpmodel." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Instantaneous scaling of rates</h1>
-    <small class="dont-index">Source: <a href='https://github.com/stineb/rpmodel/blob/master/R/inst_rpmodel.R'><code>R/inst_rpmodel.R</code></a></small>
-    <div class="hidden name"><code>inst_rpmodel.Rd</code></div>
+    <h1>Calculates the temperature dependence of the quantum yield efficiency</h1>
+    <small class="dont-index">Source: <a href='https://github.com/stineb/rpmodel/blob/master/R/subroutines.R'><code>R/subroutines.R</code></a></small>
+    <div class="hidden name"><code>ftemp_kphio.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Calculates instantaneous scaling of rates, given acclimated 
-capacities returned by function <code>rpmodel</code>.</p>
+    <p>Calculates the temperature dependence of the quantum yield efficiency
+following the temperature dependence of the maximum quantum yield of photosystem II
+in light-adapted tobacco leaves, determined by Bernacchi et al. (2003)</p>
     </div>
 
-    <pre class="usage"><span class='fu'>inst_rpmodel</span><span class='op'>(</span>
-  <span class='va'>x</span>,
-  <span class='va'>tc</span>,
-  <span class='va'>vpd</span>,
-  <span class='va'>co2</span>,
-  <span class='va'>fapar</span>,
-  <span class='va'>ppfd</span>,
-  patm <span class='op'>=</span> <span class='cn'>NA</span>,
-  elv <span class='op'>=</span> <span class='cn'>NA</span>,
-  <span class='va'>kphio</span>,
-  verbose <span class='op'>=</span> <span class='cn'>FALSE</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>ftemp_kphio</span><span class='op'>(</span><span class='va'>tc</span>, c4 <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p>An object (list) returned by function <code>rpmodel</code>.</p></td>
-    </tr>
-    <tr>
       <th>tc</th>
-      <td><p>Temperature, relevant for photosynthesis (deg C)</p></td>
+      <td><p>Temperature, relevant for photosynthesis (degrees Celsius)</p></td>
     </tr>
     <tr>
-      <th>vpd</th>
-      <td><p>Vapour pressure deficit (Pa)</p></td>
-    </tr>
-    <tr>
-      <th>co2</th>
-      <td><p>Atmospheric CO2 concentration (ppm)</p></td>
-    </tr>
-    <tr>
-      <th>fapar</th>
-      <td><p>(Optional) Fraction of absorbed photosynthetically active 
-radiation (unitless, defaults to <code>NA</code>)</p></td>
-    </tr>
-    <tr>
-      <th>ppfd</th>
-      <td><p>(Optional) Photosynthetic photon flux density (mol m-2 d-1, 
-defaults to <code>NA</code>). Note that the units of 
-<code>ppfd</code> (per area and per time) determine the units of outputs 
-<code>lue</code>, <code>gpp</code>, <code>vcmax</code>, and <code>rd</code>. For example, if 
-<code>ppfd</code> is provided in units of mol m-2 month-1, then
-respective output variables are returned as per unit months.</p></td>
-    </tr>
-    <tr>
-      <th>patm</th>
-      <td><p>Atmospheric pressure (Pa). When provided, overrides <code>elv</code>,
-otherwise <code>patm</code> is calculated using standard atmosphere (101325 Pa),
-corrected for elevation (argument <code>elv</code>), using the function
-<a href='patm.html'>patm</a>.</p></td>
-    </tr>
-    <tr>
-      <th>elv</th>
-      <td><p>Elevation above sea-level (m.a.s.l.). Is used only for calculating
-atmospheric pressure (using standard atmosphere (101325 Pa), corrected for
-elevation (argument <code>elv</code>), using the function <a href='patm.html'>patm</a>),
-if argument <code>patm</code> is not provided. If argument <code>patm</code> is 
-provided, <code>elv</code> is overridden.</p></td>
-    </tr>
-    <tr>
-      <th>kphio</th>
-      <td><p>Apparent quantum yield efficiency (unitless). Defaults to 0.0817
-for <code>method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=FALSE</code>,
-0.0870 for <code>method_jmaxlim="wang17", do_ftemp_kphio=TRUE, do_soilmstress=TRUE</code>,
-and 0.0492 for <code>method_jmaxlim="wang17", do_ftemp_kphio=FALSE, do_soilmstress=FALSE</code>,
-corresponding to the empirically fitted value as presented in Stocker et al.
-(2019) Geosci. Model Dev. for model setup 'BRC', 'FULL', and 'ORG'
-respectively.</p></td>
-    </tr>
-    <tr>
-      <th>verbose</th>
-      <td><p>provide verbose feedback (default = FALSE)</p></td>
+      <th>c4</th>
+      <td><p>Boolean specifying whether fitted temperature response for C4 plants
+is used. Defaults to <code>FALSE</code> (C3 photoynthesis temperature resposne following
+Bernacchi et al., 2003 is used).</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list containing instantaneous rates calculated from acclimated 
- photosyntetic capacities (Vcmax25,Jmax25, "average" gs). This includes :</p><ul>
-<li><p><code>vcmax</code></p></li>
-<li><p><code>jmax</code></p></li>
-<li><p><code>rd</code></p></li>
-</ul>
+    <p>A numeric value for \(\phi(T)\)</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
+    <p>The temperature factor for C3 photosynthesis (argument <code>c4 = FALSE</code>) is calculated
+based on Bernacchi et al. (2003) as
+			$$
+				\phi(T) = 0.352 + 0.022 T - 0.00034 T^2
+      $$</p>
+<p>The temperature factor for C4 (argument <code>c4 = TRUE</code>) photosynthesis is calculated based on
+unpublished work as
+			$$
+				\phi(T) = -0.008 + 0.00375 T - 0.58e-4 T^2
+      $$</p>
+<p>The factor \(\phi(T)\) is to be multiplied with leaf absorptance and the fraction
+of absorbed light that reaches photosystem II. In the P-model these additional factors
+are lumped into a single apparent quantum yield efficiency parameter (argument <code>kphio</code>
+to function <a href='rpmodel.html'>rpmodel</a>).</p>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>Bernacchi, C. J., Pimentel, C., and Long, S. P.:  In vivo temperature
+				response func-tions  of  parameters required  to  model  RuBP-limited
+				photosynthesis,  Plant  Cell Environ., 26, 1419–1430, 2003</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
- <span class='fu'><a href='dampen_vec.html'>dampen_vec</a></span><span class='op'>(</span>
-  vec <span class='op'>=</span> <span class='fl'>20</span> <span class='op'>*</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Trig.html'>sin</a></span><span class='op'>(</span><span class='va'>doy</span><span class='op'>*</span><span class='va'>pi</span><span class='op'>/</span><span class='op'>(</span><span class='fl'>365</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span><span class='op'>^</span><span class='fl'>2</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>365</span>, mean <span class='op'>=</span> <span class='fl'>0</span>, sd <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span>,
-  tau <span class='op'>=</span> <span class='fl'>40</span> <span class='op'>)</span>
-<span class='op'>}</span>
-
+    <pre class="examples"><div class='input'><span class='co'>## Relative change in the quantum yield efficiency</span>
+<span class='co'>## between 5 and 25 degrees celsius (percent change):</span>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='op'>(</span><span class='fu'>ftemp_kphio</span><span class='op'>(</span><span class='fl'>25.0</span><span class='op'>)</span><span class='op'>/</span><span class='fu'>ftemp_kphio</span><span class='op'>(</span><span class='fl'>5.0</span><span class='op'>)</span><span class='op'>-</span><span class='fl'>1</span><span class='op'>)</span><span class='op'>*</span><span class='fl'>100</span> <span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "52.0396912899669"</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
