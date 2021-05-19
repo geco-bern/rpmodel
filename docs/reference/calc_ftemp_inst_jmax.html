@@ -48,8 +48,9 @@
 
 <meta property="og:title" content="Calculates the instantaneous temperature response of Jmax — calc_ftemp_inst_jmax" />
 <meta property="og:description" content="Given Jmax at a reference temperature (argument tcref)
-this function calculates its temperature-scaling factor following modified Arrhenius
-kinetics based on Kattge &amp;amp; Knorr (2007). Calculates \(f\) for the conversion
+this function calculates its temperature-scaling factor following
+modified Arrhenius kinetics based on Kattge &amp;amp; Knorr (2007). 
+Calculates \(f\) for the conversion
 $$
    V = f Vref
 $$" />
@@ -108,6 +109,9 @@ $$" />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/accl_inst.html">Acclimated versus instantaneous response</a>
+    </li>
+    <li>
       <a href="../articles/usage.html">Usage</a>
     </li>
   </ul>
@@ -143,8 +147,9 @@ $$" />
 
     <div class="ref-description">
     <p>Given Jmax at a reference temperature (argument <code>tcref</code>)
-this function calculates its temperature-scaling factor following modified Arrhenius
-kinetics based on Kattge &amp; Knorr (2007). Calculates \(f\) for the conversion
+this function calculates its temperature-scaling factor following
+modified Arrhenius kinetics based on Kattge &amp; Knorr (2007). 
+Calculates \(f\) for the conversion
 $$
    V = f Vref
 $$</p>
@@ -157,13 +162,14 @@ $$</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>tcleaf</th>
-      <td><p>Leaf temperature, or in general the temperature relevant for photosynthesis
-(degrees Celsius)</p></td>
+      <td><p>Leaf temperature, or in general the temperature relevant for 
+photosynthesis (degrees Celsius)</p></td>
     </tr>
     <tr>
       <th>tcgrowth</th>
-      <td><p>(Optional) Growth temperature, in the P-model, taken to be equal to <code>tcleaf</code>
-(in degrees Celsius). Defaults to <code>tcgrowth = tcleaf</code>.</p></td>
+      <td><p>(Optional) Growth temperature, in the P-model, taken to be
+equal to <code>tcleaf</code> (in degrees Celsius). Defaults to 
+<code>tcgrowth = tcleaf</code>.</p></td>
     </tr>
     <tr>
       <th>tcref</th>
@@ -180,8 +186,8 @@ $$</p>
 $$
 		fv = f(T, \Delta Hv) A/B
 $$
-where \(f(T, \Delta Hv)\) is a regular Arrhenius-type temperature response function (see
-<a href='calc_ftemp_arrh.html'>calc_ftemp_arrh</a>) with \(Hv=49884\) J mol-1,
+where \(f(T, \Delta Hv)\) is a regular Arrhenius-type temperature response
+ function (see <a href='calc_ftemp_arrh.html'>calc_ftemp_arrh</a>) with \(Hv=49884\) J mol-1,
 $$
 		A = 1 + exp( (T0 \Delta S - Hd) / (T0 R) )
 $$
@@ -189,21 +195,23 @@ and
 $$
 	    B = 1 + exp( (T \Delta S - Hd) / (TK R) )
 $$
-Here, \(T\) is in Kelvin, \(T0=293.15\) K, \(Hd = 200000\) J mol-1 is the deactivation
-energy and \(R\) is the universal gas constant and is 8.3145 J mol-1 K-1, and
+Here, \(T\) is in Kelvin, \(T0=293.15\) K, \(Hd = 200000\) J mol-1 is
+the deactivation energy and \(R\) is the universal gas constant and is 
+8.3145 J mol-1 K-1, and
 $$
 		\Delta S = aS - bS T
 $$
-with \(aS = 659.70\) J mol-1 K-1, and \(bS = 0.75\) J mol-1 K-2, and \(T\) given in
-degrees Celsius (!)</p>
+with \(aS = 659.70\) J mol-1 K-1, and \(bS = 0.75\) J mol-1 K-2, and
+ \(T\) given in degrees Celsius (!)</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>Kattge, J. and Knorr, W.:  Temperature acclimation in a biochemical model of
-photosynthesis: a reanalysis of data from 36 species, Plant, Cell and Environment, 30,1176–1190, 2007.</p>
+    <p>Kattge, J. and Knorr, W.:  Temperature acclimation in a 
+biochemical model of photosynthesis: a reanalysis of data from 36 species,
+Plant, Cell and Environment, 30,1176–1190, 2007.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>## Relative change in Jmax going (instantaneously, i.e.</span>
-<span class='co'>## not acclimatedly) from 10 to 25 degrees (percent change):</span>
+    <pre class="examples"><div class='input'><span class='co'># Relative change in Jmax going (instantaneously, i.e.</span>
+<span class='co'># not acclimatedly) from 10 to 25 degrees (percent change):</span>
 <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='op'>(</span><span class='fu'>calc_ftemp_inst_jmax</span><span class='op'>(</span><span class='fl'>25</span><span class='op'>)</span><span class='op'>/</span><span class='fu'>calc_ftemp_inst_jmax</span><span class='op'>(</span><span class='fl'>10</span><span class='op'>)</span><span class='op'>-</span><span class='fl'>1</span><span class='op'>)</span><span class='op'>*</span><span class='fl'>100</span> <span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] 162.7662</div><div class='input'>
 </div></pre>
@@ -218,7 +226,7 @@ photosynthesis: a reanalysis of data from 36 species, Plant, Cell and Environmen
 
       <footer>
       <div class="copyright">
-  <p>Developed by Benjamin Stocker.</p>
+  <p>Developed by Stocker Benjamin.</p>
 </div>
 
 <div class="pkgdown">

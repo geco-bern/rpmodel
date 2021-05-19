@@ -1,3 +1,6 @@
+[![R-CMD-check](https://github.com/bluegreen-labs/rpmodel/workflows/R-CMD-check/badge.svg)](https://github.com/bluegreen-labs/rpmodel/actions)
+[![codecov](https://codecov.io/gh/bluegreen-labs/rpmodel/branch/master/graph/badge.svg?token=7bImDR3uCT)](https://codecov.io/gh/bluegreen-labs/rpmodel)
+
 ## Purpose
 
 `rpmodel` provides an implementation of the P-model (Prentice et al., 2014; Wang et al., 2017; Stocker et al., 2020) for predicting acclimated photosynthetic parameters, assimilation, and dark respiration rates as a function of the environment. The main function is `rpmodel()` which returns a list of variables that are mutually consistent within the theory of the P-model (see [Usage](./articles/usage.html) ). Further functions used within `rpmodel()` are also provided through the package.
@@ -36,13 +39,15 @@ For more information and examples see [Usage](articles/usage.html).
 
 ### Stable release
 `rpmodel` is available on CRAN [here](https://CRAN.R-project.org/package=rpmodel). To install and load, run the following commands in your R terminal:
+
 ```r
 install.packages("rpmodel")
 library(rpmodel)
 ```
 
 ### Development release
-To install and load the latest version of the rpmodel package (development release, not yet on CRAN) run the following command in your R terminal: 
+To install and load the latest version of the rpmodel package (development release, not yet on CRAN) run the following command in your R terminal:
+
 ```r
 if(!require(devtools)){install.packages(devtools)}
 devtools::install_github( "stineb/rpmodel", build_vignettes = TRUE )

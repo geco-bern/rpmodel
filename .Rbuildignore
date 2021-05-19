@@ -1,17 +1,27 @@
-^.*\.Rproj$
-^\.Rproj\.user$
-^cran-comments\.md$
-^README\.Rmd$
-^_config\.yml$
+# docs and unit tests
+^\.github$
 ^_pkgdown\.yml$
-^docs$
-^vignettes_add$
-^docs_save$
-^revdep$
 ^pkgdown$
-^\.\.Rcheck$
-^doc$
-^Meta$
-^check.log$
-^rpmodel_1.1.1.tar.gz$
-^CRAN-RELEASE$
+^docs$
+^data-raw$
+^vignettes_add$
+^benchmarking$
+^Rscripts$
+^Rold$
+
+# R-markdown files in the root folder.
+^LICENSE.*$
+^CONDUCT\.md$
+^NEWS\.md$
+^README\.md$
+^contact\.md$
+^cran-comments\.md$
+^review-notes\.md$
+
+# R Stuff
+^.*\.Rproj$
+^.*\.Renviron$
+^\.Rproj\.user$
+^\.httr-oauth$
+^.*-logo\..*$
+^codemeta\.json$
