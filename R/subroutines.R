@@ -290,18 +290,13 @@ kmm <- function( tc, patm ) {
 #' @export
 #'
 gammastar <- function( tc, patm ) {
-  #-----------------------------------------------------------------------
-  # Input:    float, air temperature, degrees C (tc)
-  # Output:   float, gamma-star, Pa (gammastar)
-  # Features: Returns the temperature-dependent photorespiratory
-  #           compensation point, Gamma star (Pascals), based on constants
-  #           derived from Bernacchi et al. (2001) study.
-  # Ref:      Bernacchi et al. (2001), Improved temperature response
-  #           functions for models of Rubisco-limited photosynthesis,
-  #           Plant, Cell and Environment, 24, 253--259.
-  #-----------------------------------------------------------------------
-  dha    <- 37830       # (J/mol) Activation energy, Bernacchi et al. (2001)
-  gs25_0 <- 4.332       # Pa, value based on Bernacchi et al. (2001), converted to Pa by T. Davis assuming elevation of 227.076 m.a.s.l.
+  
+  # (J/mol) Activation energy, Bernacchi et al. (2001)
+  dha    <- 37830
+  
+  # Pa, value based on Bernacchi et al. (2001), 
+  # converted to Pa by T. Davis assuming elevation of 227.076 m.a.s.l.
+  gs25_0 <- 4.332
   
   gammastar <- gs25_0 * patm / patm(0.0) * ftemp_arrh( (tc + 273.15), dha=dha )
   
@@ -594,7 +589,7 @@ ftemp_inst_jmax <- function(
 #'
 #' @export
 #'
-viscosity_h2o <- function( tc, p ) {
+viscosity_h2o <- function(tc, p) {
   
   # Define reference temperature, density, and pressure values:
   tk_ast  <- 647.096    # Kelvin
@@ -696,7 +691,7 @@ ftemp_arrh <- function(
   # ftemp = exp( dha * (tk - 298.15) / (298.15 * kR * tk) )
   # ftemp = exp( dha * (tc - 25.0)/(298.15 * kR * (tc + 273.15)) )
   # ftemp = exp( (dha/kR) * (1/298.15 - 1/tk) )
-  #-----------------------------------------------------------------------
+  
   kR   <- 8.3145     # Universal gas constant, J/mol/K
   ftemp <- exp( dha * (tk - tkref) / (tkref * kR * tk) )
   
@@ -776,14 +771,14 @@ density_h2o <- function(tc, p){
 #'
 #' @export
 #'
-co2_to_ca <- function( co2, patm ){
+co2_to_ca <- function(co2, patm){
   # Pa, atms. CO2
   ca   <- ( 1.0e-6 ) * co2 * patm
   return( ca )
 }
 
-optimal_chi <- function( kmm, gammastar, ns_star, ca, vpd, beta ){
-  #-----------------------------------------------------------------------
+optimal_chi <- function(kmm, gammastar, ns_star, ca, vpd, beta ){
+  
   # Input:    - float, 'kmm' : Pa, Michaelis-Menten coeff.
   #           - float, 'ns_star'  : (unitless) viscosity correction factor for water
   #           - float, 'vpd' : Pa, vapor pressure deficit
@@ -793,7 +788,7 @@ optimal_chi <- function( kmm, gammastar, ns_star, ca, vpd, beta ){
   # Depends:  - kc
   #           - ns
   #           - vpd
-  #-----------------------------------------------------------------------
+  
   ## Avoid negative VPD (dew conditions), resolves issue #2 (https://github.com/stineb/rpmodel/issues/2)
   vpd <- ifelse(vpd < 0, 0, vpd)
   
@@ -837,7 +832,6 @@ optimal_chi <- function( kmm, gammastar, ns_star, ca, vpd, beta ){
   return(out)
 }
 
-
 # ## wrap if condition in a function to allow vectorization
 # mj <- function(ns_star, vpd, vacg, vbkg, vdcg, gammastar){
 #
@@ -848,7 +842,6 @@ optimal_chi <- function( kmm, gammastar, ns_star, ca, vpd, beta ){
 #
 #   return(mj)
 # }
-
 
 lue_vcmax_wang17 <- function(out_optchi, kphio, ftemp_kphio, c_molmass, soilmstress){
   
@@ -971,20 +964,16 @@ lue_vcmax_c4 <- function( kphio, ftemp_kphio, c_molmass, soilmstress ){
 
 
 chi_c4 <- function(){
-  #//////////////////////////////////////////////////////////////////
   # (Dummy-) ci:ca for C4 photosynthesis
-  #-----------------------------------------------------------------------
   out <- list( chi=1.0, mc=1.0, mj=1.0, mjoc=1.0 )
   return(out)
 }
 
-
 mprime <- function( mc ){
-  #-----------------------------------------------------------------------
   # Input:  mc   (unitless): factor determining LUE
   # Output: mpi (unitless): modified m accounting for the co-limitation
   #                         hypothesis after Prentice et al. (2014)
-  #-----------------------------------------------------------------------
+  
   kc <- 0.41          # Jmax cost coefficient
   
   mpi <- mc^2 - kc^(2.0/3.0) * (mc^(4.0/3.0))
