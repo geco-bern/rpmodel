@@ -18,10 +18,10 @@
 #' @param patm Atmospheric pressure (Pa). When provided, overrides \code{elv},
 #'  otherwise \code{patm} is calculated using standard atmosphere (101325 Pa),
 #'  corrected for elevation (argument \code{elv}), using the function
-#'  \link{calc_patm}.
+#'  \link{patm}.
 #' @param elv Elevation above sea-level (m.a.s.l.). Is used only for calculating
 #'  atmospheric pressure (using standard atmosphere (101325 Pa), corrected for
-#'  elevation (argument \code{elv}), using the function \link{calc_patm}),
+#'  elevation (argument \code{elv}), using the function \link{patm}),
 #'  if argument \code{patm} is not provided. If argument \code{patm} is 
 #'  provided, \code{elv} is overridden.
 #' @param kphio Apparent quantum yield efficiency (unitless). Defaults to 0.0817
@@ -75,7 +75,7 @@ inst_rpmodel <- function(
                              Calculating it as a function of elevation (elv),
                              assuming standard atmosphere
                              (101325 Pa at sea level).")
-    patm <- calc_patm(elv)
+    patm <- patm(elv)
   }
 
   #---- Parameters ----
@@ -92,21 +92,21 @@ inst_rpmodel <- function(
   ca <- co2_to_ca( co2, patm )
 
   # photorespiratory compensation point - Gamma-star (Pa)
-  gammastar <- calc_gammastar( tc, patm )
+  gammastar <- gammastar( tc, patm )
 
   # Michaelis-Menten coef. (Pa)
-  kmm <- calc_kmm( tc, patm )   ## XXX Todo: replace 'NA' here with 'patm'
+  kmm <- kmm( tc, patm )   ## XXX Todo: replace 'NA' here with 'patm'
 
   #---- Vcmax, at current temperature ----
-  ftemp25_inst_vcmax  <- calc_ftemp_inst_vcmax( tc, tc, tcref = 25.0 )
+  ftemp25_inst_vcmax  <- ftemp_inst_vcmax( tc, tc, tcref = 25.0 )
   vcmax <- x$vcmax25 * ftemp25_inst_vcmax
 
   #---- Rd: Dark respiration ----
-  ftemp_inst_rd <- calc_ftemp_inst_rd( tc )
+  ftemp_inst_rd <- ftemp_inst_rd( tc )
   rd <- rd_to_vcmax * x$vcmax25 * ftemp_inst_rd
 
   #---- Jmax, at current temperature ----
-  ftemp25_inst_jmax  <- calc_ftemp_inst_jmax( tc, tc, tcref = 25.0 )
+  ftemp25_inst_jmax  <- ftemp_inst_jmax( tc, tc, tcref = 25.0 )
   jmax <- x$jmax25 * ftemp25_inst_jmax
 
   #---- Aj, gs free ----
@@ -162,74 +162,3 @@ inst_rpmodel <- function(
 
   return( out )
 }
-
-#' Larger quadratic root
-#' 
-#' Solves quadratic equation given by y = a*x^2 + bx + c
-#  Based on MAESTRA equivalent (B. Medlyn)
-#'
-#' @param A a parameter in the quadratic equation
-#' @param B b parameter in the quadratic equation
-#' @param C c parameter in the quadratic equation
-#'
-#' @return larger quardratic root
-#' @export
-
-QUADP <- function(A,B,C){
-  
-  if (any(is.na(c(A,B,C)))){
-    return(NA)
-  } else {
-    if((B^2 - 4*A*C) < 0){
-      warning("IMAGINARY ROOTS IN QUADRATIC")
-      return(0)
-    }
-
-    if(identical(A,0)){
-      if(identical(B,0)){
-        return(0)
-      } else {
-        return(-C/B)
-      }
-    } else {
-      return((- B + sqrt(B^2 - 4*A*C)) / (2*A))
-    }
-  }
-
-}
-
-#' Minor quadratic root
-#' 
-#' Solves quadratic equation given by y = a*x^2 + bx + c
-#  Based on MAESTRA equivalent (B. Medlyn)
-#'
-#' @param A a parameter in the quadratic equation
-#' @param B b parameter in the quadratic equation
-#' @param C c parameter in the quadratic equation
-#'
-#' @return minor quardratic root
-#' @export
-
-QUADM <- function(A,B,C){
-
-  if (any(is.na(c(A,B,C)))){
-    return(NA)
-  } else {
-    if((B^2 - 4*A*C) < 0){
-      warning("IMAGINARY ROOTS IN QUADRATIC")
-      return(0)
-    }
-
-    if(identical(A,0)){
-      if(identical(B,0)){
-        return(0)
-      } else {
-        return(-C/B)
-      }
-    } else {
-      return((- B - sqrt(B^2 - 4*A*C)) / (2*A))
-    }
-  }
-
-}
-

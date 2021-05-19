@@ -17,11 +17,11 @@
 #' @param patm Atmospheric pressure (Pa). When provided, overrides
 #'  \code{elv}, otherwise \code{patm} is calculated using standard
 #'  atmosphere (101325 Pa), corrected for elevation (argument \code{elv}),
-#'  using the function \link{calc_patm}.
+#'  using the function \link{patm}.
 #' @param elv Elevation above sea-level (m.a.s.l.). Is used only for 
 #'  calculating atmospheric pressure (using standard atmosphere (101325 Pa),
 #'  corrected for elevation (argument \code{elv}), using the function
-#' \link{calc_patm}), if argument \code{patm} is not provided. If argument
+#' \link{patm}), if argument \code{patm} is not provided. If argument
 #' \code{patm} is provided, \code{elv} is overridden.
 #' @param kphio Apparent quantum yield efficiency (unitless). Defaults to
 #'  0.081785 for \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, 
@@ -35,7 +35,7 @@
 #' @param soilm (Optional, used only if \code{do_soilmstress==TRUE}) Relative 
 #'  soil moisture as a fraction of field capacity (unitless). Defaults to 1.0 
 #'  (no soil moisture stress). This information is used to calculate
-#'  an empirical soil moisture stress factor (\link{calc_soilmstress}) whereby
+#'  an empirical soil moisture stress factor (\link{soilmstress}) whereby
 #'  the sensitivity is determined by average aridity, defined by the local 
 #'  annual mean ratio of actual over potential evapotranspiration, supplied by
 #'  argument \code{meanalpha}.
@@ -87,10 +87,10 @@
 #'  \item \code{ca}: Ambient CO2 expressed as partial pressure (Pa)
 #'  
 #'  \item \code{gammastar}: Photorespiratory compensation point \eqn{\Gamma*}, 
-#'   (Pa), see \link{calc_gammastar}.
+#'   (Pa), see \link{gammastar}.
 #'  
 #'  \item \code{kmm}: Michaelis-Menten coefficient \eqn{K} for photosynthesis 
-#'  (Pa), see \link{calc_kmm}.
+#'  (Pa), see \link{kmm}.
 #'  
 #'  \item \code{ns_star}: Change in the viscosity of water, relative to its 
 #'   value at 25 deg C (unitless).
@@ -108,8 +108,8 @@
 #'    \xi = \sqrt (\beta (K+ \Gamma*) / (1.6 \eta*))
 #'   }
 #'   \eqn{\beta} is given by argument \code{beta}, \eqn{K} is 
-#'   \code{kmm} (see \link{calc_kmm}), \eqn{\Gamma*} is 
-#'   \code{gammastar} (see \link{calc_gammastar}). \eqn{\eta*} is \code{ns_star}.
+#'   \code{kmm} (see \link{kmm}), \eqn{\Gamma*} is 
+#'   \code{gammastar} (see \link{gammastar}). \eqn{\eta*} is \code{ns_star}.
 #'   \eqn{D} is the vapour pressure deficit (argument \code{vpd}), \eqn{ca} is 
 #'   the ambient CO2 partial pressure in Pa (\code{ca}).
 #'   
@@ -120,7 +120,7 @@
 #'                              LUE = \phi(T) \phi0 m' Mc
 #'                         }
 #'                         where \eqn{\phi(T)} is the temperature-dependent quantum yield efficiency modifier
-#'                         (\link{calc_ftemp_kphio}) if \code{do_ftemp_kphio==TRUE}, and 1 otherwise. \eqn{\phi 0}
+#'                         (\link{ftemp_kphio}) if \code{do_ftemp_kphio==TRUE}, and 1 otherwise. \eqn{\phi 0}
 #'                         is given by argument \code{kphio}.
 #'                         \eqn{m'=m} if \code{method_jmaxlim=="none"}, otherwise
 #'                         \deqn{
@@ -129,7 +129,7 @@
 #'                         with \eqn{c=0.41} (Wang et al., 2017) if \code{method_jmaxlim=="wang17"}. \eqn{Mc} is
 #'                         the molecular mass of C (12.0107 g mol-1). \eqn{m} is given returned variable \code{mj}.
 #'                         If \code{do_soilmstress==TRUE}, \eqn{LUE} is multiplied with a soil moisture stress factor,
-#'                         calculated with \link{calc_soilmstress}.
+#'                         calculated with \link{soilmstress}.
 #'         \item \code{mj}: Factor in the light-limited assimilation rate function, given by
 #'                         \deqn{
 #'                             m = (ci - \Gamma*) / (ci + 2 \Gamma*)
@@ -165,7 +165,7 @@
 #'         \item \code{vcmax25}: Maximum carboxylation capacity \eqn{Vcmax} (mol C m-2) normalised to 25 deg C
 #'                      following a modified Arrhenius equation, calculated as \eqn{Vcmax25 = Vcmax / fv},
 #'                      where \eqn{fv} is the instantaneous temperature response by Vcmax and is implemented
-#'                      by function \link{calc_ftemp_inst_vcmax}.
+#'                      by function \link{ftemp_inst_vcmax}.
 #'         \item \code{jmax}: The maximum rate of RuBP regeneration () at growth temperature (argument
 #'                       \code{tc}), calculated using
 #'                       \deqn{
@@ -177,9 +177,9 @@
 #'                      }
 #'                      where \eqn{b0} is a constant and set to 0.015 (Atkin et al., 2015), \eqn{fv} is the
 #'                      instantaneous temperature response by Vcmax and is implemented by function
-#'                      \link{calc_ftemp_inst_vcmax}, and \eqn{fr} is the instantaneous temperature response
+#'                      \link{ftemp_inst_vcmax}, and \eqn{fr} is the instantaneous temperature response
 #'                      of dark respiration following Heskel et al. (2016) and is implemented by function
-#'                      \link{calc_ftemp_inst_rd}.
+#'                      \link{ftemp_inst_rd}.
 #' }
 #'
 #' Additional variables are contained in the returned list if argument \code{method_jmaxlim=="smith19"}
@@ -263,7 +263,7 @@ rpmodel <- function(
     stop("Aborted. Provide either elevation (arugment elv) or atmospheric pressure (argument patm).")
   } else if (!identical(NA, elv) && identical(NA, patm)){
     if (verbose) warning("Atmospheric pressure (patm) not provided. Calculating it as a function of elevation (elv), assuming standard atmosphere (101325 Pa at sea level).")
-    patm <- calc_patm(elv)
+    patm <- patm(elv)
   }
 
   #---- Fixed parameters--------------------------------------------------------
@@ -276,14 +276,14 @@ rpmodel <- function(
   ## 'do_ftemp_kphio' is not actually a stress function, but is the temperature-dependency of
   ## the quantum yield efficiency after Bernacchi et al., 2003 PCE
   if (do_ftemp_kphio){
-    ftemp_kphio <- calc_ftemp_kphio( tc, c4 )
+    ftemp_kphio <- ftemp_kphio( tc, c4 )
   } else {
     ftemp_kphio <- 1.0
   }
 
   #---- soil moisture stress as a function of soil moisture and mean alpha -----
   if (do_soilmstress) {
-    soilmstress <- calc_soilmstress( soilm, meanalpha, apar_soilm, bpar_soilm )
+    soilmstress <- soilmstress( soilm, meanalpha, apar_soilm, bpar_soilm )
   }
   else {
     soilmstress <- 1.0
@@ -294,14 +294,14 @@ rpmodel <- function(
   ca <- co2_to_ca( co2, patm )
 
   ## photorespiratory compensation point - Gamma-star (Pa)
-  gammastar <- calc_gammastar( tc, patm )
+  gammastar <- gammastar( tc, patm )
 
   ## Michaelis-Menten coef. (Pa)
-  kmm <- calc_kmm( tc, patm )   ## XXX Todo: replace 'NA' here with 'patm'
+  kmm <- kmm( tc, patm )   ## XXX Todo: replace 'NA' here with 'patm'
 
   ## viscosity correction factor = viscosity( temp, press )/viscosity( 25 degC, 1013.25 Pa)
-  ns      <- calc_viscosity_h2o( tc, patm )  # Pa s
-  ns25    <- calc_viscosity_h2o( kTo, kPo )  # Pa s
+  ns      <- viscosity_h2o( tc, patm )  # Pa s
+  ns25    <- viscosity_h2o( kTo, kPo )  # Pa s
   ns_star <- ns / ns25  # (unitless)
 
   ##----Optimal ci -------------------------------------------------------------
@@ -310,12 +310,12 @@ rpmodel <- function(
   if (c4){
 
     # "dummy" ci:ca for C4 plants
-    out_optchi <- calc_chi_c4()
+    out_optchi <- chi_c4()
 
   } else if (method_optci=="prentice14"){
 
     #---- Full formualation (Gamma-star not zero), analytical solution ---------
-    out_optchi <- calc_optimal_chi( kmm, gammastar, ns_star, ca, vpd, beta )
+    out_optchi <- optimal_chi( kmm, gammastar, ns_star, ca, vpd, beta )
 
   } else {
 
@@ -334,7 +334,7 @@ rpmodel <- function(
   # Jmax limitation comes in only at this step
   if (c4){
 
-    out_lue_vcmax <- calc_lue_vcmax_c4(
+    out_lue_vcmax <- lue_vcmax_c4(
       kphio,
       ftemp_kphio,
       c_molmass,
@@ -344,7 +344,7 @@ rpmodel <- function(
   } else if (method_jmaxlim=="wang17"){
 
     ## apply correction by Jmax limitation
-    out_lue_vcmax <- calc_lue_vcmax_wang17(
+    out_lue_vcmax <- lue_vcmax_wang17(
       out_optchi,
       kphio,
       ftemp_kphio,
@@ -354,7 +354,7 @@ rpmodel <- function(
 
   } else if (method_jmaxlim=="smith19"){
 
-    out_lue_vcmax <- calc_lue_vcmax_smith19(
+    out_lue_vcmax <- lue_vcmax_smith19(
       out_optchi,
       kphio,
       ftemp_kphio,
@@ -364,7 +364,7 @@ rpmodel <- function(
 
   } else if (method_jmaxlim=="none"){
 
-    out_lue_vcmax <- calc_lue_vcmax_none(
+    out_lue_vcmax <- lue_vcmax_none(
       out_optchi,
       kphio,
       ftemp_kphio,
@@ -380,11 +380,11 @@ rpmodel <- function(
 
   #---- Corrolary preditions ---------------------------------------------------
   # Vcmax25 (vcmax normalized to 25 deg C)
-  ftemp25_inst_vcmax  <- calc_ftemp_inst_vcmax( tc, tc, tcref = 25.0 )
+  ftemp25_inst_vcmax  <- ftemp_inst_vcmax( tc, tc, tcref = 25.0 )
   vcmax25_unitiabs  <- out_lue_vcmax$vcmax_unitiabs / ftemp25_inst_vcmax
 
   ## Dark respiration at growth temperature
-  ftemp_inst_rd <- calc_ftemp_inst_rd( tc )
+  ftemp_inst_rd <- ftemp_inst_rd( tc )
   rd_unitiabs  <- rd_to_vcmax * (ftemp_inst_rd / ftemp25_inst_vcmax) * out_lue_vcmax$vcmax_unitiabs
 
   #---- Quantities that scale linearly with absorbed light ---------------------
@@ -420,7 +420,7 @@ rpmodel <- function(
   #                rep(NA, len))
   jmax <- 4.0 * kphio * iabs / sqrt( (1.0/fact_jmaxlim)^2 - 1.0 )
 
-  ftemp25_inst_jmax <- calc_ftemp_inst_jmax( tc, tc, tcref = 25.0 )
+  ftemp25_inst_jmax <- ftemp_inst_jmax( tc, tc, tcref = 25.0 )
   jmax25 <- jmax / ftemp25_inst_jmax
 
   ## Test: at this stage, verify if A_J = A_C
@@ -463,222 +463,4 @@ rpmodel <- function(
 
   # if (!is.null(returnvar)) out <- out[returnvar]
   return( out )
-
 }
-
-
-calc_optimal_chi <- function( kmm, gammastar, ns_star, ca, vpd, beta ){
-  #-----------------------------------------------------------------------
-  # Input:    - float, 'kmm' : Pa, Michaelis-Menten coeff.
-  #           - float, 'ns_star'  : (unitless) viscosity correction factor for water
-  #           - float, 'vpd' : Pa, vapor pressure deficit
-  # Output:   float, ratio of ci/ca (chi)
-  # Features: Returns an estimate of leaf internal to ambient CO2
-  #           partial pressure following the "simple formulation".
-  # Depends:  - kc
-  #           - ns
-  #           - vpd
-  #-----------------------------------------------------------------------
-  ## Avoid negative VPD (dew conditions), resolves issue #2 (https://github.com/stineb/rpmodel/issues/2)
-  vpd <- ifelse(vpd < 0, 0, vpd)
-
-  ## leaf-internal-to-ambient CO2 partial pressure (ci/ca) ratio
-  xi  <- sqrt( (beta * ( kmm + gammastar ) ) / ( 1.6 * ns_star ) )
-  chi <- gammastar / ca + ( 1.0 - gammastar / ca ) * xi / ( xi + sqrt(vpd) )
-
-  ## more sensible to use chi for calculating mj - equivalent to code below
-  # # Define variable substitutes:
-  # vdcg <- ca - gammastar
-  # vacg <- ca + 2.0 * gammastar
-  # vbkg <- beta * (kmm + gammastar)
-  #
-  # # Check for negatives, vectorized
-  # mj <- ifelse(ns_star>0 & vpd>0 & vbkg>0,
-  #              calc_mj(ns_star, vpd, vacg, vbkg, vdcg, gammastar),
-  #              rep(NA, max(length(vpd), length(ca)))
-  #              )
-
-  ## alternative variables
-  gamma <- gammastar / ca
-  kappa <- kmm / ca
-
-  ## use chi for calculating mj
-  mj <- (chi - gamma) / (chi + 2 * gamma)
-
-  ## mc
-  mc <- (chi - gamma) / (chi + kappa)
-
-  ## mj:mv
-  mjoc <- (chi + kappa) / (chi + 2 * gamma)
-
-  # format output list
-  out <- list(
-    xi = xi,
-    chi = chi,
-    mc = mc,
-    mj = mj,
-    mjoc = mjoc
-    )
-  return(out)
-}
-
-
-# ## wrap if condition in a function to allow vectorization
-# calc_mj <- function(ns_star, vpd, vacg, vbkg, vdcg, gammastar){
-#
-#   vsr <- sqrt( 1.6 * ns_star * vpd / vbkg )
-#
-#   # Based on the mc' formulation (see Regressing_LUE.pdf)
-#   mj <- vdcg / ( vacg + 3.0 * gammastar * vsr )
-#
-#   return(mj)
-# }
-
-
-calc_lue_vcmax_wang17 <- function(out_optchi, kphio, ftemp_kphio, c_molmass, soilmstress){
-
-  ## Include effect of Jmax limitation
-  len <- length(out_optchi[[1]])
-  mprime <- calc_mprime( out_optchi$mj )
-
-  out <- list(
-
-    mprime = mprime,
-
-    ## Light use efficiency (gpp per unit absorbed light)
-    lue = kphio * ftemp_kphio * mprime * c_molmass * soilmstress,
-
-    ## Vcmax normalised per unit absorbed PPFD (assuming iabs=1), with Jmax limitation
-    vcmax_unitiabs = kphio * ftemp_kphio * out_optchi$mjoc * mprime / out_optchi$mj * soilmstress,
-
-    ## complement for non-smith19
-    omega      = rep(NA, len),
-    omega_star = rep(NA, len)
-
-    )
-
-  return(out)
-}
-
-
-calc_lue_vcmax_smith19 <- function(out_optchi, kphio, ftemp_kphio, c_molmass, soilmstress){
-
-  len <- length(out_optchi[[1]])
-
-  # Adopted from Nick Smith's code:
-  # Calculate omega, see Smith et al., 2019 Ecology Letters
-  calc_omega <- function( theta, c_cost, m ){
-
-    cm <- 4 * c_cost / m                        # simplification term for omega calculation
-    v  <- 1/(cm * (1 - theta * cm)) - 4 * theta # simplification term for omega calculation
-
-    # account for non-linearities at low m values
-    capP <- (((1/1.4) - 0.7)^2 / (1-theta)) + 3.4
-    aquad <- -1
-    bquad <- capP
-    cquad <- -(capP * theta)
-    m_star <- (4 * c_cost) / polyroot(c(aquad, bquad, cquad))
-
-    omega <- ifelse(  m < Re(m_star[1]),
-                      -( 1 - (2 * theta) ) - sqrt( (1 - theta) * v),
-                      -( 1 - (2 * theta))  + sqrt( (1 - theta) * v)
-                      )
-    return(omega)
-  }
-
-  ## constants
-  theta <- 0.85    # should be calibratable?
-  c_cost <- 0.05336251
-
-
-  ## factors derived as in Smith et al., 2019
-  omega <- calc_omega( theta = theta, c_cost = c_cost, m = out_optchi$mj )          # Eq. S4
-  omega_star <- 1.0 + omega - sqrt( (1.0 + omega)^2 - (4.0 * theta * omega) )       # Eq. 18
-
-  ## Effect of Jmax limitation
-  mprime <- out_optchi$mj * omega_star / (8.0 * theta)
-
-  ## Light use efficiency (gpp per unit absorbed light)
-  lue <- kphio * ftemp_kphio * mprime * c_molmass * soilmstress
-
-  # calculate Vcmax per unit aborbed light
-  vcmax_unitiabs  <- kphio * ftemp_kphio * out_optchi$mjoc * omega_star / (8.0 * theta) * soilmstress   # Eq. 19
-
-  out <- list(
-    lue            = lue,
-    vcmax_unitiabs = vcmax_unitiabs,
-    omega          = omega,
-    omega_star     = omega_star
-    )
-
-  return(out)
-}
-
-
-calc_lue_vcmax_none <- function(out_optchi, kphio, ftemp_kphio, c_molmass, soilmstress){
-  ## Do not include effect of Jmax limitation
-  len <- length(out_optchi[[1]])
-
-  out <- list(
-
-    ## Light use efficiency (gpp per unit absorbed light)
-    lue = kphio * ftemp_kphio * out_optchi$mj * c_molmass * soilmstress,
-
-    ## Vcmax normalised per unit absorbed PPFD (assuming iabs=1), with Jmax limitation
-    vcmax_unitiabs = kphio * ftemp_kphio * out_optchi$mjoc * soilmstress,
-
-    ## complement for non-smith19
-    omega               = rep(NA, len),
-    omega_star          = rep(NA, len)
-    )
-
-  return(out)
-}
-
-
-calc_lue_vcmax_c4 <- function( kphio, ftemp_kphio, c_molmass, soilmstress ){
-
-  len <- length(kphio)
-  out <- list(
-    ## Light use efficiency (gpp per unit absorbed light)
-    lue = kphio * ftemp_kphio * c_molmass * soilmstress,
-
-    ## Vcmax normalised per unit absorbed PPFD (assuming iabs=1), with Jmax limitation
-    vcmax_unitiabs = kphio * ftemp_kphio * soilmstress,
-
-    ## complement for non-smith19
-    omega               = rep(NA, len),
-    omega_star          = rep(NA, len)
-  )
-
-  return(out)
-}
-
-
-calc_chi_c4 <- function(){
-  #//////////////////////////////////////////////////////////////////
-  # (Dummy-) ci:ca for C4 photosynthesis
-  #-----------------------------------------------------------------------
-  out <- list( chi=1.0, mc=1.0, mj=1.0, mjoc=1.0 )
-  return(out)
-}
-
-
-calc_mprime <- function( mc ){
-  #-----------------------------------------------------------------------
-  # Input:  mc   (unitless): factor determining LUE
-  # Output: mpi (unitless): modified m accounting for the co-limitation
-  #                         hypothesis after Prentice et al. (2014)
-  #-----------------------------------------------------------------------
-  kc <- 0.41          # Jmax cost coefficient
-
-  mpi <- mc^2 - kc^(2.0/3.0) * (mc^(4.0/3.0))
-
-  # Check for negatives:
-  mpi <- ifelse(mpi>0, sqrt(mpi), NA)
-
-  return(mpi)
-}
-
-
-
