@@ -1,0 +1,68 @@
+---
+title: "Quantum yield efficiency"
+author: "Beni Stocker"
+date: "4/11/2019"
+output: html_document
+---
+
+According to Rogers et al. (2017) *New Phytologist*, the quantum yield of CO2 fixation per unit absorbed light ($\phi_\text{CO2a}$) and for a given $c_i$, is 
+$$
+\phi_\text{CO2a} = \frac{1}{8} \alpha (1-f)  \frac{c_i - \Gamma^\ast}{c_i + 2\Gamma^\ast}
+$$
+In the P-model as implemented in the *rpmodel* package, the factors $\frac{1}{8} \alpha (1-f)$ are combined into a single calibratable parameter ($\widehat{\varphi_0}$), fitted to GPP from FLUXNET. Two setups are compared against each other. One with a constant, i.e. temperature-independent $\widehat{\varphi_0}$. And one where it varies with temperature $T$ according to Bernacchi et al. (2003). The calibration of the constant $\widehat{\varphi_0}$ yielded a value of 0.0492 mol CO2 per mol absorbed light. To make this value comparable with values presented in Rogers et al. (2019), we have to factor in the effect of low $c_i$. This can be calculated, assuming standard atmospheric pressure, as follows 
+```{r}
+calc_factor_loci <- function(ci, temp, patm){
+  gammastar <- rpmodel::calc_gammastar(temp, patm)
+  (ci - gammastar) / (ci + 2 * gammastar)
+}
+
+# Convert to partial pressure (in Pa)
+ci_conc <- 303 # ppm or micro-mol/mol
+patm <- 101325 # ASSUME: standard atmospheric pressure at sea-level
+ci   <-  1.0e-6 * ci_conc * patm 
+
+factor_loci <- calc_factor_loci(ci, temp=15, patm=patm)
+qye_calib <- 0.0492
+print(paste("Corrected calibrated quantum yield efficiency in rpmodel:", format(qye_calib * factor_loci, digits = 2)))
+```
+This value corresponds to an intermediate value of measured values at 15$^\circ$C by Rogers et al. (2019) (see their Fig. 4).
+
+In the model setup where the quantum yield efficiency parameter was allowed to vary with temperature following Bernacchi et al. (2003), the function looks as follows:
+```{r warning=FALSE, message=FALSE}
+library(dplyr)
+library(ggplot2)
+library(readr)
+library(tidyr)
+
+# values 0.0870 and 0.0492 are fitted
+df <- dplyr::tibble(
+  temp = seq(1,30,length.out = 100)) %>% 
+  rowwise() %>% 
+  mutate( qye_co2_temp = 0.0870 * rpmodel::calc_ftemp_kphio( temp ) * calc_factor_loci(ci, temp, patm=patm),
+          qye_co2_fix  = 0.0492 * calc_factor_loci(ci, temp, patm=patm) ) 
+
+# get publicly accessible data with doi:10.5440/1482338
+df_obs <- read_csv(
+  "/alphadata01/bstocker/data/quantumyield_rogers/NGEE-Arctic_Light_Response_Barrow_2016_Fitted_Data.csv",
+  skip = 7)
+
+df %>% 
+  tidyr::gather(key, qye_co2, c(qye_co2_fix, qye_co2_temp)) %>% 
+  ggplot() +
+  geom_line(aes(x=temp, y=qye_co2, color=key), size=1) +
+  geom_point( data=df_obs, aes(x=Mean_Tair, y=PhiCO2.i) ) +
+  labs(
+    x=expression(paste("Temperature (", degree, "C)")), 
+    y=expression(paste(phi[CO2a], " (mol CO"[2], " mol"^{-1}, " absorbed quanta)"))
+    ) +
+  scale_color_discrete(
+    name="", 
+    breaks=c("qye_co2_fix", "qye_co2_temp"), 
+    labels=c("Fixed QYE", "Temp.-dep. QYE")) 
+
+```
+
+Dots are fitted quantum yield efficiency values from Rogers et al. (2019). "Temp.-dep. QYE" stands for the temperature-dependent implementation of the quantum yield efficiency in rsofun. The decline in the line for "Fixed QYE" with increasing temperatures is due to the temperature effect on $\Gamma^\ast$. The latter corresponds to the way it's implemented in other Earth System Models, similar to the lines shown in Rogers et al. (2019), Fig. 4.
+
+The temperature-dependent variant doesn't look to bad. However, the decrease at low temperature looks like not quite strong enough. This may also explain the overestimation of GPP in the early season I found in the evaluation against FLUXNET data...
+

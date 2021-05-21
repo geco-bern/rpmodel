@@ -1,0 +1,400 @@
+---
+title: "Hydraulics"
+author: "Benjamin D. Stocker"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+  toc: true
+toc_float: true
+toc_depth: 3
+# output:
+#   pdf_document:
+#     toc: true
+#     toc_depth: 2
+---
+
+```{r include=FALSE}
+library(dplyr)
+library(purrr)
+library(tidyr)
+library(ggplot2)
+source("QUADP.R")
+```
+
+# Essential functions
+
+## Conductivity as a function of water potential
+
+The conductivity of an infinitesimally short xylem element can be described as a function of the water potential ($\Psi$), declining to half at a level $\Psi_{50}$.  
+$$
+k(\Psi) = 0.5 ^ {\left( \Psi / \Psi_{50} \right) ^ b}
+$$
+Plotted with different shape parameter values $b$.
+```{r}
+par_conductivity_std <- list(psi50 = -2, b = 2)
+
+calc_conductivity <- function(psi, par){
+  0.5^((psi/par$psi50)^par$b)
+}
+
+ggplot( data = tibble(x = 0), aes(x = x) ) +
+  stat_function(fun = calc_conductivity, args = list(par = list(psi50 = -1, b = 1)), col = 'black') +
+  stat_function(fun = calc_conductivity, args = list(par = list(psi50 = -1, b = 2)), col = 'green') +
+  stat_function(fun = calc_conductivity, args = list(par = list(psi50 = -1, b = 5)), col = 'red') +
+  xlim( -3, 0 ) +
+  labs( title = "Conductivity as a function of water potential" )
+```
+
+## Total conductance as a function of leaf water potential
+
+The total conductance along the soil-to-leaf pathway is then given by the integral 
+$$
+\int_{\Psi_S}^{\Psi_L}k(\Psi) d \Psi
+$$
+
+Plotted here for different soil water potentials.
+```{r}
+calc_conductance = function(dpsi, psi_soil, ...){
+  -integrate(calc_conductivity, lower = psi_soil, upper = (psi_soil - dpsi), ...)$value
+}
+
+# integral_P = function(dpsi, psi_soil, psi50, b, ...){
+#   -integrate(P, psi50=psi50, b=b, lower = psi_soil, upper = (psi_soil - dpsi), ...)$value
+# }
+
+tibble( dpsi = seq(0, 5, length.out = 30)) %>% 
+  mutate(total_conductance_soil1 = purrr::map_dbl(dpsi, ~calc_conductance(., psi_soil = -1, par = par_conductivity_std))) %>% 
+  mutate(total_conductance_soil2 = purrr::map_dbl(dpsi, ~calc_conductance(., psi_soil = -2, par = par_conductivity_std))) %>% 
+  ggplot() +
+  geom_line(aes( x = dpsi, y = total_conductance_soil1)) +
+  geom_line(aes( x = dpsi, y = total_conductance_soil2), col = 'red') +
+  labs( title = "Total conductance as a function of leaf water potential" )
+```
+
+Specify plant hydraulic parameters that are held constant at the subdaily to annual time scale.
+```{r}
+par_plant_std = list(
+    Ks0=1e-12, 
+    v_huber=1e-4, 
+    height=10, 
+    conductivity_scalar=1,  # Scales (Ks0*v_huber/H)
+    psi50 = -2, 
+    b=2
+    )
+```
+
+With these parameters, typical $E$ (per unit leaf area) would be around:
+```{r}
+E = par_plant_std$Ks0 * par_plant_std$v_huber / par_plant_std$height / par_env_std$viscosity_water * 1e6
+
+m_per_s_to_mm_per_day = 8.64e7
+
+cat("E = ", E, " m^3/m2/s", "\n",
+"E = ", E*m_per_s_to_mm_per_day, " mm/day", "\n",
+"E = ", E*m_per_s_to_mm_per_day*365, " mm/year", sep = "")
+```
+
+Thus, a forest with $LAI = 4$ will transpire 
+```{r}
+cat("E_forest = ", E*m_per_s_to_mm_per_day*365*4 ," mm/year")
+```
+
+The dependence of $E$ on soil water potential and the soil-to-leaf water potential difference $\Delta \Psi$ is given by:
+```{r}
+# calc_transpiration <- function(dpsi, psi_soil, par_plant, par_env, ...){
+#   par_plant$conductivity_scalar * par_plant$Ks0 * par_plant$v_huber / par_plant$height / par_env$viscosity_water * 1e6 * integral_P(dpsi, psi_soil, par_plant$psi50, par_plant$b, ...)
+# }
+calc_transpiration <- function(dpsi, psi_soil, par_plant, par_env, ...){
+  par_plant$conductivity_scalar * par_plant$Ks0 * par_plant$v_huber / par_plant$height / par_env$viscosity_water * 1e6 * calc_conductance(dpsi, psi_soil, par = par_plant)
+}
+
+list( dpsi = seq(0, 5, length.out = 30), psi_soil = c(0,-1,-2)) %>% 
+  cross_df() %>% 
+  mutate(E = purrr::pmap_dbl(data.frame(dpsi=dpsi, psi_soil=psi_soil), calc_transpiration, par_plant=par_plant_std, par_env=par_env_std)) %>%
+  ggplot() +
+  geom_line(aes( x = dpsi, y =  E*m_per_s_to_mm_per_day, group=psi_soil, colour=as.factor(psi_soil)), size=1) +
+  scale_color_manual(values = c("red", "yellow3", "green3")) +
+  ylab("E (mm/day)")
+```
+
+# Short-term
+
+## Short-term without cavitation cost
+
+Short term regulation of $g_s$ at time scales of minutes to days.
+
+- **Given**: $V_{\mathrm{cmax}}, \nu_H, k_{s0}, H, \rho_s, \Delta \Psi^\ast$
+- **Environment**: $\Psi_s, \eta, D$
+- **Principle**: Maintain a regulated $g_s^\ast$ so that $\Delta \Psi(g_s) = \Delta \Psi^\ast$.
+
+This yields $g_s^\ast$ as a function of hydraulic parameters, the "isohydricity" constant $\Delta \Psi^\ast$, and the environment:
+$$
+g_s^\ast = \frac{\nu_H \; k_{s0}}{1.6 H \eta D} \int_{\Psi_s}^{\Psi_s - \Delta\Psi^\ast} k(\Psi) \; d\Psi
+$$
+
+```{r}
+calc_gs_star <- function(psi_soil, vpd, viscosity, dpsi_star, v_huber, par, par_conductivity){
+  (v_huber * par$conductivity_base / (1.6 * par$height * viscosity * vpd)) * calc_conductance(dpsi = dpsi_star, psi_soil = psi_soil, par = par_conductivity_std) 
+}
+# par_conductance_std <- list(conductivity_base = 1, height = 1 )
+```
+
+### Response to soil drying
+
+The regulated stomatal conductance $g_s^\ast$ responds to a drying soil as shown below (plotted as a function of soil water potential).
+```{r}
+tibble(psi_soil = seq(0, -5, length.out = 30)) %>% 
+  mutate(gs_star_1 = purrr::map_dbl(psi_soil, ~calc_gs_star(., vpd = 100, viscosity = 1, dpsi_star = 1, v_huber = 1, par = par_conductance_std, par_conductivity = par_conductivity_std))) %>% 
+  mutate(gs_star_2 = purrr::map_dbl(psi_soil, ~calc_gs_star(., vpd = 100, viscosity = 1, dpsi_star = 2, v_huber = 1, par = par_conductance_std, par_conductivity = par_conductivity_std))) %>% 
+  ggplot() + 
+  geom_line(aes(x = psi_soil, y = gs_star_1)) +
+  geom_line(aes(x = psi_soil, y = gs_star_2, col = 'red')) +
+  labs(title = "Regulated stomatal conductance", subtitle = "At two different dpsi_star levels")
+```
+
+With soil water potential, expressed as a function of volumetric soil water content, using (from BiomeE):
+$$
+\Psi_s = \Psi_\text{sat} \left( \frac{W_\text{FC}}{W}\right) ^b
+$$
+```{r}
+## functional form and values from BiomeE model
+calc_psi_soil <- function(w_vol, par){
+  par$psi_soil_sat * (par$w_vol_fc / w_vol)^par$b
+}
+par_psi_soil_std = list(psi_soil_sat = -0.6, w_vol_fc = 0.4, b = 1)  # b is 2.2 in BiomeE
+```
+
+... it can be plotted as a function of soil volumetric water content.
+```{r}
+df_w_vol <- tibble( w_vol = seq(0.05, 0.6, length.out = 100)) %>% 
+  mutate(psi_soil = calc_psi_soil(w_vol, par_psi_soil_std)) %>% 
+  mutate(gs_star_1 = purrr::map_dbl(psi_soil, ~calc_gs_star(., vpd = 100, viscosity = 1, dpsi_star = 1, v_huber = 1, par = par_conductance_std, par_conductivity = par_conductivity_std)))
+
+df_w_vol %>% 
+  ggplot() + 
+  geom_line(aes(x = w_vol, y = gs_star_1)) +
+  labs(title = "Regulated stomatal conductance", subtitle = "As a funtion of volumetric soil water content")
+```
+
+This yields a GPP response to drying soil.
+```{r}
+calc_assim <- function(gs, vcmax, ca, par){
+  
+  ## Rubisco is limiting
+  ## Solve Eq. system
+  ## A = gs (ca- ci)
+  ## A = Vcmax * (ci - gammastar)/(ci + Kmm)
+  
+  ## This leads to a quadratic equation:
+  ## A * ci^2 + B * ci + C  = 0
+  ## 0 = a + b*x + c*x^2
+  
+  ## with
+  A <- -1.0 * gs
+  B <- gs * ca - gs * par$kmm - vcmax
+  C <- gs * ca * par$kmm + vcmax * par$gammastar
+  
+  ci <- QUADM(A, B, C)
+  a_c <- vcmax * (ci - par$gammastar) / (ci + par$kmm)
+  
+  return(a_c)
+}
+
+## Set P-model parameters
+beta <- 146          # unit cost ratio a/b
+c_cost <- 0.41
+gamma <- 0.105       # unit cost ratio c/b
+kphio <- 0.05        # quantum yield efficiency
+c_molmass <- 12.0107 # molar mass, g / mol
+
+## Define environmental conditions
+tc <- 20             # temperature, deg C
+ppfd <- 300          # mol/m2/d
+vpd  <- 1000         # Pa
+co2  <- 400          # ppm
+elv  <- 0            # m.a.s.l.
+fapar <- 1           # fraction
+
+out_analytical <- rpmodel::rpmodel(
+  tc             = tc,
+  vpd            = vpd,
+  co2            = co2,
+  elv            = elv,
+  kphio          = kphio,
+  beta           = beta,
+  fapar          = fapar,
+  ppfd           = ppfd,
+  method_optci   = "prentice14",
+  method_jmaxlim = "none",
+  do_ftemp_kphio = FALSE
+  )
+
+par_photosynth_std <- list(
+  kmm = out_analytical$kmm,
+  gammastar = out_analytical$gammastar
+  )
+```
+
+```{r}
+df_w_vol <- df_w_vol %>% 
+  mutate(a_c = purrr::map_dbl(gs_star_1, ~calc_assim(., vcmax = out_analytical$vcmax, ca = out_analytical$ca, par = par_photosynth_std)))
+
+df_w_vol %>% 
+  ggplot() + 
+  geom_line(aes(x = w_vol, y = a_c)) +
+  labs(title = "Assimilation", subtitle = "As a funtion of volumetric soil water content")
+```
+
+### Response to VPD
+
+```{r}
+df_vpd <- tibble( vpd = seq(0, 1000, length.out = 100)) %>% 
+  mutate(gs_star = purrr::map_dbl(vpd, ~calc_gs_star(-1, vpd = ., viscosity = 1, dpsi_star = 1, v_huber = 1, par = par_conductance_std, par_conductivity = par_conductivity_std))) %>% 
+  mutate(a_c_inst = purrr::map_dbl(gs_star, ~calc_assim(., vcmax = out_analytical$vcmax, ca = out_analytical$ca, par = par_photosynth_std))) 
+
+df_vpd %>% 
+  ggplot() + 
+  geom_line(aes(x = vpd, y = a_c_inst)) +
+  labs(title = "Assimilation A", subtitle = "As a funtion of VPD")
+```
+
+## Short-term with cavitation cost
+
+xxx
+
+# Mid-term
+
+On time scales of weeks to months, $V_{\mathrm{cmax}}$ and $\nu_H$ are acclimated/regulated to satisfy some optimality criterion. 
+
+At this time scale, other hydraulic parameters are regarded as constant, while stomatal conductance is instantaneously regulated with fast-varying environmental conditions ($g_s^\ast$).
+
+- **Given**: $k_{s0}, H, \rho_s, A_s, \Delta \Psi^\ast$
+- **Environment**: $\Psi_s, \eta, D$
+- **Principle**: Optimise $(V_{\mathrm{cmax}}, \nu_H)$ with $g_s^\ast = f(\Delta \Psi^\ast, \nu_H)$
+
+A least-cost (LC) principle could be formulated as
+$$
+ b V_{\mathrm{cmax}} / A + (cA_s /\nu_H)/A = min.
+$$
+The second term is the leaf construction cost which is a function of the Huber value $\nu_H$ and the sapwood cross-sectional area $A_s$. Note that the water cost is implicitly included in $A$ because it's a function of the regulated $g_s^\ast$.
+
+### Simplification
+
+Treat $\nu_H$ as a constant and optimise $V_{\mathrm{cmax}}$ so that net assimilation is maximised:
+$$
+ A_C - b V_{\mathrm{cmax}} = max.
+$$
+Does it even have a maximum?
+```{r}
+fn_target <- function(vcmax, gs_star, ca, par_cost, par_photosynth, do_optim = FALSE){
+  ## Required parameter sets:
+  ## par_cost        : b
+  ## par_photosynth  : kmm, gammastar
+  
+  ## Rubisco-limited assimilation
+  a_c <- calc_assim(gs_star, vcmax, ca, par = par_photosynth)
+  
+  ## Profit Maximisation
+  out <- a_c - par_cost$b * vcmax
+  
+  if (do_optim){
+    return(-out)
+  } else {
+    return(out)
+  }
+}  
+
+optim_vcmax_midterm_constvhuber <- function(fn_target, gs_star, ca, par_cost, par_photosynth, vcmax_init, return_all = FALSE){
+
+  out_optim <- optimr::optimr(
+    par       = vcmax_init,
+    lower     = 0.00001 * vcmax_init,
+    upper     = 100000 * vcmax_init,
+    fn        = fn_target,
+    gs_star   = gs_star, 
+    ca        = ca,
+    par_cost  = par_cost, 
+    par_photosynth = par_photosynth,
+    do_optim  = TRUE,
+    method    = "L-BFGS-B",
+    control   = list( maxit = 100, maximize = TRUE )
+  )
+  
+  out_optim$value <- -out_optim$value
+  
+  if (return_all){
+    out_optim
+  } else {
+    return(out_optim$par)
+  }
+}
+
+
+df_test <- tibble( vcmax = seq(out_analytical$vcmax * 0.1, out_analytical$vcmax * 10, length.out = 30) ) %>% 
+  mutate(assim = purrr::map_dbl(vcmax, ~calc_assim(gs = 1, vcmax = ., ca = out_analytical$ca, par = par_photosynth_std))) %>% 
+  mutate(target = purrr::map_dbl(vcmax, ~fn_target(., gs_star = 1, ca = out_analytical$ca, par_cost  = list(b = 0.05), par = par_photosynth_std)))
+
+out_midterm_simpl <- optim_vcmax_midterm_constvhuber(fn_target, gs_star = 1, ca = out_analytical$ca, par_cost  = list(b = 0.05), par_photosynth = par_photosynth_std, vcmax_init = out_analytical$vcmax, return_all = TRUE)
+
+df_test %>% 
+  ggplot(aes(x = vcmax, y = target)) +
+  geom_line() +
+  geom_point(aes(x = out_midterm_simpl$par, y = out_midterm_simpl$value), col = 'red')
+```
+Yes. Ok.
+
+Btw: A least-cost criterion ($b V_{\mathrm{cmax}} / A_C = min.$) doesn't work here
+
+This allows us to predict how $V_{\mathrm{cmax}}$ would acclimate to a drying soil.
+```{r}
+df_w_vol <- tibble( w_vol = seq(0.05, 0.6, length.out = 100)) %>% 
+  mutate(psi_soil = calc_psi_soil(w_vol, par_psi_soil_std)) %>% 
+  mutate(gs_star = purrr::map_dbl(psi_soil, ~calc_gs_star(., vpd = 100, viscosity = 1, dpsi_star = 1, v_huber = 1, par = par_conductance_std, par_conductivity = par_conductivity_std))) %>% 
+  mutate(vcmax_opt = purrr::map_dbl(gs_star, ~optim_vcmax_midterm_constvhuber(fn_target, gs_star = ., ca = out_analytical$ca, par_cost  = list(b = 0.05), par_photosynth = par_photosynth_std, vcmax_init = out_analytical$vcmax))) %>% 
+  mutate(a_c_accl = purrr::map2_dbl(gs_star, vcmax_opt, ~calc_assim(.x, vcmax = .y, ca = out_analytical$ca, par = par_photosynth_std))) %>%  
+  mutate(a_c_inst = purrr::map_dbl(gs_star, ~calc_assim(., vcmax = 0.886016918, ca = out_analytical$ca, par = par_photosynth_std)))
+
+df_w_vol %>% 
+  ggplot() + 
+  geom_line(aes(x = w_vol, y = vcmax_opt)) +
+  labs(title = "Acclimated Vcmax", subtitle = "As a funtion of volumetric soil water content")
+
+df_w_vol %>% 
+  tidyr::gather("source", "a_c", c(a_c_accl, a_c_inst)) %>% 
+  ggplot() + 
+  geom_line(aes(x = w_vol, y = out_opt)) +
+  labs(title = "Regulated Vcmax", subtitle = "As a funtion of volumetric soil water content")
+
+df_w_vol %>% 
+  ggplot() + 
+  geom_line(aes(x = psi_soil, y = out_opt)) +
+  labs(title = "Regulated Vcmax", subtitle = "As a funtion of soil water potential")
+```
+
+
+### Instantaneous vs. acclimated
+
+The instantaneous dependence of $A$ on VPD goes with $1/D$. This is probably not reasonable. Compare this to the acclimated response.
+```{r}
+df_vpd <- tibble( vpd = seq(0, 1000, length.out = 100)) %>% 
+  mutate(gs_star = purrr::map_dbl(vpd, ~calc_gs_star(-1, vpd = ., viscosity = 1, dpsi_star = 1, v_huber = 1, par = par_conductance_std, par_conductivity = par_conductivity_std))) %>% 
+  mutate(a_c_inst = purrr::map_dbl(gs_star, ~calc_assim(., vcmax = out_analytical$vcmax, ca = out_analytical$ca, par = par_photosynth_std))) %>% 
+  filter(!is.infinite(gs_star)) %>% 
+  mutate(vcmax_opt = purrr::map_dbl(gs_star, ~optim_vcmax_midterm_constvhuber(fn_target, gs_star = ., ca = out_analytical$ca, par_cost  = list(b = 0.05), par_photosynth = par_photosynth_std, vcmax_init = out_analytical$vcmax))) %>% 
+  mutate(a_c_accl = purrr::map2_dbl(gs_star, vcmax_opt, ~calc_assim(.x, vcmax = .y, ca = out_analytical$ca, par = par_photosynth_std)))
+
+df_vpd %>% 
+  tidyr::gather("source", "a_c", c(a_c_accl, a_c_inst)) %>% 
+  ggplot() + 
+  geom_line(aes(x = vpd, y = a_c, linetype = source)) +
+  labs(title = "Assimilation  vs. instantaneous A", subtitle = "As a funtion of VPD")
+```
+
+
+
+
+XXX todo: 
+
+- Plot instantaneous $A$ response to soil drying (constant Vcmax) and acclimated $A$ (with acclimated Vcmax).
+- Is assimilation reduced in proportion to conductance?
+- Plot acclimated assimilation as a function of VPD.
