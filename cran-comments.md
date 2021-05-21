@@ -5,8 +5,8 @@ http://cran.r-project.org/web/packages/policies.html
 
 - local OSX / Ubuntu 16.04 install on R 3.6
 - Ubuntu 20.04 on Github Actions (devel / release)
-- Windows / OSX on Github Actions (release) 
-- codecove.io code coverage at ~xxx%
+- Windows / OSX on Github Actions (release)
+- codecove.io code coverage at ~98%
 
 ## local / Travis CI R CMD check results
 
