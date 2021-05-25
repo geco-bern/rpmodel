@@ -1,5 +1,5 @@
 ---
-title: "Usage"
+title: "Running the P-model in R"
 author: "Beni Stocker"
 date: "`r Sys.Date()`"
 output: 
