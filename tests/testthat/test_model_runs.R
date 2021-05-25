@@ -2,7 +2,6 @@ context("test model runs")
 
 test_that("default model run",{
   skip_on_cran()
-  skip_if_not(capabilities("long.double"))
   
   # no atmospheric pressure given
   expect_warning(rpmodel( 
@@ -134,7 +133,7 @@ test_that("default model run",{
 
 test_that("jmax wang17",{
   skip_on_cran()
-  skip_if_not(capabilities("long.double"))
+  
   
   out_pmodel <- rpmodel( 
     tc             = 20,
@@ -160,7 +159,7 @@ test_that("jmax wang17",{
 
 test_that("jmax smith19",{
   skip_on_cran()
-  skip_if_not(capabilities("long.double"))
+  
   
   out_pmodel <- rpmodel( 
     tc             = 20,

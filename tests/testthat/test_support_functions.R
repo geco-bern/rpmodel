@@ -2,7 +2,6 @@ context("test additional functions")
 
 test_that("test dampen function",{
   skip_on_cran()
-  skip_if_not(capabilities("long.double"))
   
   expect_error(dampen_vec(
     vec = 20 * (sin(pi/(365)))^2 + rnorm(300, mean = 0, sd = 5),
@@ -31,7 +30,7 @@ test_that("ftemp_kphio",{
 
 test_that("soilm",{
   skip_on_cran()
-  skip_if_not(capabilities("long.double"))
+
   
   moisture <- soilmstress(
     soilm = 1,
@@ -45,7 +44,6 @@ test_that("soilm",{
 
 test_that("quadratic functions",{
   skip_on_cran()
-  skip_if_not(capabilities("long.double"))
   
   expect_warning(
     QUADP(6, 2, 1)
