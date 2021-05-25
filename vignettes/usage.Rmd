@@ -2,11 +2,11 @@
 title: "Usage"
 author: "Beni Stocker"
 date: "`r Sys.Date()`"
-output:
-  html_document:
-    toc: true
-    toc_float: true
-    toc_depth: 3
+output: 
+  rmarkdown::html_vignette:
+    md_extensions: [ 
+      "-autolink_bare_uris" 
+    ]
 vignette: >
   %\VignetteEngine{knitr::knitr}
   %\usepackage[utf8]{inputenc}
