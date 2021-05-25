@@ -89,8 +89,10 @@
       </header><script src="usage_files/header-attrs-2.8/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip></h1>
+      <h1 data-toc-skip>Running the P-model in R</h1>
+                        <h4 class="author">Beni Stocker</h4>
             
+            <h4 class="date">2021-05-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/stineb/rpmodel/blob/master/vignettes/usage.Rmd"><code>vignettes/usage.Rmd</code></a></small>
       <div class="hidden name"><code>usage.Rmd</code></div>
@@ -99,15 +101,9 @@
 
     
     
-<hr>
-title: “Running the P-model in R” author: “Beni Stocker” date: “2021-05-25” output: rmarkdown::html_vignette: md_extensions: [ “-autolink_bare_uris” ] vignette: &gt; % %
-<div id="section" class="section level2">
-<h2 class="hasAnchor">
-<a href="#section" class="anchor"></a>%</h2>
 <p>The rpmodel package implements the P-model as described in Stocker et al. (2019) <em>Geosci. Mod. Dev.</em> The main function available through the package is <code><a href="../reference/rpmodel.html">rpmodel()</a></code>, which returns a list of quantities (see <code><a href="../reference/rpmodel.html">?rpmodel</a></code>) for a given set of inputs. An additional set of important functions that are used within <code><a href="../reference/rpmodel.html">rpmodel()</a></code> are also available through this package. Usage examples are given below.</p>
 <p><strong>Important note:</strong></p>
 <p>The P-model predicts how photosynthesis acclimates to a changing environment, coordinating stomatal conductance, Vcmax and Jmax. This yields a model that has the form of a light use efficiency model, where gross primary production scales linearly with absorbed light, as described in <a href="https://doi.org/10.5194/gmd-13-1545-2020">Stocker et al. 2020</a>. It is important to note that this implies that the P-model is valid only for simulating responses to the environment that evolve over the time scale at which the photosynthetic machinery (e.g., Rubisco) can be assumed to acclimate. Sensible choices are on the order of a couple of weeks to a month. In other words, the arguments (climatic forcing), provided to <code><a href="../reference/rpmodel.html">rpmodel()</a></code> should represent typical daytime mean values, averaged across a couple of weeks. The output is then representative also for average values across the same time scale.</p>
-</div>
 <div id="example-p-model-run" class="section level2">
 <h2 class="hasAnchor">
 <a href="#example-p-model-run" class="anchor"></a>Example P-model run</h2>

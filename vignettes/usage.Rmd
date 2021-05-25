@@ -4,9 +4,7 @@ author: "Beni Stocker"
 date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette:
-    md_extensions: [ 
-      "-autolink_bare_uris" 
-    ]
+    md_extensions: ["-autolink_bare_uris"]
 vignette: >
   %\VignetteEngine{knitr::knitr}
   %\usepackage[utf8]{inputenc}
