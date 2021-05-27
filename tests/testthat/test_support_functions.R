@@ -30,6 +30,7 @@ test_that("ftemp_kphio",{
 
 test_that("soilm",{
   skip_on_cran()
+
   
   moisture <- soilmstress(
     soilm = 1,

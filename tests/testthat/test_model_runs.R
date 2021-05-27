@@ -134,6 +134,7 @@ test_that("default model run",{
 test_that("jmax wang17",{
   skip_on_cran()
   
+  
   out_pmodel <- rpmodel( 
     tc             = 20,
     vpd            = 1000,
@@ -158,6 +159,7 @@ test_that("jmax wang17",{
 
 test_that("jmax smith19",{
   skip_on_cran()
+  
   
   out_pmodel <- rpmodel( 
     tc             = 20,

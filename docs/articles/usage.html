@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Usage • rpmodel</title>
+<title>Running the P-model in R • rpmodel</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -17,7 +17,7 @@
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Usage">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Running the P-model in R">
 <meta property="og:description" content="rpmodel">
 <meta property="og:image" content="/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -61,7 +61,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/usage.html">Usage</a>
+      <a href="../articles/usage.html">Running the P-model in R</a>
     </li>
   </ul>
 </li>
@@ -86,13 +86,13 @@
 
       
 
-      </header><script src="usage_files/header-attrs-2.7/header-attrs.js"></script><div class="row">
+      </header><script src="usage_files/header-attrs-2.8/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Usage</h1>
+      <h1 data-toc-skip>Running the P-model in R</h1>
                         <h4 class="author">Beni Stocker</h4>
             
-            <h4 class="date">2021-05-21</h4>
+            <h4 class="date">2021-05-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/stineb/rpmodel/blob/master/vignettes/usage.Rmd"><code>vignettes/usage.Rmd</code></a></small>
       <div class="hidden name"><code>usage.Rmd</code></div>
@@ -400,7 +400,7 @@ A = V_{\text{cmax}} \frac{c_i-\Gamma^{\ast}}{c_i + K} = \phi_0 I_{\text{abs}} \f
 <div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">vec_soilm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">1.0</span>, to <span class="op">=</span> <span class="fl">0.0</span>, by <span class="op">=</span> <span class="op">-</span><span class="fl">0.05</span><span class="op">)</span>
 <span class="va">vec_soilmstress</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/soilmstress.html">soilmstress</a></span><span class="op">(</span> <span class="va">vec_soilm</span>, meanalpha <span class="op">=</span> <span class="fl">1.0</span>, apar_soilm <span class="op">=</span> <span class="fl">0.0</span>, bpar_soilm <span class="op">=</span> <span class="fl">0.7330</span> <span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">vec_soilm</span>, <span class="va">vec_soilmstress</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span><span class="op">(</span><span class="va">vec_soilm</span>, <span class="va">vec_soilmstress</span><span class="op">)</span></code></pre></div>
 <p><img src="usage_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
 <p>Similar to above, the soil moisture dependence of LUE (and hence GPP, and Vcmax) can be calculated directly using the function <code><a href="../reference/soilmstress.html">soilmstress()</a></code> and affects several quantities returned by the <code><a href="../reference/rpmodel.html">rpmodel()</a></code> call (GPP, LUE, Vcmax):</p>
 <div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
