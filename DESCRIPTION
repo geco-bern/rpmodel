@@ -9,8 +9,8 @@ Description: Implements the P-model
 Version: 1.2.0
 Authors@R: c(
             person(
-              family = "Benjamin",
-              given = "Stocker",
+              family = "Stocker",
+              given = "Benjamin",
               email = "benjamin.stocker@gmail.com",
               comment = c(ORCID = "0000-0002-5070-8109"),
               role = c("aut", "cre")),
