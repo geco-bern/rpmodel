@@ -266,13 +266,13 @@ rpmodel <- function(
     patm <- patm(elv)
   }
 
-  #---- Fixed parameters--------------------------------------------------------
+  #---- Fixed parameters ----
   c_molmass <- 12.0107  # molecular mass of carbon (g)
   kPo <- 101325.0       # standard atmosphere, Pa (Allen, 1973)
   kTo <- 25.0           # base temperature, deg C (Prentice, unpublished)
   rd_to_vcmax <- 0.015  # Ratio of Rdark to Vcmax25, number from Atkin et al., 2015 for C3 herbaceous
 
-  #---- Temperature dependence of quantum yield efficiency----------------------
+  #---- Temperature dependence of quantum yield efficiency ----
   ## 'do_ftemp_kphio' is not actually a stress function, but is the temperature-dependency of
   ## the quantum yield efficiency after Bernacchi et al., 2003 PCE
   if (do_ftemp_kphio){
@@ -293,19 +293,20 @@ rpmodel <- function(
   ## ambient CO2 partial pression (Pa)
   ca <- co2_to_ca( co2, patm )
 
-  ## photorespiratory compensation point - Gamma-star (Pa)
+  # photorespiratory compensation point - Gamma-star (Pa)
   gammastar <- gammastar( tc, patm )
 
-  ## Michaelis-Menten coef. (Pa)
+  # Michaelis-Menten coef. (Pa)
   kmm <- kmm( tc, patm )   ## XXX Todo: replace 'NA' here with 'patm'
 
-  ## viscosity correction factor = viscosity( temp, press )/viscosity( 25 degC, 1013.25 Pa)
+  # viscosity correction factor = viscosity( temp, press )/
+  # viscosity( 25 degC, 1013.25 Pa)
   ns      <- viscosity_h2o( tc, patm )  # Pa s
   ns25    <- viscosity_h2o( kTo, kPo )  # Pa s
   ns_star <- ns / ns25  # (unitless)
 
-  ##----Optimal ci -------------------------------------------------------------
-  ## The heart of the P-model: calculate ci:ca ratio (chi) and additional terms
+  #----Optimal ci ----
+  # The heart of the P-model: calculate ci:ca ratio (chi) and additional terms
   
   if (c4){
 
@@ -314,7 +315,7 @@ rpmodel <- function(
 
   } else if (method_optci=="prentice14"){
 
-    #---- Full formualation (Gamma-star not zero), analytical solution ---------
+  #---- Full formualation (Gamma-star not zero), analytical solution ----
     out_optchi <- optimal_chi( kmm, gammastar, ns_star, ca, vpd, beta )
 
   } else {
@@ -326,11 +327,11 @@ rpmodel <- function(
   ## leaf-internal CO2 partial pressure (Pa)
   ci <- out_optchi$chi * ca
 
-  #---- Corrolary preditions ---------------------------------------------------
-  ## intrinsic water use efficiency (in Pa)
+  #---- Corrolary preditions ----
+  # intrinsic water use efficiency (in Pa)
   iwue = ( ca - ci ) / 1.6
 
-  #---- Vcmax and light use efficiency -----------------------------------------
+  #---- Vcmax and light use efficiency ----
   # Jmax limitation comes in only at this step
   if (c4){
 
@@ -378,89 +379,115 @@ rpmodel <- function(
 
   }
 
-  #---- Corrolary preditions ---------------------------------------------------
+  #---- Corrolary preditions ----
   # Vcmax25 (vcmax normalized to 25 deg C)
   ftemp25_inst_vcmax  <- ftemp_inst_vcmax( tc, tc, tcref = 25.0 )
   vcmax25_unitiabs  <- out_lue_vcmax$vcmax_unitiabs / ftemp25_inst_vcmax
 
   ## Dark respiration at growth temperature
   ftemp_inst_rd <- ftemp_inst_rd( tc )
-  rd_unitiabs  <- rd_to_vcmax * (ftemp_inst_rd / ftemp25_inst_vcmax) * out_lue_vcmax$vcmax_unitiabs
+  rd_unitiabs  <- rd_to_vcmax * 
+    (ftemp_inst_rd / ftemp25_inst_vcmax) * out_lue_vcmax$vcmax_unitiabs
 
-  #---- Quantities that scale linearly with absorbed light ---------------------
-  # len <- length(out_lue_vcmax[[1]])
+  #---- Quantities that scale linearly with absorbed light ----
   iabs <- fapar * ppfd
 
   # Gross Primary Productivity
-  # gpp <- ifelse(any(is.na(iabs)),
-  # rep(NA, len), iabs * out_lue_vcmax$lue)   # in g C m-2 s-1
   gpp <- iabs * out_lue_vcmax$lue   # in g C m-2 s-1
 
   # Vcmax per unit ground area is the product of the intrinsic quantum
   # efficiency, the absorbed PAR, and 'n'
-  # vcmax <- ifelse(any(is.na(iabs)), rep(NA, len), iabs * out_lue_vcmax$vcmax_unitiabs)
   vcmax <- iabs * out_lue_vcmax$vcmax_unitiabs
 
-  ## (vcmax normalized to 25 deg C)
-  # vcmax25 <- ifelse(any(is.na(iabs)), rep(NA, len), iabs * vcmax25_unitiabs)
+  # (vcmax normalized to 25 deg C)
   vcmax25 <- iabs * vcmax25_unitiabs
 
-  ## Dark respiration
-  # rd <- ifelse(!is.na(iabs), iabs * rd_unitiabs, rep(NA, len))
+  # Dark respiration
   rd <- iabs * rd_unitiabs
 
   # Jmax using again A_J = A_C
-  # fact_jmaxlim <- ifelse(!is.na(iabs),
-  #                        vcmax * (ci + 2.0 * gammastar) / (kphio * iabs * (ci + kmm)),
-  #                        rep(NA, len))
-  fact_jmaxlim <- vcmax * (ci + 2.0 * gammastar) / (kphio * iabs * (ci + kmm))
+  fact_jmaxlim <- vcmax * (ci + 2.0 * gammastar) / 
+    (kphio * iabs * (ci + kmm))
 
-  # jmax <- ifelse(!is.na(iabs),
-  #                4.0 * kphio * iabs / sqrt( (1.0/fact_jmaxlim)**2 - 1.0 ),
-  #                rep(NA, len))
   jmax <- 4.0 * kphio * iabs / sqrt( (1.0/fact_jmaxlim)^2 - 1.0 )
 
   ftemp25_inst_jmax <- ftemp_inst_jmax( tc, tc, tcref = 25.0 )
   jmax25 <- jmax / ftemp25_inst_jmax
 
-  ## Test: at this stage, verify if A_J = A_C
+  # Test: at this stage, verify if A_J = A_C
   a_j <- kphio * iabs * (ci - gammastar)/(ci + 2 * gammastar) * fact_jmaxlim
+  a_j[is.na(a_j)] <- 0
+  
   a_c <- vcmax * (ci - gammastar) / (ci + kmm)
-  if (any(abs(a_j/a_c - 1) > 0.001)){
-    stop("rpmodel(): light and Rubisco-limited assimilation rates
+  a_c[is.na(a_c)] <- 0
+  
+  if (!all.equal(a_j, a_c, tolerance = 0.001)){
+    warning("rpmodel(): light and Rubisco-limited assimilation rates
                  are not identical.")
-  } 
+  }
 
   # Assimilation is not returned because it should not be confused with what 
   # is usually measured should use instantaneous assimilation for comparison to
   # measurements. This is returned by inst_rpmodel().
-  assim <- ifelse(a_j < a_c , a_j, a_c)
-  if (any(abs(assim - gpp / c_molmass) > 0.001)) stop("rpmodel(): Assimilation and GPP are not identical.")
+  assim <- ifelse(a_j < a_c, a_j, a_c)
+  
+  if (any(abs(assim - gpp / c_molmass) > 0.001)){
+    warning("rpmodel(): Assimilation and GPP are not identical.")
+  }
 
-  ## average stomatal conductance
+  # average stomatal conductance
   gs <- assim / (ca - ci)
 
-  ## construct list for output
+  # construct list for output
   out <- list(
-              gpp             = gpp,   # remove this again later
-              ca              = ca,
-              gammastar       = gammastar,
-              kmm             = kmm,
-              ns_star         = ns_star,
-              chi             = out_optchi$chi,
-              xi              = out_optchi$xi,
-              mj              = out_optchi$mj,
-              mc              = out_optchi$mc,
-              ci              = ci,
-              iwue            = iwue,
-              gs              = gs,
-              vcmax           = vcmax,
-              vcmax25         = vcmax25,
-              jmax            = jmax,
-              jmax25          = jmax25,
-              rd              = rd
-              )
+    gpp             = gpp,
+    ca              = ca,
+    gammastar       = gammastar,
+    kmm             = kmm,
+    ns_star         = ns_star,
+    chi             = out_optchi$chi,
+    xi              = out_optchi$xi,
+    mj              = out_optchi$mj,
+    mc              = out_optchi$mc,
+    ci              = ci,
+    iwue            = iwue,
+    gs              = gs,
+    vcmax           = vcmax,
+    vcmax25         = vcmax25,
+    jmax            = jmax,
+    jmax25          = jmax25,
+    rd              = rd
+  )
 
-  # if (!is.null(returnvar)) out <- out[returnvar]
+  # select variable to return
+  if (!is.null(returnvar)){
+    out <- out[returnvar]
+  }
+  
+  # return data
   return( out )
+}
+
+rpmodel_empty <- function(){
+  out <- list(
+    gpp             = NA,
+    ca              = NA,
+    gammastar       = NA,
+    kmm             = NA,
+    ns_star         = NA,
+    chi             = NA,
+    xi              = NA,
+    mj              = NA,
+    mc              = NA,
+    ci              = NA,
+    iwue            = NA,
+    gs              = NA,
+    vcmax           = NA,
+    vcmax25         = NA,
+    jmax            = NA,
+    jmax25          = NA,
+    rd              = NA
+  )
+  
+  return(out)
 }
