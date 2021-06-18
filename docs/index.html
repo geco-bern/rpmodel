@@ -123,6 +123,25 @@
   do_soilmstress <span class="op">=</span> <span class="cn">FALSE</span>,        <span class="co"># corresponding to setup ORG</span>
   verbose        <span class="op">=</span> <span class="cn">TRUE</span>
   <span class="op">)</span></code></pre></div>
+<p>The <code>rpmodel</code> is vectorized, you can pass vectors are matrices as drivers to quickly calculate time series or spatial fields (matrices) using the same parameters.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R">  <span class="va">out_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/rpmodel.html">rpmodel</a></span><span class="op">(</span> 
+    tc             <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">20</span>,<span class="fl">100</span><span class="op">)</span>,<span class="fl">10</span>,<span class="fl">10</span><span class="op">)</span>,
+    vpd            <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">1000</span>,<span class="fl">100</span><span class="op">)</span>,<span class="fl">10</span>,<span class="fl">10</span><span class="op">)</span>,
+    co2            <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">400</span>,<span class="fl">100</span><span class="op">)</span>,<span class="fl">10</span>,<span class="fl">10</span><span class="op">)</span>,
+    fapar          <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">100</span><span class="op">)</span>,<span class="fl">10</span>,<span class="fl">10</span><span class="op">)</span>,
+    ppfd           <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">1000</span>,<span class="fl">100</span><span class="op">)</span>,<span class="fl">10</span>,<span class="fl">10</span><span class="op">)</span>,
+    elv            <span class="op">=</span> <span class="fl">0</span>,
+    kphio          <span class="op">=</span> <span class="fl">0.049977</span>,
+    beta           <span class="op">=</span> <span class="fl">146</span>,
+    patm           <span class="op">=</span> <span class="fl">1024</span>,
+    c4             <span class="op">=</span> <span class="cn">FALSE</span>,
+    method_optci   <span class="op">=</span> <span class="st">"prentice14"</span>,
+    method_jmaxlim <span class="op">=</span> <span class="st">"none"</span>,
+    do_ftemp_kphio <span class="op">=</span> <span class="cn">FALSE</span>,
+    do_soilmstress <span class="op">=</span> <span class="cn">FALSE</span>,
+    verbose        <span class="op">=</span> <span class="cn">TRUE</span>
+  <span class="op">)</span></code></pre></div>
 <p>For more information and examples see <a href="articles/usage.html">Usage</a>.</p>
 </div>
 <div id="installation" class="section level2">
@@ -132,7 +151,7 @@
 <h3 class="hasAnchor">
 <a href="#stable-release" class="anchor"></a>Stable release</h3>
 <p><code>rpmodel</code> is available on CRAN <a href="https://CRAN.R-project.org/package=rpmodel">here</a>. To install and load, run the following commands in your R terminal:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"rpmodel"</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/stineb/rpmodel">rpmodel</a></span><span class="op">)</span></code></pre></div>
 </div>
@@ -140,7 +159,7 @@
 <h3 class="hasAnchor">
 <a href="#development-release" class="anchor"></a>Development release</h3>
 <p>To install and load the latest version of the rpmodel package (development release, not yet on CRAN) run the following command in your R terminal:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/">devtools</a></span><span class="op">)</span><span class="op">)</span><span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="va">devtools</span><span class="op">)</span><span class="op">}</span>
 <span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span> <span class="st">"stineb/rpmodel"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span> <span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/stineb/rpmodel">rpmodel</a></span><span class="op">)</span></code></pre></div>
@@ -193,7 +212,7 @@
 <div class="developers">
 <h2>Developers</h2>
 <ul class="list-unstyled">
-<li>Stocker Benjamin <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-5070-8109" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Benjamin Stocker <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-5070-8109" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li><a href="authors.html">All authors...</a></li>
 </ul>
 </div>
@@ -210,7 +229,7 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Stocker Benjamin.</p>
+  <p>Developed by Benjamin Stocker.</p>
 </div>
 
 <div class="pkgdown">

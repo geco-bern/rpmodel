@@ -32,6 +32,27 @@ out_pmodel <- rpmodel(
   verbose        = TRUE
   )
 ```
+The `rpmodel` is vectorized, you can pass vectors are matrices as drivers to quickly calculate time series or spatial fields (matrices) using the same parameters.
+
+```r
+  out_matrix <- rpmodel( 
+    tc             = matrix(rep(20,100),10,10),
+    vpd            = matrix(rep(1000,100),10,10),
+    co2            = matrix(rep(400,100),10,10),
+    fapar          = matrix(rep(1,100),10,10),
+    ppfd           = matrix(rep(1000,100),10,10),
+    elv            = 0,
+    kphio          = 0.049977,
+    beta           = 146,
+    patm           = 1024,
+    c4             = FALSE,
+    method_optci   = "prentice14",
+    method_jmaxlim = "none",
+    do_ftemp_kphio = FALSE,
+    do_soilmstress = FALSE,
+    verbose        = TRUE
+  )
+```
 
 For more information and examples see [Usage](articles/usage.html).
 
