@@ -22,6 +22,7 @@ source("eval_environment_chi.R")
 source("eval_environment_jmax.R")
 source("eval_environment_gs_vcmax.R")
 source("QUADP.R")
+library(rpmodel)
 ```
 
 ## Theory
