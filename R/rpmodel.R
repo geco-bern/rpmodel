@@ -315,12 +315,12 @@ rpmodel <- function(
 
   } else if (method_optci=="prentice14"){
 
-  #---- Full formualation (Gamma-star not zero), analytical solution ----
+  #---- Full formualation (Gamma-star not zero), analytic solution ----
     out_optchi <- optimal_chi( kmm, gammastar, ns_star, ca, vpd, beta )
 
   } else {
 
-    stop("rpmodel(): argument method_optci not idetified.")
+    stop("rpmodel(): argument method_optci not identified.")
 
   }
 
@@ -416,12 +416,20 @@ rpmodel <- function(
 
   # Test: at this stage, verify if A_J = A_C
   a_j <- kphio * iabs * (ci - gammastar)/(ci + 2 * gammastar) * fact_jmaxlim
-  a_j[is.na(a_j)] <- 0
+  
+  if(any(is.na(a_j))){
+    warning("rpmodel():
+            Light limited assimilation include NA values")
+  }
   
   a_c <- vcmax * (ci - gammastar) / (ci + kmm)
-  a_c[is.na(a_c)] <- 0
   
-  if (!all.equal(a_j, a_c, tolerance = 0.001)){
+  if(any(is.na(a_c))){
+    warning("rpmodel():
+            Rubisco limited assimilation include NA values")
+  }
+  
+  if (any(stats::na.omit(abs(a_j - a_c)) > 0.001)){
     warning("rpmodel(): light and Rubisco-limited assimilation rates
                  are not identical.")
   }
@@ -431,7 +439,7 @@ rpmodel <- function(
   # measurements. This is returned by inst_rpmodel().
   assim <- ifelse(a_j < a_c, a_j, a_c)
   
-  if (any(abs(assim - gpp / c_molmass) > 0.001)){
+  if (any(stats::na.omit(abs(assim - gpp / c_molmass)) > 0.001)){
     warning("rpmodel(): Assimilation and GPP are not identical.")
   }
 
@@ -458,6 +466,7 @@ rpmodel <- function(
     jmax25          = jmax25,
     rd              = rd
   )
+  
 
   # select variable to return
   if (!is.null(returnvar)){
@@ -466,28 +475,4 @@ rpmodel <- function(
   
   # return data
   return( out )
-}
-
-rpmodel_empty <- function(){
-  out <- list(
-    gpp             = NA,
-    ca              = NA,
-    gammastar       = NA,
-    kmm             = NA,
-    ns_star         = NA,
-    chi             = NA,
-    xi              = NA,
-    mj              = NA,
-    mc              = NA,
-    ci              = NA,
-    iwue            = NA,
-    gs              = NA,
-    vcmax           = NA,
-    vcmax25         = NA,
-    jmax            = NA,
-    jmax25          = NA,
-    rd              = NA
-  )
-  
-  return(out)
 }

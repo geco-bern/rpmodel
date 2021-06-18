@@ -3,6 +3,49 @@ context("test model runs")
 test_that("default model run",{
   skip_on_cran()
   
+  # vectorized input
+  out_vector <- rpmodel( 
+    tc             = c(20,20,20),
+    vpd            = c(1000,1000,1000),
+    co2            = c(400,400,400),
+    fapar          = c(1,1,1),
+    ppfd           = c(300,300,300),
+    elv            = 0,
+    kphio          = 0.049977,
+    beta           = 146,
+    patm           = 1024,
+    c4             = FALSE,
+    method_optci   = "prentice14",
+    method_jmaxlim = "none",
+    do_ftemp_kphio = FALSE,
+    do_soilmstress = FALSE,
+    verbose        = TRUE
+  )
+  
+  # output must be a list
+  expect_type(out_vector, "list")
+  
+  out_matrix <- rpmodel( 
+    tc             = matrix(rep(20,100),10,10),
+    vpd            = matrix(rep(1000,100),10,10),
+    co2            = matrix(rep(400,100),10,10),
+    fapar          = matrix(rep(1,100),10,10),
+    ppfd           = matrix(rep(1000,100),10,10),
+    elv            = 0,
+    kphio          = 0.049977,
+    beta           = 146,
+    patm           = 1024,
+    c4             = FALSE,
+    method_optci   = "prentice14",
+    method_jmaxlim = "none",
+    do_ftemp_kphio = FALSE,
+    do_soilmstress = FALSE,
+    verbose        = TRUE
+  )
+  
+  # output must be a list
+  expect_type(out_matrix, "list")
+  
   # no atmospheric pressure given
   expect_warning(rpmodel( 
     tc             = 20,
@@ -87,13 +130,34 @@ test_that("default model run",{
   # for c4 run, assimilation and GPP are not identical
   # results in error (tests routine, not sure if
   # settings are meaningful)
-  expect_error(
+  expect_warning(
     rpmodel( 
       tc             = 20,
       vpd            = 1000,
       co2            = 400,
       fapar          = 1,
       ppfd           = 300,
+      elv            = 0,
+      kphio          = 0.049977,
+      beta           = 146,
+      patm           = 1024,
+      c4             = TRUE,
+      method_optci   = "prentice14",
+      method_jmaxlim = "none",
+      do_ftemp_kphio = FALSE,
+      do_soilmstress = FALSE,
+      verbose        = TRUE
+    )
+  )
+  
+  # iabs == 0 (ppfd == 0)
+  expect_warning(
+    rpmodel( 
+      tc             = 20,
+      vpd            = 1000,
+      co2            = 400,
+      fapar          = 1,
+      ppfd           = 0,
       elv            = 0,
       kphio          = 0.049977,
       beta           = 146,
