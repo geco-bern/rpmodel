@@ -446,6 +446,41 @@ rpmodel <- function(
   # average stomatal conductance
   gs <- assim / (ca - ci)
 
+  # fill uncertain values with NA, not adhering to optimality
+  if(any(iabs == 0) | 
+     any(is.na(iabs) | 
+     any(stats::na.omit(abs(assim - gpp / c_molmass)) > 0.001) |
+     any(stats::na.omit(abs(a_j - a_c)) > 0.001)
+     
+     )){
+    
+    # find locations to set to NA
+    loc <- which(iabs == 0 |
+                   is.na(iabs) |
+                   any(stats::na.omit(abs(assim - gpp / c_molmass)) > 0.001) |
+                   any(stats::na.omit(abs(a_j - a_c)) > 0.001)
+                   )
+    
+    # set locations to NA
+    gpp[loc] = NA
+    ca[loc] = NA
+    gammastar[loc] = NA
+    kmm[loc] = NA
+    ns_star[loc] = NA
+    out_optchi$chi[loc] = NA
+    out_optchi$xi[loc] = NA
+    out_optchi$mj[loc] = NA
+    out_optchi$mc[loc] = NA
+    ci[loc] = NA
+    iwue[loc] = NA
+    gs[loc] = NA
+    vcmax[loc] = NA
+    vcmax25[loc] = NA
+    jmax[loc] = NA
+    jmax25[loc] = NA
+    rd[loc] = NA
+  }
+  
   # construct list for output
   out <- list(
     gpp             = gpp,

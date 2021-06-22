@@ -25,6 +25,27 @@ test_that("default model run",{
   # output must be a list
   expect_type(out_vector, "list")
   
+  # vectorized input
+  expect_warning(
+    rpmodel( 
+      tc             = c(20,20,20),
+      vpd            = c(1000,1000,1000),
+      co2            = c(400,400,400),
+      fapar          = c(1,1,0),
+      ppfd           = c(300,300,300),
+      elv            = 0,
+      kphio          = 0.049977,
+      beta           = 146,
+      patm           = 1024,
+      c4             = FALSE,
+      method_optci   = "prentice14",
+      method_jmaxlim = "none",
+      do_ftemp_kphio = FALSE,
+      do_soilmstress = FALSE,
+      verbose        = TRUE
+    )
+  )
+  
   out_matrix <- rpmodel( 
     tc             = matrix(rep(20,100),10,10),
     vpd            = matrix(rep(1000,100),10,10),

@@ -780,7 +780,27 @@ co2_to_ca <- function(co2, patm){
   return( ca )
 }
 
-optimal_chi <- function(kmm, gammastar, ns_star, ca, vpd, beta ){
+#' Calculate optimal Chi
+#' 
+#' Optimal chi routine
+#'
+#' @param kmm Michaelis Menten coefficient
+#' @param gammastar CO2 compensation point
+#' @param ns_star viscosity correction factor for water
+#' @param ca ambient CO2
+#' @param vpd vapour pressure deficit
+#' @param beta beta parameter
+#'
+#' @return optimal chi value
+#' @export
+
+optimal_chi <- function(
+  kmm,
+  gammastar,
+  ns_star,
+  ca,
+  vpd,
+  beta ){
   
   # Input:    - float, 'kmm' : Pa, Michaelis-Menten coeff.
   #           - float, 'ns_star'  : (unitless) viscosity correction factor for water
