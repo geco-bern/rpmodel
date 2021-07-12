@@ -626,7 +626,7 @@ $$
 
 ### Response to the environment
 
-```{r echo=FALSE}
+```{r echo=FALSE, warning=FALSE}
 gg_none <- eval_environment_gs_vcmax(
   kphio = kphio, 
   beta = beta, 
