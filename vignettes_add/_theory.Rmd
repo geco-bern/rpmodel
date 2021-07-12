@@ -73,7 +73,7 @@ co2  <- 400          # ppm
 elv  <- 0            # m.a.s.l.
 fapar <- 1           # fraction
 
-out_analytical_none <- rpmodel::rpmodel(
+out_analytical_none <- rpmodel(
   tc             = tc,
   vpd            = vpd,
   co2            = co2,
@@ -87,7 +87,7 @@ out_analytical_none <- rpmodel::rpmodel(
   do_ftemp_kphio = FALSE
   )
 
-out_analytical_jmaxlim <- rpmodel::rpmodel(
+out_analytical_jmaxlim <- rpmodel(
   tc             = tc,
   vpd            = vpd,
   co2            = co2,
@@ -213,7 +213,7 @@ print( kphio * fapar * ppfd * (out_analytical_none$ci + out_analytical_none$kmm)
 ### Response of $\chi$
 
 Create data frames where one variable is varied at a time, holding all others constant, and apply rpmodel. Plot response of $\chi$:
-```{r echo=FALSE}
+```{r echo=FALSE, warning=FALSE}
 gg_none <- eval_environment_chi(
   kphio = kphio, 
   method_jmaxlim = "none"
@@ -229,7 +229,7 @@ gg_none$patm
 ### Response of $A_J$
 
 Same as above, but showing $A_J$ (no Jmax limitation):
-```{r echo=FALSE}
+```{r echo=FALSE, warning=FALSE}
 gg_none <- eval_environment_chi(
   kphio = kphio, 
   method_jmaxlim = "none",
@@ -489,7 +489,7 @@ Indeed, this is the same.
 
 ### Response to the environment
 
-```{r echo=FALSE}
+```{r echo=FALSE, warning=FALSE}
 gg_none <- eval_environment_gs_vcmax(
   kphio = kphio, 
   beta = beta, 

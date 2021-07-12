@@ -360,21 +360,21 @@ rpmodel <- function( tc, vpd, co2, fapar, ppfd, patm = NA, elv = NA,
 
   }
 
-  # ----------------------------------------------------------------
-  #  xxx test
-  # ----------------------------------------------------------------
-  # light-limited assimilation rate
-  fact_jmaxlim = 1.0 / sqrt(1.0 + (4.0 * kphio * fapar * ppfd / out_optim_num$jmax)**2)
-  a_j = kphio * fapar * ppfd * (out_optim_num$ci - gammastar)/(out_optim_num$ci + 2 * gammastar) * fact_jmaxlim
-
-  # Rubisco-limited assimilation rate
-  a_c = out_optim_num$vcmax * (out_optim_num$ci - gammastar)/(out_optim_num$ci + kmm)
-
-  # output from pmodel()
-  a_returned = out_optim_num$gpp / c_molmass
-
-  print*,'a_j, a_c, a_returned, dgpp : ', a_j, a_c, a_returned, dgpp / c_molmass
-  # ----------------------------------------------------------------
+  # # ----------------------------------------------------------------
+  # #  xxx test
+  # # ----------------------------------------------------------------
+  # # light-limited assimilation rate
+  # fact_jmaxlim = 1.0 / sqrt(1.0 + (4.0 * kphio * fapar * ppfd / out_optim_num$jmax)**2)
+  # a_j = kphio * fapar * ppfd * (out_optim_num$ci - gammastar)/(out_optim_num$ci + 2 * gammastar) * fact_jmaxlim
+  # 
+  # # Rubisco-limited assimilation rate
+  # a_c = out_optim_num$vcmax * (out_optim_num$ci - gammastar)/(out_optim_num$ci + kmm)
+  # 
+  # # output from pmodel()
+  # a_returned = out_optim_num$gpp / c_molmass
+  # 
+  # # print*,'a_j, a_c, a_returned, dgpp : ', a_j, a_c, a_returned, dgpp / c_molmass
+  # # ----------------------------------------------------------------
 
 
 
