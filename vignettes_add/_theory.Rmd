@@ -448,7 +448,16 @@ calc_optimal_gs_vcmax <- function( par, args, maximize=FALSE, return_all=FALSE, 
   if (maximize) net_assim <- -net_assim
 
   if (return_all){
-    return( tibble( vcmax_num = vcmax, gs_num = gs, ci_num = ci, chi_num = ci/ca, a_c_num = a_c, cost_transp_num = cost_transp, cost_vcmax_num = cost_vcmax, net_assim_num = net_assim  ) )
+    return( tibble( vcmax_num = vcmax,
+                    gs_num = gs,
+                    ci_num = ci,
+                    chi_num = ci / ca,
+                    a_c_num = a_c,
+                    cost_transp_num = cost_transp,
+                    cost_vcmax_num = cost_vcmax,
+                    net_assim_num = net_assim,
+                    kmm_num = kmm,
+                    gammastar_num = gammastar))
   } else {
     return( net_assim )
   }
@@ -515,7 +524,7 @@ $$
 To verify one again:
 ```{r}
 print( paste( "optimal Vcmax:", varlist$vcmax_num ) )
-print( paste( "Vcmax^P:", kphio * fapar * ppfd * (varlist$ci_num + varlist$kmm) / (varlist$ci + 2 * varlist$gammastar )) )
+print( paste( "Vcmax^P:", kphio * fapar * ppfd * (varlist$ci_num + varlist$kmm_num) / (varlist$ci_num + 2 * varlist$gammastar_num )) )
 print( paste( "Vcmax from P-model:", out_analytical_none$vcmax ) )
 ```
 
