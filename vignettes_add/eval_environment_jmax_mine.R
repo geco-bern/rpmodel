@@ -1,4 +1,4 @@
-eval_environment_jmax_mine <- function(kphio, beta, c_cost, nsteps = 50, method_jmaxlim = "none", show = "chi", vcmax_start, gs_start, jmax_start){
+eval_environment_jmax_mine <- function(kphio, beta, c_cost, method_jmaxlim_inst, nsteps = 50, method_jmaxlim = "none", show = "chi", vcmax_start, gs_start, jmax_start){
 
   # calc_aj <- function(kphio, ppfd, ca, chi, gammastar, jmax){
   #   
@@ -26,7 +26,7 @@ eval_environment_jmax_mine <- function(kphio, beta, c_cost, nsteps = 50, method_
         ) ) %>%
     mutate( out_pmodel = purrr::map(out_pmodel, ~as_tibble(.))) %>%
     unnest( out_pmodel ) %>%
-    mutate( out = purrr::pmap(dplyr::select(., kmm, gammastar, ns_star, ca, vpd, ppfd), calc_optimal_gs_vcmax_jmax, fapar = 1.0, kphio = kphio, beta = beta, c_cost = c_cost, vcmax_start = vcmax_start, gs_start = gs_start, jmax_start = jmax_start) ) %>%
+    mutate( out = purrr::pmap(dplyr::select(., kmm, gammastar, ns_star, ca, vpd, ppfd), calc_optimal_gs_vcmax_jmax, fapar = 1.0, kphio = kphio, beta = beta, c_cost = c_cost, method_jmaxlim_inst = method_jmaxlim_inst, vcmax_start = vcmax_start, gs_start = gs_start, jmax_start = jmax_start) ) %>%
     unnest( out ) %>%
     mutate( a_ = gpp / 12.0107 )
 
@@ -47,7 +47,7 @@ eval_environment_jmax_mine <- function(kphio, beta, c_cost, nsteps = 50, method_
         ) ) %>%
     mutate( out_pmodel = purrr::map(out_pmodel, ~as_tibble(.))) %>%
     unnest( out_pmodel ) %>%
-    mutate( out = purrr::pmap(dplyr::select(., kmm, gammastar, ns_star, ca, vpd, ppfd), calc_optimal_gs_vcmax_jmax, fapar = 1.0, kphio = kphio, beta = beta, c_cost = c_cost, vcmax_start = vcmax_start, gs_start = gs_start, jmax_start = jmax_start) ) %>%
+    mutate( out = purrr::pmap(dplyr::select(., kmm, gammastar, ns_star, ca, vpd, ppfd), calc_optimal_gs_vcmax_jmax, fapar = 1.0, kphio = kphio, beta = beta, c_cost = c_cost, method_jmaxlim_inst = method_jmaxlim_inst, vcmax_start = vcmax_start, gs_start = gs_start, jmax_start = jmax_start) ) %>%
     unnest( out ) %>%
     mutate( a_ = gpp / 12.0107 )
 
@@ -68,7 +68,7 @@ eval_environment_jmax_mine <- function(kphio, beta, c_cost, nsteps = 50, method_
         ) ) %>%
     mutate( out_pmodel = purrr::map(out_pmodel, ~as_tibble(.))) %>%
     unnest( out_pmodel ) %>%
-    mutate( out = purrr::pmap(dplyr::select(., kmm, gammastar, ns_star, ca, vpd, ppfd), calc_optimal_gs_vcmax_jmax, fapar = 1.0, kphio = kphio, beta = beta, c_cost = c_cost, vcmax_start = vcmax_start, gs_start = gs_start, jmax_start = jmax_start) ) %>%
+    mutate( out = purrr::pmap(dplyr::select(., kmm, gammastar, ns_star, ca, vpd, ppfd), calc_optimal_gs_vcmax_jmax, fapar = 1.0, kphio = kphio, beta = beta, c_cost = c_cost, method_jmaxlim_inst, vcmax_start = vcmax_start, gs_start = gs_start, jmax_start = jmax_start) ) %>%
     unnest( out ) %>%
     mutate( a_ = gpp / 12.0107 )
 
@@ -89,7 +89,7 @@ eval_environment_jmax_mine <- function(kphio, beta, c_cost, nsteps = 50, method_
         ) ) %>%
     mutate( out_pmodel = purrr::map(out_pmodel, ~as_tibble(.))) %>%
     unnest( out_pmodel ) %>%
-    mutate( out = purrr::pmap(dplyr::select(., kmm, gammastar, ns_star, ca, vpd, ppfd), calc_optimal_gs_vcmax_jmax, fapar = 1.0, kphio = kphio, beta = beta, c_cost = c_cost, vcmax_start = vcmax_start, gs_start = gs_start, jmax_start = jmax_start) ) %>%
+    mutate( out = purrr::pmap(dplyr::select(., kmm, gammastar, ns_star, ca, vpd, ppfd), calc_optimal_gs_vcmax_jmax, fapar = 1.0, kphio = kphio, beta = beta, c_cost = c_cost, method_jmaxlim_inst, vcmax_start = vcmax_start, gs_start = gs_start, jmax_start = jmax_start) ) %>%
     unnest( out ) %>%
     mutate( a_ = gpp / 12.0107 )
 
@@ -110,7 +110,7 @@ eval_environment_jmax_mine <- function(kphio, beta, c_cost, nsteps = 50, method_
         ) ) %>%
     mutate( out_pmodel = purrr::map(out_pmodel, ~as_tibble(.))) %>%
     unnest( out_pmodel ) %>%
-    mutate( out = purrr::pmap(dplyr::select(., kmm, gammastar, ns_star, ca, vpd, ppfd), calc_optimal_gs_vcmax_jmax, fapar = 1.0, kphio = kphio, beta = beta, c_cost = c_cost, vcmax_start = vcmax_start, gs_start = gs_start, jmax_start = jmax_start) ) %>%
+    mutate( out = purrr::pmap(dplyr::select(., kmm, gammastar, ns_star, ca, vpd, ppfd), calc_optimal_gs_vcmax_jmax, fapar = 1.0, kphio = kphio, beta = beta, c_cost = c_cost, method_jmaxlim_inst, vcmax_start = vcmax_start, gs_start = gs_start, jmax_start = jmax_start) ) %>%
     unnest( out ) %>%
     mutate( a_ = gpp / 12.0107 )
 

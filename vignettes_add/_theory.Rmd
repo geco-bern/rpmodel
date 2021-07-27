@@ -545,13 +545,22 @@ This is implemented as follows:
 
 Let's compare the results for $\chi$ with this modified version to the original one:
 ```{r}
-source("~/rpmodel/vignettes_add/calc_optimal_gs_vcmax_jmax.R")
-varlist_ll <- calc_optimal_gs_vcmax_jmax( out_analytical_none$kmm, out_analytical_none$gammastar, out_analytical_none$ns_star, out_analytical_none$ca, vpd, ppfd, fapar, kphio, beta, c_cost, out_analytical_none$vcmax, out_analytical_none$gs, 40 )
+source("calc_optimal_gs_vcmax_jmax.R")
+varlist_ll <- calc_optimal_gs_vcmax_jmax(out_analytical_none$kmm,
+                                         out_analytical_none$gammastar,
+                                         out_analytical_none$ns_star,
+                                         out_analytical_none$ca,
+                                         vpd, ppfd, fapar, kphio, beta,
+                                         c_cost,
+                                         out_analytical_none$vcmax,
+                                         out_analytical_none$gs,
+                                         40,
+                                         method_jmaxlim_inst = "farquhar89") # smith37 or farquhar89
 
 ## Invoke function with optimised Vcmax and gs (in out_optim$par), now returning all variables
 print( paste("Optimal chi from P-model:", out_analytical_none$chi ) )
 print( paste("Optimal chi from Vcmax-gs optimization:", jmax_chi_opt$chi_opt ) )
-print( paste("Optimal chi from Vcmax-gs opt. with light limit.:", varlist_ll$chi_mine ) )
+print( paste("Optimal chi from Vcmax-gs opt. with light limit.:", varlist_ll$chi_mine, "using Jmax limitation from:", varlist_ll$method_jmaxlim_inst) )
 ```
 
 ### Response to the environment
@@ -559,12 +568,13 @@ print( paste("Optimal chi from Vcmax-gs opt. with light limit.:", varlist_ll$chi
 #### $\chi$
 Create data frames where one variable is varied at a time, holding all others constant, and apply rpmodel.
 ```{r echo=FALSE}
-source("~/rpmodel/vignettes_add/eval_environment_jmax_mine.R")
+source("eval_environment_jmax_mine.R")
 gg_none <- eval_environment_jmax_mine(
   kphio = kphio, 
   beta = beta,
   c_cost = c_cost / 4.0,
-  method_jmaxlim = "wang17", 
+  method_jmaxlim = "wang17",
+  method_jmaxlim_inst = "farquhar89", # smith37 or farquhar89
   show = "chi",
   vcmax_start = out_analytical_none$vcmax, 
   gs_start = out_analytical_none$gs,
