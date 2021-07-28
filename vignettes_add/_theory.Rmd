@@ -67,7 +67,9 @@ c_molmass <- 12.0107 # molar mass, g / mol
 
 ## Define environmental conditions
 tc <- 20             # temperature, deg C
-ppfd <- 300          # mol/m2/d
+# ppfd <- 300          # mol/m2/d; Original setting
+ppfd <- 130          # mol/m2/d, same as 1500 umol/m2/s
+# ppfd <- 1500 * 10^-6 # mol/m2/s
 vpd  <- 1000         # Pa
 co2  <- 400          # ppm
 elv  <- 0            # m.a.s.l.
@@ -260,7 +262,7 @@ A_J - c \; J_{\mathrm{max}} = max.
 $$
 We can now implement a numerical version of the $J_{\mathrm{max}}$-limited P-model by...
 
-- First (numerically) derive optimal $\chi$ based on the original criterion (as describd in the previous section).
+- First (numerically) derive optimal $\chi$ based on the original criterion (as described in the previous section).
 - Then calculate the $J_{\mathrm{max}}$-limited $A_J$ using Smith (1937).
 - Maximise $A_J - c \; J_{\mathrm{max}}$.
 
@@ -361,7 +363,6 @@ jmax_chi_opt <- calc_optimal_jmax_num(
 print(jmax_chi_opt$aj)
 print(out_analytical_jmaxlim$gpp / 12.0107)
 ```
-
 
 ### Response to the environment
 
@@ -555,7 +556,7 @@ varlist_ll <- calc_optimal_gs_vcmax_jmax(out_analytical_none$kmm,
                                          out_analytical_none$vcmax,
                                          out_analytical_none$gs,
                                          40,
-                                         method_jmaxlim_inst = "farquhar89") # smith37 or farquhar89
+                                         method_jmaxlim_inst = "smith37") # smith37 or farquhar89
 
 ## Invoke function with optimised Vcmax and gs (in out_optim$par), now returning all variables
 print( paste("Optimal chi from P-model:", out_analytical_none$chi ) )
@@ -574,7 +575,7 @@ gg_none <- eval_environment_jmax_mine(
   beta = beta,
   c_cost = c_cost / 4.0,
   method_jmaxlim = "wang17",
-  method_jmaxlim_inst = "farquhar89", # smith37 or farquhar89
+  method_jmaxlim_inst = "smith37", # smith37 or farquhar89
   show = "chi",
   vcmax_start = out_analytical_none$vcmax, 
   gs_start = out_analytical_none$gs,
@@ -597,6 +598,7 @@ gg_none <- eval_environment_jmax_mine(
   beta = beta,
   c_cost = c_cost / 4.0,
   method_jmaxlim = "wang17", 
+  method_jmaxlim_inst = "farquhar89", # smith37 or farquhar89
   show = "assim_jv",
   vcmax_start = out_analytical_none$vcmax, 
   gs_start = out_analytical_none$gs,
@@ -619,6 +621,7 @@ gg_none <- eval_environment_jmax_mine(
   beta = beta,
   c_cost = c_cost / 4.0,
   method_jmaxlim = "wang17", 
+  method_jmaxlim_inst = "smith37", # smith37 or farquhar89
   show = "jv",
   vcmax_start = out_analytical_none$vcmax, 
   gs_start = out_analytical_none$gs,
@@ -631,6 +634,57 @@ gg_none$co2
 gg_none$ppfd
 gg_none$patm
 ```
+
+
+#### Considering leaf energy balance
+```{r}
+source("calc_optimal_tcleaf_vcmax_jmax.R")
+
+varlist_ll <- calc_optimal_gs_vcmax_jmax(out_analytical_none$kmm,
+                                         out_analytical_none$gammastar,
+                                         out_analytical_none$ns_star,
+                                         out_analytical_none$ca,
+                                         vpd, ppfd, fapar, kphio, beta,
+                                         c_cost,
+                                         out_analytical_none$vcmax,
+                                         out_analytical_none$gs,
+                                         40,
+                                         method_jmaxlim_inst = "smith37") # smith37 or farquhar89
+
+## Invoke function with optimised Vcmax and gs (in out_optim$par), now returning all variables
+print( paste("Optimal chi from P-model:", out_analytical_none$chi ) )
+print( paste("Optimal chi from Vcmax-gs optimization:", jmax_chi_opt$chi_opt ) )
+print( paste("Optimal chi from Vcmax-gs opt. with light limit.:", varlist_ll$chi_mine, "using Jmax limitation from:", varlist_ll$method_jmaxlim_inst) )
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Profit Maximisation vs. Least Cost
 
