@@ -1,6 +1,6 @@
-#' Calculates the instantaneous temperature response of Vcmax
+#' Calculates the instantaneous temperature response of Jmax
 #'
-#' Given Vcmax at a reference temperature (argument \code{tcref})
+#' Given Jmax at a reference temperature (argument \code{tcref})
 #' this function calculates its temperature-scaling factor following modified Arrhenius
 #' kinetics based on Kattge & Knorr (2007). Calculates \eqn{f} for the conversion
 #' \deqn{
@@ -18,7 +18,7 @@
 #' 		fv = f(T, \Delta Hv) A/B
 #' }
 #' where \eqn{f(T, \Delta Hv)} is a regular Arrhenius-type temperature response function (see
-#' \link{calc_ftemp_arrh}) with \eqn{Hv=71513} J mol-1,
+#' \link{calc_ftemp_arrh}) with \eqn{Hv=49884} J mol-1,
 #' \deqn{
 #' 		A = 1 + exp( (T0 \Delta S - Hd) / (T0 R) )
 #' }
@@ -31,7 +31,7 @@
 #' \deqn{
 #' 		\Delta S = aS - bS T
 #' }
-#' with \eqn{aS = 668.39} J mol-1 K-1, and \eqn{bS = 1.07} J mol-1 K-2, and \eqn{T} given in
+#' with \eqn{aS = 659.70} J mol-1 K-1, and \eqn{bS = 0.75} J mol-1 K-2, and \eqn{T} given in
 #' degrees Celsius (!)
 #'
 #' @references Kattge, J. and Knorr, W.:  Temperature acclimation in a biochemical model of
@@ -39,45 +39,47 @@
 #'
 #' @return A numeric value for \eqn{fv}
 #'
-#' @examples 
-#' ## Relative change in Vcmax going (instantaneously, i.e. 
+#' @examples
+#' ## Relative change in Jmax going (instantaneously, i.e.
 #' ## not acclimatedly) from 10 to 25 degrees (percent change):
-#' print((calc_ftemp_inst_vcmax(25)/calc_ftemp_inst_vcmax(10)-1)*100 )
+#' print((calc_ftemp_inst_jmax(25)/calc_ftemp_inst_jmax(10)-1)*100 )
 #'
 #' @export
 #'
-calc_ftemp_inst_vcmax <- function( tcleaf, tcgrowth = tcleaf, tcref = 25.0, kuma_par = T){
-  
-  # local parameters
+calc_ftemp_inst_jmax <- function( tcleaf, tcgrowth = tcleaf, tchome = NA, tcref = 25.0, kuma_par = T ){
+
+  # loal parameters
   Hd    <- 200000 # deactivation energy (J/mol)
-  Rgas  <- 8.3145 # universal gas constant (J/mol/K)
   tkref <- tcref + 273.15  # to Kelvin
   tkleaf <- tcleaf + 273.15  # conversion of temperature to Kelvin, tcleaf is the instantaneous leaf temperature in degrees C.
-  
+
   # Kattge2007 Parametrization
-  Ha    <- 71513  # activation energy (J/mol)
-  a_ent <- 668.39 # offset of entropy vs. temperature relationship from Kattge & Knorr (2007) (J/mol/K)
-  b_ent <- 1.07   # slope of entropy vs. temperature relationship from Kattge & Knorr (2007) (J/mol/K^2)
-  
-  if (kuma_par){
+  Ha    <- 49884  # activation energy (J/mol)
+  Rgas  <- 8.3145 # universal gas constant (J/mol/K)
+  a_ent <- 659.70 # offset of entropy vs. temperature relationship from Kattge & Knorr (2007) (J/mol/K)
+  b_ent <- 0.75   # slope of entropy vs. temperature relationship from Kattge & Knorr (2007) (J/mol/K^2)
+
+  # calculate entropy following Kattge & Knorr (2007), negative slope and y-axis intersect is when expressed as a function of temperature in degrees Celsius, not Kelvin !!!
+  dent <- a_ent - b_ent * tcgrowth   # 'tcgrowth' corresponds to 'tmean' in Nicks, 'tc25' is 'to' in Nick's
+
+  if(kuma_par){
     #-------------------------
     # Kumarathunge2019 Implementation:
     # local parameters
-    a_ent = 645.13 # offset of entropy vs. temperature relationship (J/mol/K)
-    b_ent = 0.38   # slope  of entropy vs. temperature relationship (J/mol/K^2)
-    
-    # local variables
-    Ha = 42600 + (1140 * tcgrowth) # Acclimation for vcmax
-    
-    # print*,'Kumarathunge vcmax, Ha:', Ha
+    Ha    = 40710  # activation energy (J/mol)
+    a_ent = 658.77 # offset of entropy vs. temperature relationship (J/mol/K)
+    b_ent = 0.84   # slope of entropy vs. temperature relationship (J/mol/K^2)
+    c_ent = 0.52   # 2nd slope of entropy vs. temperature (J/mol/K^2)
+
+    # Entropy calculation, equations given in Celsius, not in Kelvin
+    dent = a_ent - (b_ent * tchome) - c_ent * (tcgrowth - tchome)
+    # print*,'Kumarathunge jmax, dent:', dent
     #-------------------------
   }
-  
-  # calculate entropy following Kattge & Knorr (2007), negative slope and y-axis intersect is when expressed as a function of temperature in degrees Celsius, not Kelvin !!!
-  dent <- a_ent - (b_ent * tcgrowth)  # 'tcgrowth' corresponds to 'tmean' in Nicks, 'tc25' is 'to' in Nick's
+
   fva <- calc_ftemp_arrh( tkleaf, Ha, tkref = tkref )
   fvb <- (1 + exp( (tkref * dent - Hd)/(Rgas * tkref) ) ) / (1 + exp( (tkleaf * dent - Hd)/(Rgas * tkleaf) ) )
   fv  <- fva * fvb
-  
+
   return( fv )
 }
