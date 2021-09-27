@@ -268,3 +268,27 @@ df_tmp %>%
   geom_line(aes(ppfd, Assimilation, color = Scale)) +
   labs(title = "Assimilation")
 ```
+
+### Instantaneous response to temperature
+
+```{r}
+df_out3 <- df %>% 
+  left_join(dplyr::select(df_out, doy, out_pmodel), by = "doy") %>% 
+  slice(rep(150, each = 61)) %>% 
+  mutate(tc = -10:50) %>% 
+  mutate(out_inst = purrr::pmap(dplyr::select(., x = out_pmodel, tc, vpd, co2, fapar, ppfd), 
+                                inst_rpmodel,
+                                elv = 0, 
+                                kphio = 0.05))
+
+df_tmp <- df_out3 %>% 
+  mutate( out_pmodel = purrr::map(out_pmodel, ~as_tibble(.)),
+          out_inst = purrr::map(out_inst, ~as_tibble(.))) %>% 
+  unnest(out_inst)
+
+df_tmp %>% 
+  pivot_longer(cols = c(a_c, a_j), names_to = "Limitation", values_to = "myassim") %>% 
+  ggplot() +
+  geom_line(aes(tc, myassim, color = Limitation)) +
+  labs(title = "Assimilation")
+```
