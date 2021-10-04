@@ -556,7 +556,7 @@ varlist_ll <- calc_optimal_gs_vcmax_jmax(out_analytical_none$kmm,
                                          out_analytical_none$vcmax,
                                          out_analytical_none$gs,
                                          40,
-                                         method_jmaxlim_inst = "smith37") # smith37 or farquhar89
+                                         method_jmaxlim_inst = "farquhar89") # smith37 or farquhar89
 
 ## Invoke function with optimised Vcmax and gs (in out_optim$par), now returning all variables
 print( paste("Optimal chi from P-model:", out_analytical_none$chi ) )
@@ -575,7 +575,7 @@ gg_none <- eval_environment_jmax_mine(
   beta = beta,
   c_cost = c_cost / 4.0,
   method_jmaxlim = "wang17",
-  method_jmaxlim_inst = "smith37", # smith37 or farquhar89
+  method_jmaxlim_inst = "farquhar89", # smith37 or farquhar89
   show = "chi",
   vcmax_start = out_analytical_none$vcmax, 
   gs_start = out_analytical_none$gs,

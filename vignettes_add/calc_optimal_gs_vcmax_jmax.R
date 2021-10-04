@@ -109,7 +109,7 @@ calc_optimal_gs_vcmax_jmax <- function( kmm, gammastar, ns_star, ca, vpd, ppfd, 
     method_jmaxlim_inst = method_jmaxlim_inst,
     method     = "L-BFGS-B",
     maximize   = TRUE,
-    control    = list( maxit = 100000 )
+    control    = list( maxit = 10000, reltol = 0.0001 )
   )
   
   varlist <- optimise_this_gs_vcmax_jmax( 
