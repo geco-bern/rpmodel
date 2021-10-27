@@ -71,7 +71,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/stineb/rpmodel/">
+  <a href="https://github.com/computationales/rpmodel/">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -92,9 +92,9 @@
       <h1 data-toc-skip>Running the P-model in R</h1>
                         <h4 class="author">Beni Stocker</h4>
             
-            <h4 class="date">2021-06-09</h4>
+            <h4 class="date">2021-10-27</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/stineb/rpmodel/blob/master/vignettes/usage.Rmd"><code>vignettes/usage.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/computationales/rpmodel/blob/master/vignettes/usage.Rmd"><code>vignettes/usage.Rmd</code></a></small>
       <div class="hidden name"><code>usage.Rmd</code></div>
 
     </div>
@@ -110,7 +110,7 @@
 <p>Let’s run the P-model, without <span class="math inline">\(J_{\text{max}}\)</span> limitation (argument <code>method_jmaxlim = "none"</code>), for one point. The set of inputs, being temperature (<code>tc</code>), photosynthetic photon flux density (<code>ppfd</code>), vapour pressure deficit (<code>vpd</code>), ambient CO<span class="math inline">\(_2\)</span> (<code>co2</code>), elevation (<code>elv</code>), and fraction of absorbed photosynthetically active radiation (<code>fapar</code>). The quantum yield efficiency parameter is provided as an argument (<code>kphio</code>) and corresponds to <span class="math inline">\(\widehat{\varphi_0}\)</span> in Stocker et al. (2019) if the temperature-dependence of this parameter is ignored (argument <code>do_ftemp_kphio = FALSE</code>, corresponding to simulation setup ‘ORG’ in Stocker et al. (2019)), or to <span class="math inline">\(\widehat{c_L}\)</span> if the temperature-dependence of the quantum yield efficiency is included (argument <code>do_ftemp_kphio = TRUE</code>, used in simulation setups ‘BRC’ and ‘FULL’ in Stocker et al. (2019)). By default the optional argument <code>do_soilmstress</code> is set to <code>FALSE</code>, meaning that the empirical soil moisture stress function is not included. The unit cost ratio (<span class="math inline">\(\beta\)</span> in Stocker et al. (2019)) is given by argument <code>beta</code>.</p>
 <p>To run the <code><a href="../reference/rpmodel.html">rpmodel()</a></code> function we can do:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/stineb/rpmodel">rpmodel</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/computationales/rpmodel">rpmodel</a></span><span class="op">)</span>
 <span class="va">out_pmodel</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rpmodel.html">rpmodel</a></span><span class="op">(</span> 
   tc             <span class="op">=</span> <span class="fl">20</span>,           <span class="co"># temperature, deg C</span>
   vpd            <span class="op">=</span> <span class="fl">1000</span>,         <span class="co"># Pa,</span>
