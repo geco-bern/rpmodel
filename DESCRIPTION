@@ -36,5 +36,5 @@ Suggests:
     covr,
     markdown
 VignetteBuilder: knitr
-URL: https://github.com/stineb/rpmodel
-BugReports: https://github.com/stineb/rpmodel/issues
+URL: https://github.com/computationales/rpmodel
+BugReports: https://github.com/computationales/rpmodel/issues
