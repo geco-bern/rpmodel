@@ -158,6 +158,30 @@ df <- df %>%
 print(df)
 ```
 
+### C4 photosynthesis
+
+Photosynthesis by C4 plants is simulated by the P-model based on the assumption that the "CO2 limitation term" in the FvCB model (Eq. 11 in Stocker et al., 2020) is 1 (no limitation), and based on a distinct parametrisation of the quantum yield efficiency and its temperature dependence $\varphi_0$, following Cai & Prentice, 2020.  
+
+To accurately simulate C3 photosynthesis, a constant scalar was calibrated by Stocker et al., 2020 to GPP from FLUXNET2015 data and scaled in their 'BRC' and 'FULL' setup with a temperature dependence factor (their Eq. 20). The implementation of C3 photosynthesis in rpmodel uses `kphio` as a constant scalar,  provided to `rpmodel()` as an argument, and representing $(a_L b_L)/4$ in their Eq. 20. The temprature dependence is calculated based on Bernacchi et al., 2003 using the function `ftemp_kphio()`. 
+
+The implementation of C4 photosynthesis uses a different temperature dependence of $\varphi_0$ following Eq. 5 in Cai & Prentice (2020), implemented by `ftemp_kphio(c4 = TRUE)`. The calibratable parameter `kphio` doesn't appear explicitly in Eq. 5 by Cai & Prentice (2020), but is implemented the same way in rpmodel as for C3 photosynthesis. It should therefore be regarded as a "correction" factor, where `kphio = 1.0` means "no correction" and reflects the parametrisation used by Cai & Prentice (2020).
+
+The following shows $\varphi(T)$, corresponding to `kphio * ftemp_kphio()`, using parameters as in Stocker et al., 2020 for C3 vegetation (their 'BRC' setup, black line in the plot below), and as in Cai & Prentice (2020) for C4 vegetation (blue solid line). For illustration, also the temperature response of C3 photosynthesis as used by Cai & Prentice (2020) is shown (black dashed line).
+
+```{r}
+library(ggplot2)
+ftemp_c3_stocker <- function(...){0.081785 * ftemp_kphio(...)}
+ftemp_c3_caiprentice <- function(tc){0.044 + 0.00275 * tc - 0.425e-4 * tc^2}
+
+ggplot() +
+  geom_function(fun = ftemp_c3_stocker, args = list(c4 = FALSE)) +
+  geom_function(fun = ftemp_kphio, args = list(c4 = TRUE), color = "royalblue") +
+  geom_function(fun = ftemp_c3_caiprentice, linetype = "dashed") +
+  xlim(0, 30) +
+  labs(x = expression(paste("Temperature (", degree, "C)")), y = expression(varphi))
+```
+
+
 ## Auxiliary functions
 
 A number of auxiliary functions, which are used within `rpmodel()`, are available (public) through the package.
@@ -359,5 +383,9 @@ print(paste("soilmstress(0.2, apar_soilm = 0.1, bpar_soilm = 0.7, meanalpha = 0.
 <!-- ``` -->
 
 ## References
+
+Bernacchi, C. J., Pimentel, C., and Long, S. P.:  In vivo temperature response func-tions  of  parameters required  to  model  RuBP-limited photosynthesis,  Plant  Cell Environ., 26, 1419–1430, 2003
+
+Cai, W., and Prentice, I. C.: Recent trends in gross primary production and their drivers: analysis and modelling at flux-site and global scales, Environ. Res. Lett. 15 124050 https://doi.org/10.1088/1748-9326/abc64e, 2020
 
 Stocker, B. D., Wang, H., Smith, N. G., Harrison, S. P., Keenan, T. F., Sandoval, D., Davis, T., and Prentice, I. C.: P-model v1.0: An optimality-based light use efficiency model for simulating ecosystem gross primary production, Geosci. Model Dev. Discuss., <https://doi.org/10.5194/gmd-2019-200>, in review, 2019.

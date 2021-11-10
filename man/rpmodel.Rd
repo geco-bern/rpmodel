@@ -62,7 +62,10 @@ do_ftemp_kphio=TRUE, do_soilmstress=TRUE}, and 0.049977 for
 \code{method_jmaxlim="wang17", do_ftemp_kphio=FALSE, do_soilmstress=FALSE},
 corresponding to the empirically fitted value as presented in Stocker et al.
 (2019) Geosci. Model Dev. for model setup 'BRC', 'FULL', and 'ORG' 
-respectively.}
+respectively, corresponding to \eqn{(a_L b_L)/4} in 
+Eq.20 in Stocker et al. (2020) for C3 photosynthesis. For C4 photosynthesis
+(\code{c4 = TRUE}), \code{kphio} defaults to 1.0, corresponding to the 
+ parametrisation by  Cai & Prentice (2020).}
 
 \item{beta}{Unit cost ratio. Defaults to 146.0 (see Stocker et al., 2019).}
 
@@ -96,7 +99,9 @@ do_ftemp_kphio=TRUE, do_soilmstress=TRUE}).}
 photosynthetic pathway is followed.Defaults to \code{FALSE}. If \code{TRUE},
 the leaf-internal CO2 concentration is assumed to be very large and 
 \eqn{m} (returned variable \code{mj}) tends to 1, and \eqn{m'} tends to 
-0.669 (with \code{c = 0.41}).}
+0.669 (with \code{c = 0.41}). With \code{do_ftemp_kphio = TRUE}, a C4-specific
+temperature dependence of the quantum yield efficiency is used 
+(see \link{ftemp_kphio}).}
 
 \item{method_optci}{(Optional) A character string specifying which method is
 to be used for calculating optimal ci:ca. Defaults to \code{"prentice14"}.
@@ -110,8 +115,8 @@ also \code{"smith19"}, following the method by Smith et al., 2019 Ecology
 Letters, and \code{"none"} for ignoring effects of Jmax limitation.}
 
 \item{do_ftemp_kphio}{(Optional) A logical specifying whether 
-temperature-dependence of quantum yield efficiency after Bernacchi et al., 
-2003 is to be accounted for. Defaults to \code{TRUE}.}
+temperature-dependence of quantum yield efficiency is used. See \link{ftemp_kphio}
+for details. Defaults to \code{TRUE}.}
 
 \item{do_soilmstress}{(Optional) A logical specifying whether an empirical 
 soil moisture stress factor is to be applied to down-scale light use 
@@ -255,6 +260,8 @@ corollary predictions (Prentice et al., 2014; Han et al., 2017).
 Bernacchi, C. J., Pimentel, C., and Long, S. P.:  In vivo temperature response func-tions  of  parameters
  required  to  model  RuBP-limited  photosynthesis,  Plant  Cell Environ., 26, 1419–1430, 2003
 
+ and their drivers: analysis and modelling at flux-site and global scales,
+ Environ. Res. Lett. 15 124050 https://doi.org/10.1088/1748-9326/abc64e, 2020
  Heskel,  M.,  O’Sullivan,  O.,  Reich,  P.,  Tjoelker,  M.,  Weerasinghe,  L.,  Penillard,  A.,Egerton, J.,
  Creek, D., Bloomfield, K., Xiang, J., Sinca, F., Stangl, Z., Martinez-De La Torre, A., Griffin, K.,
  Huntingford, C., Hurry, V., Meir, P., Turnbull, M.,and Atkin, O.:  Convergence in the temperature response

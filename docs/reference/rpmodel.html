@@ -218,7 +218,10 @@ do_ftemp_kphio=TRUE, do_soilmstress=TRUE</code>, and 0.049977 for
 <code>method_jmaxlim="wang17", do_ftemp_kphio=FALSE, do_soilmstress=FALSE</code>,
 corresponding to the empirically fitted value as presented in Stocker et al.
 (2019) Geosci. Model Dev. for model setup 'BRC', 'FULL', and 'ORG' 
-respectively.</p></td>
+respectively, corresponding to \((a_L b_L)/4\) in 
+Eq.20 in Stocker et al. (2020) for C3 photosynthesis. For C4 photosynthesis
+(<code>c4 = TRUE</code>), <code>kphio</code> defaults to 1.0, corresponding to the 
+ parametrisation by  Cai &amp; Prentice (2020).</p></td>
     </tr>
     <tr>
       <th>beta</th>
@@ -264,7 +267,9 @@ do_ftemp_kphio=TRUE, do_soilmstress=TRUE</code>).</p></td>
 photosynthetic pathway is followed.Defaults to <code>FALSE</code>. If <code>TRUE</code>,
 the leaf-internal CO2 concentration is assumed to be very large and 
 \(m\) (returned variable <code>mj</code>) tends to 1, and \(m'\) tends to 
-0.669 (with <code>c = 0.41</code>).</p></td>
+0.669 (with <code>c = 0.41</code>). With <code>do_ftemp_kphio = TRUE</code>, a C4-specific
+temperature dependence of the quantum yield efficiency is used 
+(see <a href='ftemp_kphio.html'>ftemp_kphio</a>).</p></td>
     </tr>
     <tr>
       <th>method_optci</th>
@@ -284,8 +289,8 @@ Letters, and <code>"none"</code> for ignoring effects of Jmax limitation.</p></t
     <tr>
       <th>do_ftemp_kphio</th>
       <td><p>(Optional) A logical specifying whether 
-temperature-dependence of quantum yield efficiency after Bernacchi et al., 
-2003 is to be accounted for. Defaults to <code>TRUE</code>.</p></td>
+temperature-dependence of quantum yield efficiency is used. See <a href='ftemp_kphio.html'>ftemp_kphio</a>
+for details. Defaults to <code>TRUE</code>.</p></td>
     </tr>
     <tr>
       <th>do_soilmstress</th>
@@ -414,7 +419,9 @@ including all its corollary). This includes :</p>
 
     <p>Bernacchi, C. J., Pimentel, C., and Long, S. P.:  In vivo temperature response func-tions  of  parameters
  required  to  model  RuBP-limited  photosynthesis,  Plant  Cell Environ., 26, 1419–1430, 2003</p>
-<p>Heskel,  M.,  O’Sullivan,  O.,  Reich,  P.,  Tjoelker,  M.,  Weerasinghe,  L.,  Penillard,  A.,Egerton, J.,
+<p>and their drivers: analysis and modelling at flux-site and global scales,
+ Environ. Res. Lett. 15 124050 https://doi.org/10.1088/1748-9326/abc64e, 2020
+ Heskel,  M.,  O’Sullivan,  O.,  Reich,  P.,  Tjoelker,  M.,  Weerasinghe,  L.,  Penillard,  A.,Egerton, J.,
  Creek, D., Bloomfield, K., Xiang, J., Sinca, F., Stangl, Z., Martinez-De La Torre, A., Griffin, K.,
  Huntingford, C., Hurry, V., Meir, P., Turnbull, M.,and Atkin, O.:  Convergence in the temperature response
  of leaf respiration across biomes and plant functional types, Proceedings of the National Academy of Sciences,

@@ -29,7 +29,7 @@ based on Bernacchi et al. (2003) as
       }
 
 The temperature factor for C4 (argument \code{c4 = TRUE}) photosynthesis is calculated based on
-unpublished work as
+Cai & Prentice (2020) as
 			\deqn{
 				\phi(T) = -0.008 + 0.00375 T - 0.58e-4 T^2
       }
@@ -49,4 +49,7 @@ print(paste((ftemp_kphio(25.0)/ftemp_kphio(5.0)-1)*100 ))
 Bernacchi, C. J., Pimentel, C., and Long, S. P.:  In vivo temperature
 				response func-tions  of  parameters required  to  model  RuBP-limited
 				photosynthesis,  Plant  Cell Environ., 26, 1419–1430, 2003
+Cai, W., and Prentice, I. C.: Recent trends in gross primary production 
+       and their drivers: analysis and modelling at flux-site and global scales,
+       Environ. Res. Lett. 15 124050 https://doi.org/10.1088/1748-9326/abc64e, 2020
 }

@@ -23,7 +23,7 @@ Authors@R: c(
            )
 License: GPL-3
 Encoding: UTF-8
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Depends:
     R (>= 3.6)
 Suggests:

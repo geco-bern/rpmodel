@@ -30,7 +30,10 @@
 #'  \code{method_jmaxlim="wang17", do_ftemp_kphio=FALSE, do_soilmstress=FALSE},
 #'  corresponding to the empirically fitted value as presented in Stocker et al.
 #'  (2019) Geosci. Model Dev. for model setup 'BRC', 'FULL', and 'ORG' 
-#'  respectively.
+#'  respectively, corresponding to \eqn{(a_L b_L)/4} in 
+#'  Eq.20 in Stocker et al. (2020) for C3 photosynthesis. For C4 photosynthesis
+#'  (\code{c4 = TRUE}), \code{kphio} defaults to 1.0, corresponding to the 
+#'   parametrisation by  Cai & Prentice (2020).
 #' @param beta Unit cost ratio. Defaults to 146.0 (see Stocker et al., 2019).
 #' @param soilm (Optional, used only if \code{do_soilmstress==TRUE}) Relative 
 #'  soil moisture as a fraction of field capacity (unitless). Defaults to 1.0 
@@ -58,7 +61,9 @@
 #'  photosynthetic pathway is followed.Defaults to \code{FALSE}. If \code{TRUE},
 #'  the leaf-internal CO2 concentration is assumed to be very large and 
 #'  \eqn{m} (returned variable \code{mj}) tends to 1, and \eqn{m'} tends to 
-#'  0.669 (with \code{c = 0.41}).
+#'  0.669 (with \code{c = 0.41}). With \code{do_ftemp_kphio = TRUE}, a C4-specific
+#'  temperature dependence of the quantum yield efficiency is used 
+#'  (see \link{ftemp_kphio}).
 #' @param method_optci (Optional) A character string specifying which method is
 #'  to be used for calculating optimal ci:ca. Defaults to \code{"prentice14"}.
 #'  Available also \code{"prentice14_num"} for a numerical solution to the same
@@ -69,8 +74,8 @@
 #'  also \code{"smith19"}, following the method by Smith et al., 2019 Ecology 
 #'  Letters, and \code{"none"} for ignoring effects of Jmax limitation.
 #' @param do_ftemp_kphio (Optional) A logical specifying whether 
-#'  temperature-dependence of quantum yield efficiency after Bernacchi et al., 
-#'  2003 is to be accounted for. Defaults to \code{TRUE}.
+#'  temperature-dependence of quantum yield efficiency is used. See \link{ftemp_kphio}
+#'  for details. Defaults to \code{TRUE}.
 #' @param do_soilmstress (Optional) A logical specifying whether an empirical 
 #' soil moisture stress factor is to be applied to down-scale light use 
 #' efficiency (and only light use efficiency). Defaults to \code{FALSE}.
@@ -195,6 +200,10 @@
 #'  Bernacchi, C. J., Pimentel, C., and Long, S. P.:  In vivo temperature response func-tions  of  parameters
 #'  required  to  model  RuBP-limited  photosynthesis,  Plant  Cell Environ., 26, 1419–1430, 2003
 #'
+#   Cai, W., and Prentice, I. C.: Recent trends in gross primary production 
+#'  and their drivers: analysis and modelling at flux-site and global scales,
+#'  Environ. Res. Lett. 15 124050 https://doi.org/10.1088/1748-9326/abc64e, 2020
+#
 #'  Heskel,  M.,  O’Sullivan,  O.,  Reich,  P.,  Tjoelker,  M.,  Weerasinghe,  L.,  Penillard,  A.,Egerton, J.,
 #'  Creek, D., Bloomfield, K., Xiang, J., Sinca, F., Stangl, Z., Martinez-De La Torre, A., Griffin, K.,
 #'  Huntingford, C., Hurry, V., Meir, P., Turnbull, M.,and Atkin, O.:  Convergence in the temperature response
@@ -275,11 +284,11 @@ rpmodel <- function(
   #---- Temperature dependence of quantum yield efficiency----------------------
   ## 'do_ftemp_kphio' is not actually a stress function, but is the temperature-dependency of
   ## the quantum yield efficiency after Bernacchi et al., 2003 PCE
-  if (do_ftemp_kphio){
-    ftemp_kphio <- ftemp_kphio( tc, c4 )
-  } else {
-    ftemp_kphio <- 1.0
-  }
+  kphio <- ifelse(
+    do_ftemp_kphio,
+    ftemp_kphio( tc, c4 ) * kphio,
+    kphio
+  )
 
   #---- soil moisture stress as a function of soil moisture and mean alpha -----
   if (do_soilmstress) {
@@ -336,7 +345,6 @@ rpmodel <- function(
 
     out_lue_vcmax <- lue_vcmax_c4(
       kphio,
-      ftemp_kphio,
       c_molmass,
       soilmstress
       )
@@ -347,7 +355,6 @@ rpmodel <- function(
     out_lue_vcmax <- lue_vcmax_wang17(
       out_optchi,
       kphio,
-      ftemp_kphio,
       c_molmass,
       soilmstress
       )
@@ -357,7 +364,6 @@ rpmodel <- function(
     out_lue_vcmax <- lue_vcmax_smith19(
       out_optchi,
       kphio,
-      ftemp_kphio,
       c_molmass,
       soilmstress
       )
@@ -367,7 +373,6 @@ rpmodel <- function(
     out_lue_vcmax <- lue_vcmax_none(
       out_optchi,
       kphio,
-      ftemp_kphio,
       c_molmass,
       soilmstress
       )

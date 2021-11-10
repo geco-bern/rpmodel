@@ -325,7 +325,7 @@ gammastar <- function( tc, patm ) {
 #'       }
 #'
 #' The temperature factor for C4 (argument \code{c4 = TRUE}) photosynthesis is calculated based on
-#' unpublished work as
+#' Cai & Prentice (2020) as
 #' 			\deqn{
 #' 				\phi(T) = -0.008 + 0.00375 T - 0.58e-4 T^2
 #'       }
@@ -342,9 +342,13 @@ gammastar <- function( tc, patm ) {
 #' ## between 5 and 25 degrees celsius (percent change):
 #' print(paste((ftemp_kphio(25.0)/ftemp_kphio(5.0)-1)*100 ))
 #'
-#' @references  Bernacchi, C. J., Pimentel, C., and Long, S. P.:  In vivo temperature
+#' @references  
+#' Bernacchi, C. J., Pimentel, C., and Long, S. P.:  In vivo temperature
 #' 				response func-tions  of  parameters required  to  model  RuBP-limited
 #' 				photosynthesis,  Plant  Cell Environ., 26, 1419–1430, 2003
+#' Cai, W., and Prentice, I. C.: Recent trends in gross primary production 
+#'        and their drivers: analysis and modelling at flux-site and global scales,
+#'        Environ. Res. Lett. 15 124050 https://doi.org/10.1088/1748-9326/abc64e, 2020
 #'
 #' @export
 #'
@@ -846,7 +850,7 @@ optimal_chi <- function(kmm, gammastar, ns_star, ca, vpd, beta ){
 #   return(mj)
 # }
 
-lue_vcmax_wang17 <- function(out_optchi, kphio, ftemp_kphio, c_molmass, soilmstress){
+lue_vcmax_wang17 <- function(out_optchi, kphio, c_molmass, soilmstress){
   
   ## Include effect of Jmax limitation
   len <- length(out_optchi[[1]])
@@ -857,10 +861,10 @@ lue_vcmax_wang17 <- function(out_optchi, kphio, ftemp_kphio, c_molmass, soilmstr
     mprime = mprime,
     
     ## Light use efficiency (gpp per unit absorbed light)
-    lue = kphio * ftemp_kphio * mprime * c_molmass * soilmstress,
+    lue = kphio * mprime * c_molmass * soilmstress,
     
     ## Vcmax normalised per unit absorbed PPFD (assuming iabs=1), with Jmax limitation
-    vcmax_unitiabs = kphio * ftemp_kphio * out_optchi$mjoc * mprime / out_optchi$mj * soilmstress,
+    vcmax_unitiabs = kphio * out_optchi$mjoc * mprime / out_optchi$mj * soilmstress,
     
     ## complement for non-smith19
     omega      = rep(NA, len),
@@ -872,7 +876,7 @@ lue_vcmax_wang17 <- function(out_optchi, kphio, ftemp_kphio, c_molmass, soilmstr
 }
 
 
-lue_vcmax_smith19 <- function(out_optchi, kphio, ftemp_kphio, c_molmass, soilmstress){
+lue_vcmax_smith19 <- function(out_optchi, kphio, c_molmass, soilmstress){
   
   len <- length(out_optchi[[1]])
   
@@ -910,10 +914,10 @@ lue_vcmax_smith19 <- function(out_optchi, kphio, ftemp_kphio, c_molmass, soilmst
   mprime <- out_optchi$mj * omega_star / (8.0 * theta)
   
   ## Light use efficiency (gpp per unit absorbed light)
-  lue <- kphio * ftemp_kphio * mprime * c_molmass * soilmstress
+  lue <- kphio * mprime * c_molmass * soilmstress
   
   # calculate Vcmax per unit aborbed light
-  vcmax_unitiabs  <- kphio * ftemp_kphio * out_optchi$mjoc * omega_star / (8.0 * theta) * soilmstress   # Eq. 19
+  vcmax_unitiabs  <- kphio * out_optchi$mjoc * omega_star / (8.0 * theta) * soilmstress   # Eq. 19
   
   out <- list(
     lue            = lue,
@@ -926,17 +930,17 @@ lue_vcmax_smith19 <- function(out_optchi, kphio, ftemp_kphio, c_molmass, soilmst
 }
 
 
-lue_vcmax_none <- function(out_optchi, kphio, ftemp_kphio, c_molmass, soilmstress){
+lue_vcmax_none <- function(out_optchi, kphio, c_molmass, soilmstress){
   ## Do not include effect of Jmax limitation
   len <- length(out_optchi[[1]])
   
   out <- list(
     
     ## Light use efficiency (gpp per unit absorbed light)
-    lue = kphio * ftemp_kphio * out_optchi$mj * c_molmass * soilmstress,
+    lue = kphio * out_optchi$mj * c_molmass * soilmstress,
     
     ## Vcmax normalised per unit absorbed PPFD (assuming iabs=1), with Jmax limitation
-    vcmax_unitiabs = kphio * ftemp_kphio * out_optchi$mjoc * soilmstress,
+    vcmax_unitiabs = kphio * out_optchi$mjoc * soilmstress,
     
     ## complement for non-smith19
     omega               = rep(NA, len),
@@ -947,15 +951,15 @@ lue_vcmax_none <- function(out_optchi, kphio, ftemp_kphio, c_molmass, soilmstres
 }
 
 
-lue_vcmax_c4 <- function( kphio, ftemp_kphio, c_molmass, soilmstress ){
+lue_vcmax_c4 <- function( kphio, c_molmass, soilmstress ){
   
   len <- length(kphio)
   out <- list(
     ## Light use efficiency (gpp per unit absorbed light)
-    lue = kphio * ftemp_kphio * c_molmass * soilmstress,
+    lue = kphio * c_molmass * soilmstress,
     
     ## Vcmax normalised per unit absorbed PPFD (assuming iabs=1), with Jmax limitation
-    vcmax_unitiabs = kphio * ftemp_kphio * soilmstress,
+    vcmax_unitiabs = kphio * soilmstress,
     
     ## complement for non-smith19
     omega               = rep(NA, len),
