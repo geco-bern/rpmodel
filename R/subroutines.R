@@ -121,15 +121,11 @@ soilmstress <- function(
   beta <- (1.0 - y0) / (x0 - x1)^2
   outstress <- 1.0 - beta * ( soilm - x1 )^2
   
-  ## bound between 0 and 1, and set to 1.0 above soil moisture threshold x1.
-  outstress <- ifelse(soilm > x1,
-                      1.0,
-                      ifelse(outstress > 1.0,
-                             1.0,
-                             ifelse(outstress < 0.0, 
-                                    0.0, 
-                                    outstress)))
-  
+  ## bound between 0 and 1
+  outstress <- pmin(pmax(outstress, 0), 1)
+  # and set to 1.0 above soil moisture threshold x1.
+  outstress[soilm > x1] <- 1.0
+
   return(outstress)
 }
 
