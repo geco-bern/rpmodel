@@ -429,16 +429,22 @@ rpmodel <- function(
   ## Test: at this stage, verify if A_J = A_C
   a_j <- kphio * iabs * (ci - gammastar)/(ci + 2 * gammastar) * fact_jmaxlim
   a_c <- vcmax * (ci - gammastar) / (ci + kmm)
-  if (any(abs(a_j/a_c - 1) > 0.001)){
-    stop("rpmodel(): light and Rubisco-limited assimilation rates
-                 are not identical.")
-  } 
+
+  a_j_eq_a_c <- all.equal(a_j, a_c, tol = 0.001)
+  if (! isTRUE(a_j_eq_a_c)) {
+    warning("rpmodel(): light and Rubisco-limited assimilation rates",
+            "are not identical.\n", a_j_eq_a_c)
+  }
 
   # Assimilation is not returned because it should not be confused with what 
   # is usually measured should use instantaneous assimilation for comparison to
   # measurements. This is returned by inst_rpmodel().
   assim <- ifelse(a_j < a_c , a_j, a_c)
-  if (any(abs(assim - gpp / c_molmass) > 0.001)) stop("rpmodel(): Assimilation and GPP are not identical.")
+  assim_eq_check <- all.equal(assim, gpp / c_molmass, tol = 0.001)
+  if (! isTRUE(assim_eq_check)) {
+      warning("rpmodel(): Assimilation and GPP are not identical.\n",
+              assim_eq_check)
+  }
 
   ## average stomatal conductance
   gs <- assim / (ca - ci)
