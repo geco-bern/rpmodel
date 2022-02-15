@@ -284,11 +284,9 @@ rpmodel <- function(
   #---- Temperature dependence of quantum yield efficiency----------------------
   ## 'do_ftemp_kphio' is not actually a stress function, but is the temperature-dependency of
   ## the quantum yield efficiency after Bernacchi et al., 2003 PCE
-  kphio <- ifelse(
-    do_ftemp_kphio,
-    ftemp_kphio( tc, c4 ) * kphio,
-    kphio
-  )
+  if (do_ftemp_kphio) {
+    kphio <- ftemp_kphio( tc, c4 ) * kphio
+  }
 
   #---- soil moisture stress as a function of soil moisture and mean alpha -----
   if (do_soilmstress) {
