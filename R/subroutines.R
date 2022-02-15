@@ -969,10 +969,27 @@ lue_vcmax_c4 <- function( kphio, c_molmass, soilmstress ){
   return(out)
 }
 
+optimal_chi_c4 <- function(kmm, gammastar, ns_star, ca, vpd, beta=146/9){
+  
+  # Input:    - float, 'kmm' : Pa, Michaelis-Menten coeff.
+  #           - float, 'ns_star'  : (unitless) viscosity correction factor for water
+  #           - float, 'vpd' : Pa, vapor pressure deficit
+  # Output:   float, ratio of ci/ca (chi)
+  # Features: Returns an estimate of leaf internal to ambient CO2
+  #           partial pressure following the "simple formulation".
+  # Depends:  - kc
+  #           - ns
+  #           - vpd
+  
+  ## Avoid negative VPD (dew conditions), resolves issue #2 (https://github.com/stineb/rpmodel/issues/2)
+  vpd <- ifelse(vpd < 0, 0, vpd)
+  
+  ## leaf-internal-to-ambient CO2 partial pressure (ci/ca) ratio
+  xi  <- sqrt( (beta * ( kmm + gammastar ) ) / ( 1.6 * ns_star ) )
+  chi <- gammastar / ca + ( 1.0 - gammastar / ca ) * xi / ( xi + sqrt(vpd) )
 
-chi_c4 <- function(){
-  # (Dummy-) ci:ca for C4 photosynthesis
-  out <- list( chi=1.0, mc=1.0, mj=1.0, mjoc=1.0 )
+  # True ci:ca for C4 photosynthesis and then dummy values for mc, mj, mjoc
+  out <- list( chi=chi, mc=1.0, mj=1.0, mjoc=1.0 )
   return(out)
 }
 
