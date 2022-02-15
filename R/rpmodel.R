@@ -34,7 +34,8 @@
 #'  Eq.20 in Stocker et al. (2020) for C3 photosynthesis. For C4 photosynthesis
 #'  (\code{c4 = TRUE}), \code{kphio} defaults to 1.0, corresponding to the 
 #'   parametrisation by  Cai & Prentice (2020).
-#' @param beta Unit cost ratio. Defaults to 146.0 (see Stocker et al., 2019).
+#' @param beta Unit cost ratio. Defaults to 146.0 (see Stocker et al., 2019) for
+#'   C3 plants and 146/9 for C4 plants.
 #' @param soilm (Optional, used only if \code{do_soilmstress==TRUE}) Relative 
 #'  soil moisture as a fraction of field capacity (unitless). Defaults to 1.0 
 #'  (no soil moisture stress). This information is used to calculate
@@ -57,13 +58,13 @@
 #'  Stocker et al. (2019) Geosci. Model Dev. for model setup 'FULL' 
 #'  (corresponding to a setup with \code{method_jmaxlim="wang17", 
 #'  do_ftemp_kphio=TRUE, do_soilmstress=TRUE}).
-#' @param c4 (Optional) A logical value specifying whether the C3 or C4 
+#' @param c4 (Optional) A logical value specifying whether the C3 or C4
 #'  photosynthetic pathway is followed.Defaults to \code{FALSE}. If \code{TRUE},
-#'  the leaf-internal CO2 concentration is assumed to be very large and 
-#'  \eqn{m} (returned variable \code{mj}) tends to 1, and \eqn{m'} tends to 
-#'  0.669 (with \code{c = 0.41}). With \code{do_ftemp_kphio = TRUE}, a C4-specific
-#'  temperature dependence of the quantum yield efficiency is used 
-#'  (see \link{ftemp_kphio}).
+#'  the leaf-internal CO2 concentration is still estimated using beta but
+#'  \eqn{m} (returned variable \code{mj}) tends to 1, and \eqn{m'} tends to
+#'  0.669 (with \code{c = 0.41}) to represent CO2 concentrations within the leaf.
+#'  With \code{do_ftemp_kphio = TRUE}, a C4-specific temperature dependence of
+#'  the quantum yield efficiency is used (see \link{ftemp_kphio}).
 #' @param method_optci (Optional) A character string specifying which method is
 #'  to be used for calculating optimal ci:ca. Defaults to \code{"prentice14"}.
 #'  Available also \code{"prentice14_num"} for a numerical solution to the same
@@ -253,7 +254,7 @@ rpmodel <- function(
   patm = NA,
   elv = NA,
   kphio = ifelse(do_ftemp_kphio, ifelse(do_soilmstress, 0.087182, 0.081785), 0.049977),
-  beta = 146.0,
+  beta = NA,
   soilm = stopifnot(!do_soilmstress),
   meanalpha = 1.0,
   apar_soilm = 0.0,
@@ -273,6 +274,11 @@ rpmodel <- function(
   } else if (!identical(NA, elv) && identical(NA, patm)){
     if (verbose) warning("Atmospheric pressure (patm) not provided. Calculating it as a function of elevation (elv), assuming standard atmosphere (101325 Pa at sea level).")
     patm <- patm(elv)
+  }
+
+  # Set defaults for beta if none provided
+  if (is.na(beta)) {
+    beta <- ifelse(c4, 146/9, 146)
   }
 
   #---- Fixed parameters--------------------------------------------------------
@@ -313,11 +319,10 @@ rpmodel <- function(
 
   ##----Optimal ci -------------------------------------------------------------
   ## The heart of the P-model: calculate ci:ca ratio (chi) and additional terms
-  
-  if (c4){
+  if (c4) {
 
-    # "dummy" ci:ca for C4 plants
-    out_optchi <- chi_c4()
+    # Correct ci:ca for C4 plants, with dummy mj, mc, mjoc
+    out_optchi <- optimal_chi_c4( kmm, gammastar, ns_star, ca, vpd, beta )
 
   } else if (method_optci=="prentice14"){
 
