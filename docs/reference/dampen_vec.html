@@ -171,13 +171,13 @@ perturbation). Must be smaller or equal to 365 d.</p></td>
  the decay time scale of a perturbation, given by argument <code>tau</code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='fu'>dampen_vec</span><span class='op'>(</span>
- vec <span class='op'>=</span> <span class='fl'>20</span> <span class='op'>*</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Trig.html'>sin</a></span><span class='op'>(</span><span class='va'>doy</span><span class='op'>*</span><span class='va'>pi</span><span class='op'>/</span><span class='op'>(</span><span class='fl'>365</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span><span class='op'>^</span><span class='fl'>2</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>365</span>, mean <span class='op'>=</span> <span class='fl'>0</span>, sd <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span>,
- tau <span class='op'>=</span> <span class='fl'>40</span> 
- <span class='op'>)</span>
-<span class='op'>}</span>
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'><span class='fu'>dampen_vec</span><span class='op'>(</span></span>
+<span class='r-in'> vec <span class='op'>=</span> <span class='fl'>20</span> <span class='op'>*</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Trig.html'>sin</a></span><span class='op'>(</span><span class='va'>doy</span><span class='op'>*</span><span class='va'>pi</span><span class='op'>/</span><span class='op'>(</span><span class='fl'>365</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span><span class='op'>^</span><span class='fl'>2</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>365</span>, mean <span class='op'>=</span> <span class='fl'>0</span>, sd <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span>,</span>
+<span class='r-in'> tau <span class='op'>=</span> <span class='fl'>40</span> </span>
+<span class='r-in'> <span class='op'>)</span></span>
+<span class='r-in'><span class='op'>}</span></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

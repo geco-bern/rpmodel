@@ -170,6 +170,8 @@ The implementation of C4 photosynthesis uses a different temperature dependence 
 
 The following shows $\varphi(T)$, corresponding to `kphio * ftemp_kphio()`, using parameters as in Stocker et al., 2020 for C3 vegetation (their 'BRC' setup, black line in the plot below), and as in Cai & Prentice (2020) for C4 vegetation (blue solid line).
 
+Addendum: As of [issue #19](https://github.com/computationales/rpmodel/issues/19) (raised by David Orme), the values provided in Cai & Prentice (2020) are erroneous. And instead, the temperature response function for C4 should be `ftemp = -0.064 + 0.03 * tc - 0.000464 * tc^2`. This is now also implemented in rpmodel.
+
 ```{r}
 library(ggplot2)
 
@@ -185,7 +187,7 @@ ggplot() +
        subtitle = "Black: Stocker et al., 2020 | Blue: Cai & Prentice, 2020")
 
 ftemp_c4_stocker <- function(...){1.0 * ftemp_kphio(...)}
-ftemp_c4_caiprentice <- function(tc){-0.008 + 0.00375 * tc - 0.58e-4 * tc^2}
+ftemp_c4_caiprentice <- function(tc){-0.064 + 0.03 * tc - 0.000464 * tc^2 }
 
 ggplot() +
   geom_function(fun = ftemp_c4_stocker, args = list(c4 = TRUE), size = 2) +

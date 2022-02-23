@@ -150,7 +150,8 @@ corollary predictions (Prentice et al., 2014; Han et al., 2017).</p>
   <span class='va'>ppfd</span>,
   patm <span class='op'>=</span> <span class='cn'>NA</span>,
   elv <span class='op'>=</span> <span class='cn'>NA</span>,
-  kphio <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='va'>do_ftemp_kphio</span>, <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='va'>do_soilmstress</span>, <span class='fl'>0.087182</span>, <span class='fl'>0.081785</span><span class='op'>)</span>, <span class='fl'>0.049977</span><span class='op'>)</span>,
+  kphio <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='va'>c4</span>, <span class='fl'>1</span>, <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='va'>do_ftemp_kphio</span>, <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='va'>do_soilmstress</span>, <span class='fl'>0.087182</span>,
+    <span class='fl'>0.081785</span><span class='op'>)</span>, <span class='fl'>0.049977</span><span class='op'>)</span><span class='op'>)</span>,
   beta <span class='op'>=</span> <span class='fl'>146</span>,
   soilm <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/stopifnot.html'>stopifnot</a></span><span class='op'>(</span><span class='op'>!</span><span class='va'>do_soilmstress</span><span class='op'>)</span>,
   meanalpha <span class='op'>=</span> <span class='fl'>1</span>,
@@ -241,7 +242,8 @@ argument <code>meanalpha</code>.</p></td>
       <th>meanalpha</th>
       <td><p>(Optional, used only if <code>do_soilmstress==TRUE</code>) Local 
 annual mean ratio of actual over potential evapotranspiration, measure for 
-average aridity. Defaults to 1.0.</p></td>
+average aridity. Defaults to 1.0. Only scalar numbers are accepted. If 
+a vector is provided, only the first element will be used.</p></td>
     </tr>
     <tr>
       <th>apar_soilm</th>
@@ -290,7 +292,8 @@ Letters, and <code>"none"</code> for ignoring effects of Jmax limitation.</p></t
       <th>do_ftemp_kphio</th>
       <td><p>(Optional) A logical specifying whether 
 temperature-dependence of quantum yield efficiency is used. See <a href='ftemp_kphio.html'>ftemp_kphio</a>
-for details. Defaults to <code>TRUE</code>.</p></td>
+for details. Defaults to <code>TRUE</code>. Only scalar numbers are accepted. If 
+a vector is provided, only the first element will be used.</p></td>
     </tr>
     <tr>
       <th>do_soilmstress</th>
@@ -445,16 +448,16 @@ including all its corollary). This includes :</p>
 <p>Stocker, B. et al. Geoscientific Model Development Discussions (in prep.)</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
- <span class='fu'>rpmodel</span><span class='op'>(</span>
-  tc <span class='op'>=</span> <span class='fl'>20</span>,
-  vpd <span class='op'>=</span> <span class='fl'>1000</span>,
-  co2 <span class='op'>=</span> <span class='fl'>400</span>,
-  ppfd <span class='op'>=</span> <span class='fl'>30</span>,
-  elv <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span>
-<span class='op'>}</span>
-
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'> <span class='fu'>rpmodel</span><span class='op'>(</span></span>
+<span class='r-in'>  tc <span class='op'>=</span> <span class='fl'>20</span>,</span>
+<span class='r-in'>  vpd <span class='op'>=</span> <span class='fl'>1000</span>,</span>
+<span class='r-in'>  co2 <span class='op'>=</span> <span class='fl'>400</span>,</span>
+<span class='r-in'>  ppfd <span class='op'>=</span> <span class='fl'>30</span>,</span>
+<span class='r-in'>  elv <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>}</span></span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

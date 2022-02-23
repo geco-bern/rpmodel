@@ -29,9 +29,10 @@ based on Bernacchi et al. (2003) as
       }
 
 The temperature factor for C4 (argument \code{c4 = TRUE}) photosynthesis is calculated based on
-Cai & Prentice (2020) as
+pers. comm. by David Orme, correcting values provided in Cai & Prentice (2020). Corrected 
+parametrisation is:
 			\deqn{
-				\phi(T) = -0.008 + 0.00375 T - 0.58e-4 T^2
+				\phi(T) = -0.064 + 0.03 T - 0.000464 T^2 
       }
 
 The factor \eqn{\phi(T)} is to be multiplied with leaf absorptance and the fraction
