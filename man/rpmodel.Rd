@@ -12,7 +12,8 @@ rpmodel(
   ppfd,
   patm = NA,
   elv = NA,
-  kphio = ifelse(do_ftemp_kphio, ifelse(do_soilmstress, 0.087182, 0.081785), 0.049977),
+  kphio = ifelse(c4, 1, ifelse(do_ftemp_kphio, ifelse(do_soilmstress, 0.087182,
+    0.081785), 0.049977)),
   beta = 146,
   soilm = stopifnot(!do_soilmstress),
   meanalpha = 1,
@@ -79,7 +80,8 @@ argument \code{meanalpha}.}
 
 \item{meanalpha}{(Optional, used only if \code{do_soilmstress==TRUE}) Local 
 annual mean ratio of actual over potential evapotranspiration, measure for 
-average aridity. Defaults to 1.0.}
+average aridity. Defaults to 1.0. Only scalar numbers are accepted. If 
+a vector is provided, only the first element will be used.}
 
 \item{apar_soilm}{(Optional, used only if \code{do_soilmstress==TRUE}) 
 Parameter determining the sensitivity of the empirical soil moisture stress 
@@ -116,7 +118,8 @@ Letters, and \code{"none"} for ignoring effects of Jmax limitation.}
 
 \item{do_ftemp_kphio}{(Optional) A logical specifying whether 
 temperature-dependence of quantum yield efficiency is used. See \link{ftemp_kphio}
-for details. Defaults to \code{TRUE}.}
+for details. Defaults to \code{TRUE}. Only scalar numbers are accepted. If 
+a vector is provided, only the first element will be used.}
 
 \item{do_soilmstress}{(Optional) A logical specifying whether an empirical 
 soil moisture stress factor is to be applied to down-scale light use 

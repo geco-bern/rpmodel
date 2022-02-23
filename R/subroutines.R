@@ -321,9 +321,10 @@ gammastar <- function( tc, patm ) {
 #'       }
 #'
 #' The temperature factor for C4 (argument \code{c4 = TRUE}) photosynthesis is calculated based on
-#' Cai & Prentice (2020) as
+#' pers. comm. by David Orme, correcting values provided in Cai & Prentice (2020). Corrected 
+#' parametrisation is:
 #' 			\deqn{
-#' 				\phi(T) = -0.008 + 0.00375 T - 0.58e-4 T^2
+#' 				\phi(T) = -0.064 + 0.03 T - 0.000464 T^2 
 #'       }
 #'
 #' The factor \eqn{\phi(T)} is to be multiplied with leaf absorptance and the fraction
@@ -351,7 +352,8 @@ gammastar <- function( tc, patm ) {
 ftemp_kphio <- function( tc, c4 = FALSE ){
   
   if (c4){
-    ftemp = -0.064 + 0.03 * tc - 0.000464 * tc^2    # Based on calibrated values by Shirley
+    ftemp = -0.064 + 0.03 * tc - 0.000464 * tc^2     # correcting erroneous values provided in Cai & Prentice, 2020, according to D. Orme (issue #19) 
+    # XXX THIS IS NOT CORRECT: ftemp = -0.008 + 0.00375 * tc - 0.58e-4 * tc^2   # Based on calibrated values by Shirley
   } else {
     ftemp <- 0.352 + 0.022 * tc - 3.4e-4 * tc^2
   }

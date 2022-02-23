@@ -53,7 +53,9 @@ apar_soilm = 0.0
 bpar_soilm = 0.73300
 ```
 
-The function returns a list of variables (see also man page by `?rpmodel`), including $V_{\mathrm{cmax}}$, $g_s$, and all the parameters of the photosynthesis model ($K$, $\Gamma^{\ast}$), which are all internally consistent, as can be verified for... $$
+The function returns a list of variables (see also man page by `?rpmodel`), including $V_{\mathrm{cmax}}$, $g_s$, and all the parameters of the photosynthesis model ($K$, $\Gamma^{\ast}$), which are all internally consistent, as can be verified for... 
+
+$$
 c_i = c_a - A / g_s = \chi c_a
 $$
 
@@ -166,19 +168,34 @@ To accurately simulate C3 photosynthesis, a constant scalar was calibrated by St
 
 The implementation of C4 photosynthesis uses a different temperature dependence of $\varphi_0$ following Eq. 5 in Cai & Prentice (2020), implemented by `ftemp_kphio(c4 = TRUE)`. The calibratable parameter `kphio` doesn't appear explicitly in Eq. 5 by Cai & Prentice (2020), but is implemented the same way in rpmodel as for C3 photosynthesis. It should therefore be regarded as a "correction" factor, where `kphio = 1.0` means "no correction" and reflects the parametrisation used by Cai & Prentice (2020).
 
-The following shows $\varphi(T)$, corresponding to `kphio * ftemp_kphio()`, using parameters as in Stocker et al., 2020 for C3 vegetation (their 'BRC' setup, black line in the plot below), and as in Cai & Prentice (2020) for C4 vegetation (blue solid line). For illustration, also the temperature response of C3 photosynthesis as used by Cai & Prentice (2020) is shown (black dashed line).
+The following shows $\varphi(T)$, corresponding to `kphio * ftemp_kphio()`, using parameters as in Stocker et al., 2020 for C3 vegetation (their 'BRC' setup, black line in the plot below), and as in Cai & Prentice (2020) for C4 vegetation (blue solid line).
+
+Addendum: As of [issue #19](https://github.com/computationales/rpmodel/issues/19) (raised by David Orme), the values provided in Cai & Prentice (2020) are erroneous. And instead, the temperature response function for C4 should be `ftemp = -0.064 + 0.03 * tc - 0.000464 * tc^2`. This is now also implemented in rpmodel.
 
 ```{r}
 library(ggplot2)
+
 ftemp_c3_stocker <- function(...){0.081785 * ftemp_kphio(...)}
 ftemp_c3_caiprentice <- function(tc){0.044 + 0.00275 * tc - 0.425e-4 * tc^2}
 
 ggplot() +
   geom_function(fun = ftemp_c3_stocker, args = list(c4 = FALSE)) +
-  geom_function(fun = ftemp_kphio, args = list(c4 = TRUE), color = "royalblue") +
-  geom_function(fun = ftemp_c3_caiprentice, linetype = "dashed") +
+  geom_function(fun = ftemp_c3_caiprentice, color = "royalblue") +
   xlim(0, 30) +
-  labs(x = expression(paste("Temperature (", degree, "C)")), y = expression(varphi))
+  labs(x = expression(paste("Temperature (", degree, "C)")), y = expression(varphi),
+       title = "Temperature dependence of C3 photosynthesis (BRC setup)",
+       subtitle = "Black: Stocker et al., 2020 | Blue: Cai & Prentice, 2020")
+
+ftemp_c4_stocker <- function(...){1.0 * ftemp_kphio(...)}
+ftemp_c4_caiprentice <- function(tc){-0.064 + 0.03 * tc - 0.000464 * tc^2 }
+
+ggplot() +
+  geom_function(fun = ftemp_c4_stocker, args = list(c4 = TRUE), size = 2) +
+  geom_function(fun = ftemp_c4_caiprentice, color = "royalblue") +
+  xlim(0, 30) +
+  labs(x = expression(paste("Temperature (", degree, "C)")), y = expression(varphi),
+       title = "Temperature dependence of C4 photosynthesis (BRC setup)",
+       subtitle = "Black: Stocker et al., 2020 | Blue: Cai & Prentice, 2020")
 ```
 
 
