@@ -292,6 +292,10 @@ rpmodel <- function(
 
   #---- soil moisture stress as a function of soil moisture and mean alpha -----
   if (do_soilmstress) {
+    if (length(meanalpha) > 1){
+      warning("Argument 'meanalpha' has length > 1. Only the first element is used.")
+      meanalpha <- meanalpha[1]
+    }
     soilmstress <- soilmstress( soilm, meanalpha, apar_soilm, bpar_soilm )
   }
   else {
