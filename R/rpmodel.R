@@ -44,7 +44,8 @@
 #'  argument \code{meanalpha}.
 #' @param meanalpha (Optional, used only if \code{do_soilmstress==TRUE}) Local 
 #'  annual mean ratio of actual over potential evapotranspiration, measure for 
-#'  average aridity. Defaults to 1.0.
+#'  average aridity. Defaults to 1.0. Only scalar numbers are accepted. If 
+#'  a vector is provided, only the first element will be used.
 #' @param apar_soilm (Optional, used only if \code{do_soilmstress==TRUE}) 
 #'  Parameter determining the sensitivity of the empirical soil moisture stress 
 #'  function. Defaults to 0.0, the empirically fitted value as presented in 
@@ -75,7 +76,8 @@
 #'  Letters, and \code{"none"} for ignoring effects of Jmax limitation.
 #' @param do_ftemp_kphio (Optional) A logical specifying whether 
 #'  temperature-dependence of quantum yield efficiency is used. See \link{ftemp_kphio}
-#'  for details. Defaults to \code{TRUE}.
+#'  for details. Defaults to \code{TRUE}. Only scalar numbers are accepted. If 
+#'  a vector is provided, only the first element will be used.
 #' @param do_soilmstress (Optional) A logical specifying whether an empirical 
 #' soil moisture stress factor is to be applied to down-scale light use 
 #' efficiency (and only light use efficiency). Defaults to \code{FALSE}.
@@ -252,7 +254,7 @@ rpmodel <- function(
   ppfd,
   patm = NA,
   elv = NA,
-  kphio = ifelse(do_ftemp_kphio, ifelse(do_soilmstress, 0.087182, 0.081785), 0.049977),
+  kphio = ifelse(c4, 1.0, ifelse(do_ftemp_kphio, ifelse(do_soilmstress, 0.087182, 0.081785), 0.049977)),
   beta = 146.0,
   soilm = stopifnot(!do_soilmstress),
   meanalpha = 1.0,
@@ -284,6 +286,10 @@ rpmodel <- function(
   #---- Temperature dependence of quantum yield efficiency----------------------
   ## 'do_ftemp_kphio' is not actually a stress function, but is the temperature-dependency of
   ## the quantum yield efficiency after Bernacchi et al., 2003 PCE
+  if (length(do_ftemp_kphio) > 1){
+    warning("Argument 'do_ftemp_kphio' has length > 1. Only the first element is used.")
+    do_ftemp_kphio <- do_ftemp_kphio[1]
+  }
   kphio <- ifelse(
     do_ftemp_kphio,
     ftemp_kphio( tc, c4 ) * kphio,
