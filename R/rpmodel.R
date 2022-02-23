@@ -34,7 +34,8 @@
 #'  Eq.20 in Stocker et al. (2020) for C3 photosynthesis. For C4 photosynthesis
 #'  (\code{c4 = TRUE}), \code{kphio} defaults to 1.0, corresponding to the 
 #'   parametrisation by  Cai & Prentice (2020).
-#' @param beta Unit cost ratio. Defaults to 146.0 (see Stocker et al., 2019).
+#' @param beta Unit cost ratio. Defaults to 146.0 (see Stocker et al., 2019) for
+#'   C3 plants and 146/9 for C4 plants.
 #' @param soilm (Optional, used only if \code{do_soilmstress==TRUE}) Relative 
 #'  soil moisture as a fraction of field capacity (unitless). Defaults to 1.0 
 #'  (no soil moisture stress). This information is used to calculate
@@ -58,13 +59,13 @@
 #'  Stocker et al. (2019) Geosci. Model Dev. for model setup 'FULL' 
 #'  (corresponding to a setup with \code{method_jmaxlim="wang17", 
 #'  do_ftemp_kphio=TRUE, do_soilmstress=TRUE}).
-#' @param c4 (Optional) A logical value specifying whether the C3 or C4 
+#' @param c4 (Optional) A logical value specifying whether the C3 or C4
 #'  photosynthetic pathway is followed.Defaults to \code{FALSE}. If \code{TRUE},
-#'  the leaf-internal CO2 concentration is assumed to be very large and 
-#'  \eqn{m} (returned variable \code{mj}) tends to 1, and \eqn{m'} tends to 
-#'  0.669 (with \code{c = 0.41}). With \code{do_ftemp_kphio = TRUE}, a C4-specific
-#'  temperature dependence of the quantum yield efficiency is used 
-#'  (see \link{ftemp_kphio}).
+#'  the leaf-internal CO2 concentration is still estimated using beta but
+#'  \eqn{m} (returned variable \code{mj}) tends to 1, and \eqn{m'} tends to
+#'  0.669 (with \code{c = 0.41}) to represent CO2 concentrations within the leaf.
+#'  With \code{do_ftemp_kphio = TRUE}, a C4-specific temperature dependence of
+#'  the quantum yield efficiency is used (see \link{ftemp_kphio}).
 #' @param method_optci (Optional) A character string specifying which method is
 #'  to be used for calculating optimal ci:ca. Defaults to \code{"prentice14"}.
 #'  Available also \code{"prentice14_num"} for a numerical solution to the same
@@ -277,6 +278,11 @@ rpmodel <- function(
     patm <- patm(elv)
   }
 
+  # Set defaults for beta if none provided
+  if (is.na(beta)) {
+    beta <- ifelse(c4, 146/9, 146)
+  }
+
   #---- Fixed parameters--------------------------------------------------------
   c_molmass <- 12.0107  # molecular mass of carbon (g)
   kPo <- 101325.0       # standard atmosphere, Pa (Allen, 1973)
@@ -290,11 +296,9 @@ rpmodel <- function(
     warning("Argument 'do_ftemp_kphio' has length > 1. Only the first element is used.")
     do_ftemp_kphio <- do_ftemp_kphio[1]
   }
-  kphio <- ifelse(
-    do_ftemp_kphio,
-    ftemp_kphio( tc, c4 ) * kphio,
-    kphio
-  )
+  if (do_ftemp_kphio) {
+    kphio <- ftemp_kphio( tc, c4 ) * kphio
+  }
 
   #---- soil moisture stress as a function of soil moisture and mean alpha -----
   if (do_soilmstress) {
@@ -325,11 +329,10 @@ rpmodel <- function(
 
   ##----Optimal ci -------------------------------------------------------------
   ## The heart of the P-model: calculate ci:ca ratio (chi) and additional terms
-  
-  if (c4){
+  if (c4) {
 
-    # "dummy" ci:ca for C4 plants
-    out_optchi <- chi_c4()
+    # Correct ci:ca for C4 plants, with dummy mj, mc, mjoc
+    out_optchi <- optimal_chi_c4( kmm, gammastar, ns_star, ca, vpd, beta )
 
   } else if (method_optci=="prentice14"){
 
@@ -441,16 +444,22 @@ rpmodel <- function(
   ## Test: at this stage, verify if A_J = A_C
   a_j <- kphio * iabs * (ci - gammastar)/(ci + 2 * gammastar) * fact_jmaxlim
   a_c <- vcmax * (ci - gammastar) / (ci + kmm)
-  if (any(abs(a_j/a_c - 1) > 0.001)){
-    stop("rpmodel(): light and Rubisco-limited assimilation rates
-                 are not identical.")
-  } 
+
+  a_j_eq_a_c <- all.equal(a_j, a_c, tol = 0.001)
+  if (! isTRUE(a_j_eq_a_c)) {
+    warning("rpmodel(): light and Rubisco-limited assimilation rates",
+            "are not identical.\n", a_j_eq_a_c)
+  }
 
   # Assimilation is not returned because it should not be confused with what 
   # is usually measured should use instantaneous assimilation for comparison to
   # measurements. This is returned by inst_rpmodel().
   assim <- ifelse(a_j < a_c , a_j, a_c)
-  if (any(abs(assim - gpp / c_molmass) > 0.001)) stop("rpmodel(): Assimilation and GPP are not identical.")
+  assim_eq_check <- all.equal(assim, gpp / c_molmass, tol = 0.001)
+  if (! isTRUE(assim_eq_check)) {
+      warning("rpmodel(): Assimilation and GPP are not identical.\n",
+              assim_eq_check)
+  }
 
   ## average stomatal conductance
   gs <- assim / (ca - ci)
