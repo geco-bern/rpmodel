@@ -1,3 +1,8 @@
+## rpmodel 1.2.1
+
+* Some minor bugfixes handling unintended usage.
+* chi for C4 photosynthesis
+
 # rpmodel 1.2.0
 
 * Implemented tests and continuous integration. Refactoring.

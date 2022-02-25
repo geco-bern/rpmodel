@@ -61,6 +61,9 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/functional_dependencies.html">Functional dependencies</a>
+    </li>
+    <li>
       <a href="../articles/usage.html">Running the P-model in R</a>
     </li>
   </ul>
@@ -92,7 +95,7 @@
       <h1 data-toc-skip>Running the P-model in R</h1>
                         <h4 class="author">Beni Stocker</h4>
             
-            <h4 class="date">2022-02-23</h4>
+            <h4 class="date">2022-02-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/computationales/rpmodel/blob/master/vignettes/usage.Rmd"><code>vignettes/usage.Rmd</code></a></small>
       <div class="hidden name"><code>usage.Rmd</code></div>
@@ -121,7 +124,6 @@
   kphio          <span class="op">=</span> <span class="fl">0.049977</span>,     <span class="co"># quantum yield efficiency as calibrated for setup ORG by Stocker et al. 2020 GMD,</span>
   beta           <span class="op">=</span> <span class="fl">146</span>,          <span class="co"># unit cost ratio a/b,</span>
   c4             <span class="op">=</span> <span class="cn">FALSE</span>,
-  method_optci   <span class="op">=</span> <span class="st">"prentice14"</span>,
   method_jmaxlim <span class="op">=</span> <span class="st">"wang17"</span>,
   do_ftemp_kphio <span class="op">=</span> <span class="cn">FALSE</span>,        <span class="co"># corresponding to setup ORG</span>
   do_soilmstress <span class="op">=</span> <span class="cn">FALSE</span>,        <span class="co"># corresponding to setup ORG</span>
@@ -243,7 +245,6 @@ A = V_{\text{cmax}} \frac{c_i-\Gamma^{\ast}}{c_i + K} = \phi_0 I_{\text{abs}} \f
   kphio          <span class="op">=</span> <span class="fl">0.049977</span>,
   beta           <span class="op">=</span> <span class="fl">146</span>,
   c4             <span class="op">=</span> <span class="cn">FALSE</span>,
-  method_optci   <span class="op">=</span> <span class="st">"prentice14"</span>,
   method_jmaxlim <span class="op">=</span> <span class="st">"none"</span>,
   do_ftemp_kphio <span class="op">=</span> <span class="cn">TRUE</span>,
   do_soilmstress <span class="op">=</span> <span class="cn">FALSE</span>,
@@ -252,7 +253,7 @@ A = V_{\text{cmax}} \frac{c_i-\Gamma^{\ast}}{c_i + K} = \phi_0 I_{\text{abs}} \f
 <pre><code>## Warning in sqrt((1/fact_jmaxlim)^2 - 1): NaNs produced</code></pre>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">out_ts_pmodel</span><span class="op">$</span><span class="va">gpp</span><span class="op">)</span></code></pre></div>
-<pre><code>## [1] 8.162522 8.271190 8.973919 7.213033 9.555819</code></pre>
+<pre><code>## [1] 8.162522 7.967237 8.148933 7.468270 8.968635</code></pre>
 <p>Note that <code>gpp</code> (as well as all other returned variables) are now vectors of the same length as the vectors provided as inputs.</p>
 </div>
 <div id="p-model-in-the-tidyverse" class="section level3">
@@ -277,7 +278,6 @@ A = V_{\text{cmax}} \frac{c_i-\Gamma^{\ast}}{c_i + K} = \phi_0 I_{\text{abs}} \f
     kphio          <span class="op">=</span> <span class="fl">0.049977</span>,
     beta           <span class="op">=</span> <span class="fl">146</span>,
     c4             <span class="op">=</span> <span class="cn">FALSE</span>,
-    method_optci   <span class="op">=</span> <span class="st">"prentice14"</span>,
     method_jmaxlim <span class="op">=</span> <span class="st">"none"</span>,
     do_ftemp_kphio <span class="op">=</span> <span class="cn">FALSE</span>
     <span class="op">)</span> <span class="op">)</span>
@@ -295,37 +295,40 @@ A = V_{\text{cmax}} \frac{c_i-\Gamma^{\ast}}{c_i + K} = \phi_0 I_{\text{abs}} \f
 <div id="c4-photosynthesis" class="section level3">
 <h3 class="hasAnchor">
 <a href="#c4-photosynthesis" class="anchor"></a>C4 photosynthesis</h3>
-<p>Photosynthesis by C4 plants is simulated by the P-model based on the assumption that the “CO2 limitation term” in the FvCB model (Eq. 11 in Stocker et al., 2020) is 1 (no limitation), and based on a distinct parametrisation of the quantum yield efficiency and its temperature dependence <span class="math inline">\(\varphi_0\)</span>, following Cai &amp; Prentice, 2020.</p>
+<p>Photosynthesis by C4 plants is simulated by the P-model based on the assumption that the “CO2 limitation term” in the FvCB model (Eq. 11 in Stocker et al., 2020) is 1 (no limitation), and based on a distinct parametrisation of the quantum yield efficiency and its temperature dependence <span class="math inline">\(\varphi_0\)</span>, following Cai &amp; Prentice, 2020. Under identical conditions, GPP of C3 and C4 photosynthesis are different:</p>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">out_c3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rpmodel.html">rpmodel</a></span><span class="op">(</span> 
+  tc             <span class="op">=</span> <span class="fl">20</span>,           <span class="co"># temperature, deg C</span>
+  vpd            <span class="op">=</span> <span class="fl">1000</span>,         <span class="co"># Pa,</span>
+  co2            <span class="op">=</span> <span class="fl">400</span>,          <span class="co"># ppm,</span>
+  fapar          <span class="op">=</span> <span class="fl">1</span>,            <span class="co"># fraction  ,</span>
+  ppfd           <span class="op">=</span> <span class="fl">30</span>,           <span class="co"># mol/m2/d,</span>
+  elv            <span class="op">=</span> <span class="fl">0</span>,            <span class="co"># m.a.s.l.,</span>
+  c4             <span class="op">=</span> <span class="cn">FALSE</span>
+  <span class="op">)</span>
+<span class="va">out_c4</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rpmodel.html">rpmodel</a></span><span class="op">(</span> 
+  tc             <span class="op">=</span> <span class="fl">20</span>,           <span class="co"># temperature, deg C</span>
+  vpd            <span class="op">=</span> <span class="fl">1000</span>,         <span class="co"># Pa,</span>
+  co2            <span class="op">=</span> <span class="fl">400</span>,          <span class="co"># ppm,</span>
+  fapar          <span class="op">=</span> <span class="fl">1</span>,            <span class="co"># fraction  ,</span>
+  ppfd           <span class="op">=</span> <span class="fl">30</span>,           <span class="co"># mol/m2/d,</span>
+  elv            <span class="op">=</span> <span class="fl">0</span>,            <span class="co"># m.a.s.l.,</span>
+  c4             <span class="op">=</span> <span class="cn">TRUE</span>
+  <span class="op">)</span></code></pre></div>
+<pre><code>## Warning in rpmodel(tc = 20, vpd = 1000, co2 = 400, fapar = 1, ppfd = 30, : rpmodel(): light and Rubisco-limited assimilation rates are not identical.
+## Mean relative difference: 76.4877</code></pre>
+<pre><code>## Warning in rpmodel(tc = 20, vpd = 1000, co2 = 400, fapar = 1, ppfd = 30, : rpmodel(): Assimilation and GPP are not identical.
+## Mean relative difference: 1.582923</code></pre>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">out_c3</span><span class="op">$</span><span class="va">gpp</span><span class="op">)</span></code></pre></div>
+<pre><code>## [1] 7.642545</code></pre>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">out_c4</span><span class="op">$</span><span class="va">gpp</span><span class="op">)</span></code></pre></div>
+<pre><code>## [1] 126.2565</code></pre>
 <p>To accurately simulate C3 photosynthesis, a constant scalar was calibrated by Stocker et al., 2020 to GPP from FLUXNET2015 data and scaled in their ‘BRC’ and ‘FULL’ setup with a temperature dependence factor (their Eq. 20). The implementation of C3 photosynthesis in rpmodel uses <code>kphio</code> as a constant scalar, provided to <code><a href="../reference/rpmodel.html">rpmodel()</a></code> as an argument, and representing <span class="math inline">\((a_L b_L)/4\)</span> in their Eq. 20. The temprature dependence is calculated based on Bernacchi et al., 2003 using the function <code><a href="../reference/ftemp_kphio.html">ftemp_kphio()</a></code>.</p>
 <p>The implementation of C4 photosynthesis uses a different temperature dependence of <span class="math inline">\(\varphi_0\)</span> following Eq. 5 in Cai &amp; Prentice (2020), implemented by <code>ftemp_kphio(c4 = TRUE)</code>. The calibratable parameter <code>kphio</code> doesn’t appear explicitly in Eq. 5 by Cai &amp; Prentice (2020), but is implemented the same way in rpmodel as for C3 photosynthesis. It should therefore be regarded as a “correction” factor, where <code>kphio = 1.0</code> means “no correction” and reflects the parametrisation used by Cai &amp; Prentice (2020).</p>
 <p>The following shows <span class="math inline">\(\varphi(T)\)</span>, corresponding to <code>kphio * ftemp_kphio()</code>, using parameters as in Stocker et al., 2020 for C3 vegetation (their ‘BRC’ setup, black line in the plot below), and as in Cai &amp; Prentice (2020) for C4 vegetation (blue solid line).</p>
 <p>Addendum: As of <a href="https://github.com/computationales/rpmodel/issues/19">issue #19</a> (raised by David Orme), the values provided in Cai &amp; Prentice (2020) are erroneous. And instead, the temperature response function for C4 should be <code>ftemp = -0.064 + 0.03 * tc - 0.000464 * tc^2</code>. This is now also implemented in rpmodel.</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
-
-<span class="va">ftemp_c3_stocker</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">...</span><span class="op">)</span><span class="op">{</span><span class="fl">0.081785</span> <span class="op">*</span> <span class="fu"><a href="../reference/ftemp_kphio.html">ftemp_kphio</a></span><span class="op">(</span><span class="va">...</span><span class="op">)</span><span class="op">}</span>
-<span class="va">ftemp_c3_caiprentice</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">tc</span><span class="op">)</span><span class="op">{</span><span class="fl">0.044</span> <span class="op">+</span> <span class="fl">0.00275</span> <span class="op">*</span> <span class="va">tc</span> <span class="op">-</span> <span class="fl">0.425e-4</span> <span class="op">*</span> <span class="va">tc</span><span class="op">^</span><span class="fl">2</span><span class="op">}</span>
-
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_function.html">geom_function</a></span><span class="op">(</span>fun <span class="op">=</span> <span class="va">ftemp_c3_stocker</span>, args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>c4 <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_function.html">geom_function</a></span><span class="op">(</span>fun <span class="op">=</span> <span class="va">ftemp_c3_caiprentice</span>, color <span class="op">=</span> <span class="st">"royalblue"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html">xlim</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">30</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html">expression</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Temperature ("</span>, <span class="va">degree</span>, <span class="st">"C)"</span><span class="op">)</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html">expression</a></span><span class="op">(</span><span class="va">varphi</span><span class="op">)</span>,
-       title <span class="op">=</span> <span class="st">"Temperature dependence of C3 photosynthesis (BRC setup)"</span>,
-       subtitle <span class="op">=</span> <span class="st">"Black: Stocker et al., 2020 | Blue: Cai &amp; Prentice, 2020"</span><span class="op">)</span></code></pre></div>
-<p><img src="usage_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">ftemp_c4_stocker</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">...</span><span class="op">)</span><span class="op">{</span><span class="fl">1.0</span> <span class="op">*</span> <span class="fu"><a href="../reference/ftemp_kphio.html">ftemp_kphio</a></span><span class="op">(</span><span class="va">...</span><span class="op">)</span><span class="op">}</span>
-<span class="va">ftemp_c4_caiprentice</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">tc</span><span class="op">)</span><span class="op">{</span><span class="op">-</span><span class="fl">0.064</span> <span class="op">+</span> <span class="fl">0.03</span> <span class="op">*</span> <span class="va">tc</span> <span class="op">-</span> <span class="fl">0.000464</span> <span class="op">*</span> <span class="va">tc</span><span class="op">^</span><span class="fl">2</span> <span class="op">}</span>
-
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_function.html">geom_function</a></span><span class="op">(</span>fun <span class="op">=</span> <span class="va">ftemp_c4_stocker</span>, args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>c4 <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_function.html">geom_function</a></span><span class="op">(</span>fun <span class="op">=</span> <span class="va">ftemp_c4_caiprentice</span>, color <span class="op">=</span> <span class="st">"royalblue"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/lims.html">xlim</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">30</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html">expression</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Temperature ("</span>, <span class="va">degree</span>, <span class="st">"C)"</span><span class="op">)</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html">expression</a></span><span class="op">(</span><span class="va">varphi</span><span class="op">)</span>,
-       title <span class="op">=</span> <span class="st">"Temperature dependence of C4 photosynthesis (BRC setup)"</span>,
-       subtitle <span class="op">=</span> <span class="st">"Black: Stocker et al., 2020 | Blue: Cai &amp; Prentice, 2020"</span><span class="op">)</span></code></pre></div>
-<p><img src="usage_files/figure-html/unnamed-chunk-8-2.png" width="700"></p>
 </div>
 </div>
 <div id="auxiliary-functions" class="section level2">
@@ -340,7 +343,7 @@ A = V_{\text{cmax}} \frac{c_i-\Gamma^{\ast}}{c_i + K} = \phi_0 I_{\text{abs}} \f
 <li>
 <code><a href="../reference/ftemp_inst_vcmax.html">ftemp_inst_vcmax()</a></code> calculates the instantaneous temperature response of <span class="math inline">\(V_\text{cmax}\)</span>. Let’s run the P-model for <code>tc = 10</code> (degrees C). The ratio of <span class="math inline">\(V_\text{cmax}/V_\text{cmax25}\)</span> should equal the instantaneous temperature scaling function for <span class="math inline">\(V_\text{cmax}\)</span> at 10 degrees C (calculated by <code>ftemp_inst_vcmax(10)</code>):</li>
 </ul>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">out_pmodel</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rpmodel.html">rpmodel</a></span><span class="op">(</span> 
   tc             <span class="op">=</span> <span class="fl">10</span>,           <span class="co"># temperature, deg C</span>
   vpd            <span class="op">=</span> <span class="fl">1000</span>,         <span class="co"># Pa,</span>
@@ -350,7 +353,6 @@ A = V_{\text{cmax}} \frac{c_i-\Gamma^{\ast}}{c_i + K} = \phi_0 I_{\text{abs}} \f
   elv            <span class="op">=</span> <span class="fl">0</span>,            <span class="co"># m.a.s.l.,</span>
   kphio          <span class="op">=</span> <span class="fl">0.049977</span>,     <span class="co"># quantum yield efficiency as calibrated for setup ORG by Stocker et al. 2020 GMD,</span>
   beta           <span class="op">=</span> <span class="fl">146</span>,          <span class="co"># unit cost ratio a/b,</span>
-  method_optci   <span class="op">=</span> <span class="st">"prentice14"</span>,
   method_jmaxlim <span class="op">=</span> <span class="st">"none"</span>,
   do_ftemp_kphio <span class="op">=</span> <span class="cn">FALSE</span>,
   verbose        <span class="op">=</span> <span class="cn">TRUE</span>
@@ -358,17 +360,17 @@ A = V_{\text{cmax}} \frac{c_i-\Gamma^{\ast}}{c_i + K} = \phi_0 I_{\text{abs}} \f
 <pre><code>## Warning in rpmodel(tc = 10, vpd = 1000, co2 = 400, fapar = 1, ppfd = 30, :
 ## Atmospheric pressure (patm) not provided. Calculating it as a function of
 ## elevation (elv), assuming standard atmosphere (101325 Pa at sea level).</code></pre>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Ratio Vcmax/Vcmax25      :"</span>, <span class="va">out_pmodel</span><span class="op">$</span><span class="va">vcmax</span><span class="op">/</span><span class="va">out_pmodel</span><span class="op">$</span><span class="va">vcmax25</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] "Ratio Vcmax/Vcmax25      : 0.260975632963417"</code></pre>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"ftemp_inst_vcmax(10):"</span>, <span class="fu"><a href="../reference/ftemp_inst_vcmax.html">ftemp_inst_vcmax</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] "ftemp_inst_vcmax(10): 0.260975632963417"</code></pre>
 <ul>
 <li><p><code><a href="../reference/ftemp_arrh.html">ftemp_arrh()</a></code> Calculates the Arrhenius-type temperature response and is used inside <code><a href="../reference/ftemp_inst_vcmax.html">ftemp_inst_vcmax()</a></code>.</p></li>
 <li><p><code><a href="../reference/ftemp_inst_rd.html">ftemp_inst_rd()</a></code> calculates the temperature response of dark respiration (<span class="math inline">\(R_d\)</span>), which is slightly less steep than that for <span class="math inline">\(V_\text{cmax}\)</span>:</p></li>
 </ul>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"ftemp_inst_rd(10):"</span>, <span class="fu"><a href="../reference/ftemp_inst_rd.html">ftemp_inst_rd</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] "ftemp_inst_rd(10): 0.284933345928884"</code></pre>
 </div>
@@ -379,20 +381,20 @@ A = V_{\text{cmax}} \frac{c_i-\Gamma^{\ast}}{c_i + K} = \phi_0 I_{\text{abs}} \f
 <li>
 <code><a href="../reference/gammastar.html">gammastar()</a></code> calculates the CO<span class="math inline">\(_2\)</span> compensation point (<span class="math inline">\(\Gamma^\ast\)</span>) in the Farquhar-von Caemmerer-Berry model as a function of temperature (argument <code>tc</code>) and atmospheric pressure (argument <code>patm</code>). This is returned by the <code><a href="../reference/rpmodel.html">rpmodel()</a></code> function and by the separate auxiliary function <code><a href="../reference/gammastar.html">gammastar()</a></code>. <code><a href="../reference/gammastar.html">gammastar()</a></code> requires atmospheric pressure (<code>patm</code>) to be given as an argument (in addition to temperature). Corresponding to the <code><a href="../reference/rpmodel.html">rpmodel()</a></code> call above, let’s calculate this using the auxiliary function <code><a href="../reference/patm.html">patm()</a></code> with 0 metres above sea level, and assuming standard atmospheric pressure (101325 Pa at 0 m a.s.l.):</li>
 </ul>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"From rpmodel call :"</span>, <span class="va">out_pmodel</span><span class="op">$</span><span class="va">gammastar</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] "From rpmodel call : 1.93016150706341"</code></pre>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"gammastar(10):"</span>, <span class="fu"><a href="../reference/gammastar.html">gammastar</a></span><span class="op">(</span><span class="fl">10</span>, patm <span class="op">=</span> <span class="fu"><a href="../reference/patm.html">patm</a></span><span class="op">(</span>elv <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] "gammastar(10): 1.93016150706341"</code></pre>
 <ul>
 <li>
 <code><a href="../reference/kmm.html">kmm()</a></code> calculates the Michaelis Menten coefficient for Rubisco-limited photosynthesis as a function of temperature (argument <code>tc</code>) and atmospheric pressure (argument <code>patm</code>). As above, <code><a href="../reference/kmm.html">kmm()</a></code> requires atmospheric pressure to be given as an argument (in addition to temperature). Corresponding to the <code><a href="../reference/rpmodel.html">rpmodel()</a></code> call above, let’s calculate this using the auxiliary function <code><a href="../reference/patm.html">patm()</a></code> with 0 metres above sea level, and assuming standard atmospheric pressure (101325 Pa at 0 m a.s.l.):</li>
 </ul>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"From rpmodel call:"</span>, <span class="va">out_pmodel</span><span class="op">$</span><span class="va">kmm</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] "From rpmodel call: 19.6242174524746"</code></pre>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"kmm(10)     :"</span>, <span class="fu"><a href="../reference/kmm.html">kmm</a></span><span class="op">(</span><span class="fl">10</span>, patm <span class="op">=</span> <span class="fu"><a href="../reference/patm.html">patm</a></span><span class="op">(</span>elv <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] "kmm(10)     : 19.6242174524746"</code></pre>
 </div>
@@ -400,7 +402,7 @@ A = V_{\text{cmax}} \frac{c_i-\Gamma^{\ast}}{c_i + K} = \phi_0 I_{\text{abs}} \f
 <h3 class="hasAnchor">
 <a href="#temperature-dependence-of-quantum-yield-efficiency" class="anchor"></a>Temperature dependence of quantum yield efficiency</h3>
 <p>The temperature dependence of quantum yield efficiency is modelled following Bernacchi et al. (2003), if the argument to the <code><a href="../reference/rpmodel.html">rpmodel()</a></code> call <code>do_ftemp_kphio = TRUE</code>. This affects several quantities returned by the <code><a href="../reference/rpmodel.html">rpmodel()</a></code> call (GPP, LUE, Vcmax), and can be calculated direction using <code><a href="../reference/ftemp_kphio.html">ftemp_kphio()</a></code>.</p>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">out_pmodel_ftemp_kphio_ON</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rpmodel.html">rpmodel</a></span><span class="op">(</span> 
   tc             <span class="op">=</span> <span class="fl">20</span>,           <span class="co"># temperature, deg C</span>
   vpd            <span class="op">=</span> <span class="fl">1000</span>,         <span class="co"># Pa,</span>
@@ -421,13 +423,13 @@ A = V_{\text{cmax}} \frac{c_i-\Gamma^{\ast}}{c_i + K} = \phi_0 I_{\text{abs}} \f
   <span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"LUE ftemp_ON /LUE ftemp_OFF ="</span>, <span class="va">out_pmodel_ftemp_kphio_ON</span><span class="op">$</span><span class="va">lue</span> <span class="op">/</span> <span class="va">out_pmodel_ftemp_kphio_OFF</span><span class="op">$</span><span class="va">lue</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] "LUE ftemp_ON /LUE ftemp_OFF = "</code></pre>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"GPP ftemp_ON /GPP ftemp_OFF ="</span>, <span class="va">out_pmodel_ftemp_kphio_ON</span><span class="op">$</span><span class="va">gpp</span> <span class="op">/</span> <span class="va">out_pmodel_ftemp_kphio_OFF</span><span class="op">$</span><span class="va">gpp</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] "GPP ftemp_ON /GPP ftemp_OFF = 1.07351301598735"</code></pre>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Vcmax ftemp_ON /Vcmax ftemp_OFF ="</span>, <span class="va">out_pmodel_ftemp_kphio_ON</span><span class="op">$</span><span class="va">vcmax</span> <span class="op">/</span> <span class="va">out_pmodel_ftemp_kphio_OFF</span><span class="op">$</span><span class="va">vcmax</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] "Vcmax ftemp_ON /Vcmax ftemp_OFF = 1.07351301598735"</code></pre>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"ftemp_kphio(20) ="</span>, <span class="fu"><a href="../reference/ftemp_kphio.html">ftemp_kphio</a></span><span class="op">(</span><span class="fl">20</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] "ftemp_kphio(20) = 0.656"</code></pre>
 </div>
@@ -435,13 +437,13 @@ A = V_{\text{cmax}} \frac{c_i-\Gamma^{\ast}}{c_i + K} = \phi_0 I_{\text{abs}} \f
 <h3 class="hasAnchor">
 <a href="#soil-moisture-stress" class="anchor"></a>Soil moisture stress</h3>
 <p>The soil moisture stress function is available as a separate public function.</p>
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">vec_soilm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fl">1.0</span>, to <span class="op">=</span> <span class="fl">0.0</span>, by <span class="op">=</span> <span class="op">-</span><span class="fl">0.05</span><span class="op">)</span>
 <span class="va">vec_soilmstress</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/soilmstress.html">soilmstress</a></span><span class="op">(</span> <span class="va">vec_soilm</span>, meanalpha <span class="op">=</span> <span class="fl">1.0</span>, apar_soilm <span class="op">=</span> <span class="fl">0.0</span>, bpar_soilm <span class="op">=</span> <span class="fl">0.7330</span> <span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">vec_soilm</span>, <span class="va">vec_soilmstress</span><span class="op">)</span></code></pre></div>
 <p><img src="usage_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
 <p>Similar to above, the soil moisture dependence of LUE (and hence GPP, and Vcmax) can be calculated directly using the function <code><a href="../reference/soilmstress.html">soilmstress()</a></code> and affects several quantities returned by the <code><a href="../reference/rpmodel.html">rpmodel()</a></code> call (GPP, LUE, Vcmax):</p>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">out_pmodel_soilmstress_OFF</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rpmodel.html">rpmodel</a></span><span class="op">(</span> 
   tc             <span class="op">=</span> <span class="fl">20</span>,           <span class="co"># temperature, deg C</span>
   vpd            <span class="op">=</span> <span class="fl">1000</span>,         <span class="co"># Pa,</span>
@@ -468,13 +470,13 @@ A = V_{\text{cmax}} \frac{c_i-\Gamma^{\ast}}{c_i + K} = \phi_0 I_{\text{abs}} \f
   <span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"LUE soilmstress_ON /LUE soilmstress_OFF ="</span>, <span class="va">out_pmodel_soilmstress_ON</span><span class="op">$</span><span class="va">lue</span> <span class="op">/</span> <span class="va">out_pmodel_soilmstress_OFF</span><span class="op">$</span><span class="va">lue</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] "LUE soilmstress_ON /LUE soilmstress_OFF = "</code></pre>
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"GPP soilmstress_ON /GPP soilmstress_OFF ="</span>, <span class="va">out_pmodel_soilmstress_ON</span><span class="op">$</span><span class="va">gpp</span> <span class="op">/</span> <span class="va">out_pmodel_soilmstress_OFF</span><span class="op">$</span><span class="va">gpp</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] "GPP soilmstress_ON /GPP soilmstress_OFF = 0.662222222222222"</code></pre>
-<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Vcmax soilmstress_ON /Vcmax soilmstress_OFF ="</span>, <span class="va">out_pmodel_soilmstress_ON</span><span class="op">$</span><span class="va">vcmax</span> <span class="op">/</span> <span class="va">out_pmodel_soilmstress_OFF</span><span class="op">$</span><span class="va">vcmax</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] "Vcmax soilmstress_ON /Vcmax soilmstress_OFF = 0.662222222222222"</code></pre>
-<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"soilmstress(0.2, apar_soilm = 0.1, bpar_soilm = 0.7, meanalpha = 0.2) ="</span>, <span class="fu"><a href="../reference/soilmstress.html">soilmstress</a></span><span class="op">(</span><span class="fl">0.2</span>, apar_soilm <span class="op">=</span> <span class="fl">0.1</span>, bpar_soilm <span class="op">=</span> <span class="fl">0.7</span>, meanalpha <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] "soilmstress(0.2, apar_soilm = 0.1, bpar_soilm = 0.7, meanalpha = 0.2) = 0.662222222222222"</code></pre>
 <p><code><a href="../reference/ftemp_arrh.html">ftemp_arrh()</a></code> Calculates the Arrhenius-type temperature response.</p>

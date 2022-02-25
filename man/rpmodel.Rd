@@ -14,13 +14,12 @@ rpmodel(
   elv = NA,
   kphio = ifelse(c4, 1, ifelse(do_ftemp_kphio, ifelse(do_soilmstress, 0.087182,
     0.081785), 0.049977)),
-  beta = 146,
+  beta = ifelse(c4, 146/9, 146),
   soilm = stopifnot(!do_soilmstress),
   meanalpha = 1,
   apar_soilm = 0,
   bpar_soilm = 0.733,
   c4 = FALSE,
-  method_optci = "prentice14",
   method_jmaxlim = "wang17",
   do_ftemp_kphio = TRUE,
   do_soilmstress = FALSE,
@@ -68,7 +67,8 @@ Eq.20 in Stocker et al. (2020) for C3 photosynthesis. For C4 photosynthesis
 (\code{c4 = TRUE}), \code{kphio} defaults to 1.0, corresponding to the 
  parametrisation by  Cai & Prentice (2020).}
 
-\item{beta}{Unit cost ratio. Defaults to 146.0 (see Stocker et al., 2019).}
+\item{beta}{Unit cost ratio. Defaults to 146.0 (see Stocker et al., 2019) for
+C3 plants and 146/9 for C4 plants.}
 
 \item{soilm}{(Optional, used only if \code{do_soilmstress==TRUE}) Relative 
 soil moisture as a fraction of field capacity (unitless). Defaults to 1.0 
@@ -97,18 +97,13 @@ Stocker et al. (2019) Geosci. Model Dev. for model setup 'FULL'
 (corresponding to a setup with \code{method_jmaxlim="wang17", 
 do_ftemp_kphio=TRUE, do_soilmstress=TRUE}).}
 
-\item{c4}{(Optional) A logical value specifying whether the C3 or C4 
+\item{c4}{(Optional) A logical value specifying whether the C3 or C4
 photosynthetic pathway is followed.Defaults to \code{FALSE}. If \code{TRUE},
-the leaf-internal CO2 concentration is assumed to be very large and 
-\eqn{m} (returned variable \code{mj}) tends to 1, and \eqn{m'} tends to 
-0.669 (with \code{c = 0.41}). With \code{do_ftemp_kphio = TRUE}, a C4-specific
-temperature dependence of the quantum yield efficiency is used 
-(see \link{ftemp_kphio}).}
-
-\item{method_optci}{(Optional) A character string specifying which method is
-to be used for calculating optimal ci:ca. Defaults to \code{"prentice14"}.
-Available also \code{"prentice14_num"} for a numerical solution to the same
-optimization criterium as used for \code{"prentice14"}.}
+the leaf-internal CO2 concentration is still estimated using beta but
+\eqn{m} (returned variable \code{mj}) tends to 1, and \eqn{m'} tends to
+0.669 (with \code{c = 0.41}) to represent CO2 concentrations within the leaf.
+With \code{do_ftemp_kphio = TRUE}, a C4-specific temperature dependence of
+the quantum yield efficiency is used (see \link{ftemp_kphio}).}
 
 \item{method_jmaxlim}{(Optional) A character string specifying which method 
 is to be used for factoring in Jmax limitation. Defaults to \code{"wang17"},

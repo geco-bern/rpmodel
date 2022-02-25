@@ -66,10 +66,6 @@
 #'  0.669 (with \code{c = 0.41}) to represent CO2 concentrations within the leaf.
 #'  With \code{do_ftemp_kphio = TRUE}, a C4-specific temperature dependence of
 #'  the quantum yield efficiency is used (see \link{ftemp_kphio}).
-#' @param method_optci (Optional) A character string specifying which method is
-#'  to be used for calculating optimal ci:ca. Defaults to \code{"prentice14"}.
-#'  Available also \code{"prentice14_num"} for a numerical solution to the same
-#'  optimization criterium as used for \code{"prentice14"}.
 #' @param method_jmaxlim (Optional) A character string specifying which method 
 #'  is to be used for factoring in Jmax limitation. Defaults to \code{"wang17"},
 #'  based on Wang Han et al. 2017 Nature Plants and (Smith 1937). Available is 
@@ -256,13 +252,12 @@ rpmodel <- function(
   patm = NA,
   elv = NA,
   kphio = ifelse(c4, 1.0, ifelse(do_ftemp_kphio, ifelse(do_soilmstress, 0.087182, 0.081785), 0.049977)),
-  beta = 146.0,
+  beta = ifelse(c4, 146/9, 146),
   soilm = stopifnot(!do_soilmstress),
   meanalpha = 1.0,
   apar_soilm = 0.0,
   bpar_soilm = 0.73300,
   c4 = FALSE,
-  method_optci = "prentice14",
   method_jmaxlim = "wang17",
   do_ftemp_kphio = TRUE,
   do_soilmstress = FALSE,
@@ -276,11 +271,6 @@ rpmodel <- function(
   } else if (!identical(NA, elv) && identical(NA, patm)){
     if (verbose) warning("Atmospheric pressure (patm) not provided. Calculating it as a function of elevation (elv), assuming standard atmosphere (101325 Pa at sea level).")
     patm <- patm(elv)
-  }
-
-  # Set defaults for beta if none provided
-  if (is.na(beta)) {
-    beta <- ifelse(c4, 146/9, 146)
   }
 
   #---- Fixed parameters--------------------------------------------------------
@@ -298,6 +288,10 @@ rpmodel <- function(
   }
   if (do_ftemp_kphio) {
     kphio <- ftemp_kphio( tc, c4 ) * kphio
+  } else {
+    if (c4){
+      kphio <- ftemp_kphio( 15.0, c4 ) * kphio
+    }
   }
 
   #---- soil moisture stress as a function of soil moisture and mean alpha -----
@@ -329,21 +323,7 @@ rpmodel <- function(
 
   ##----Optimal ci -------------------------------------------------------------
   ## The heart of the P-model: calculate ci:ca ratio (chi) and additional terms
-  if (c4) {
-
-    # Correct ci:ca for C4 plants, with dummy mj, mc, mjoc
-    out_optchi <- optimal_chi_c4( kmm, gammastar, ns_star, ca, vpd, beta )
-
-  } else if (method_optci=="prentice14"){
-
-    #---- Full formualation (Gamma-star not zero), analytical solution ---------
-    out_optchi <- optimal_chi( kmm, gammastar, ns_star, ca, vpd, beta )
-
-  } else {
-
-    stop("rpmodel(): argument method_optci not idetified.")
-
-  }
+  out_optchi <- optimal_chi( kmm, gammastar, ns_star, ca, vpd, beta, c4 )
 
   ## leaf-internal CO2 partial pressure (Pa)
   ci <- out_optchi$chi * ca
@@ -442,12 +422,17 @@ rpmodel <- function(
   jmax25 <- jmax / ftemp25_inst_jmax
 
   ## Test: at this stage, verify if A_J = A_C
-  a_j <- kphio * iabs * (ci - gammastar)/(ci + 2 * gammastar) * fact_jmaxlim
-  a_c <- vcmax * (ci - gammastar) / (ci + kmm)
-
+  if (c4){
+    a_j = kphio * iabs * out_optchi$mj * fact_jmaxlim
+    a_c = vcmax * iabs * out_optchi$mc
+  } else {
+    a_j <- kphio * iabs * (ci - gammastar)/(ci + 2 * gammastar) * fact_jmaxlim
+    a_c <- vcmax * (ci - gammastar) / (ci + kmm)
+  }
+  
   a_j_eq_a_c <- all.equal(a_j, a_c, tol = 0.001)
   if (! isTRUE(a_j_eq_a_c)) {
-    warning("rpmodel(): light and Rubisco-limited assimilation rates",
+    warning("rpmodel(): light and Rubisco-limited assimilation rates ",
             "are not identical.\n", a_j_eq_a_c)
   }
 

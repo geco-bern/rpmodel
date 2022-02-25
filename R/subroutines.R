@@ -782,7 +782,7 @@ co2_to_ca <- function(co2, patm){
   return( ca )
 }
 
-optimal_chi <- function(kmm, gammastar, ns_star, ca, vpd, beta ){
+optimal_chi <- function(kmm, gammastar, ns_star, ca, vpd, beta, c4){
   
   # Input:    - float, 'kmm' : Pa, Michaelis-Menten coeff.
   #           - float, 'ns_star'  : (unitless) viscosity correction factor for water
@@ -813,27 +813,42 @@ optimal_chi <- function(kmm, gammastar, ns_star, ca, vpd, beta ){
   #              rep(NA, max(length(vpd), length(ca)))
   #              )
   
-  ## alternative variables
-  gamma <- gammastar / ca
-  kappa <- kmm / ca
+  if (c4){
+    
+    out <- list(
+      xi = xi,
+      chi = chi,
+      mc = 1.0,
+      mj = 1.0,
+      mjoc = 1.0
+    )    
+    
+  } else {
+
+    ## alternative variables
+    gamma <- gammastar / ca
+    kappa <- kmm / ca
+    
+    ## use chi for calculating mj
+    mj <- (chi - gamma) / (chi + 2 * gamma)
+    
+    ## mc
+    mc <- (chi - gamma) / (chi + kappa)
+    
+    ## mj:mv
+    mjoc <- (chi + kappa) / (chi + 2 * gamma)
+    
+    # format output list
+    out <- list(
+      xi = xi,
+      chi = chi,
+      mc = mc,
+      mj = mj,
+      mjoc = mjoc
+    )
+    
+  }
   
-  ## use chi for calculating mj
-  mj <- (chi - gamma) / (chi + 2 * gamma)
-  
-  ## mc
-  mc <- (chi - gamma) / (chi + kappa)
-  
-  ## mj:mv
-  mjoc <- (chi + kappa) / (chi + 2 * gamma)
-  
-  # format output list
-  out <- list(
-    xi = xi,
-    chi = chi,
-    mc = mc,
-    mj = mj,
-    mjoc = mjoc
-  )
   return(out)
 }
 
@@ -964,30 +979,6 @@ lue_vcmax_c4 <- function( kphio, c_molmass, soilmstress ){
     omega_star          = rep(NA, len)
   )
   
-  return(out)
-}
-
-optimal_chi_c4 <- function(kmm, gammastar, ns_star, ca, vpd, beta=146/9){
-  
-  # Input:    - float, 'kmm' : Pa, Michaelis-Menten coeff.
-  #           - float, 'ns_star'  : (unitless) viscosity correction factor for water
-  #           - float, 'vpd' : Pa, vapor pressure deficit
-  # Output:   float, ratio of ci/ca (chi)
-  # Features: Returns an estimate of leaf internal to ambient CO2
-  #           partial pressure following the "simple formulation".
-  # Depends:  - kc
-  #           - ns
-  #           - vpd
-  
-  ## Avoid negative VPD (dew conditions), resolves issue #2 (https://github.com/stineb/rpmodel/issues/2)
-  vpd <- ifelse(vpd < 0, 0, vpd)
-  
-  ## leaf-internal-to-ambient CO2 partial pressure (ci/ca) ratio
-  xi  <- sqrt( (beta * ( kmm + gammastar ) ) / ( 1.6 * ns_star ) )
-  chi <- gammastar / ca + ( 1.0 - gammastar / ca ) * xi / ( xi + sqrt(vpd) )
-
-  # True ci:ca for C4 photosynthesis and then dummy values for mc, mj, mjoc
-  out <- list( chi=chi, mc=1.0, mj=1.0, mjoc=1.0 )
   return(out)
 }
 
