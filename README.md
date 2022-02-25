@@ -1,5 +1,5 @@
-[![R-CMD-check](https://github.com/bluegreen-labs/rpmodel/workflows/R-CMD-check/badge.svg)](https://github.com/bluegreen-labs/rpmodel/actions)
-[![codecov](https://codecov.io/gh/bluegreen-labs/rpmodel/branch/master/graph/badge.svg?token=7bImDR3uCT)](https://codecov.io/gh/bluegreen-labs/rpmodel)
+[![R-CMD-check](https://github.com/computationales/rpmodel/workflows/R-CMD-check/badge.svg)](https://github.com/computationales/rpmodel/actions)
+[![codecov](https://codecov.io/gh/computationales/rpmodel/branch/master/graph/badge.svg?token=7bImDR3uCT)](https://codecov.io/gh/computationales/rpmodel)
 
 ## Purpose
 
