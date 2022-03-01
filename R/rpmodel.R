@@ -407,7 +407,8 @@ rpmodel <- function(
   # rd <- ifelse(!is.na(iabs), iabs * rd_unitiabs, rep(NA, len))
   rd <- iabs * rd_unitiabs
 
-  # Jmax using again A_J = A_C
+  # Jmax using again A_J = A_C, derive the "Jmax limitation factor" 
+  # (corresponding to L in Eq. 13, Stocker et al., 2020 GMD)
   # fact_jmaxlim <- ifelse(!is.na(iabs),
   #                        vcmax * (ci + 2.0 * gammastar) / (kphio * iabs * (ci + kmm)),
   #                        rep(NA, len))
