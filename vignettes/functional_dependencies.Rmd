@@ -1,11 +1,13 @@
 ---
-title: "Functional dependencies"
-output:
-  html_document:
-    toc: true
-    toc_float: true
-    toc_depth: 3
-    code_folding: hide
+title: "Summary of functional dependencies"
+author: "Beni Stocker"
+output: 
+  rmarkdown::html_vignette:
+    md_extensions: ["-autolink_bare_uris"]
+vignette: >
+  %\VignetteEngine{knitr::knitr}
+  %\usepackage[utf8]{inputenc}
+  %\VignetteIndexEntry{Summary of functional dependencies}
 ---
 
 ```{r setup, include=FALSE}
@@ -13,6 +15,8 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 library(tidyverse)
 library(rpmodel)
 ```
+
+Functional dependencies in the model exposed and visualized!
 
 ## C3 Photosynthesis
 
