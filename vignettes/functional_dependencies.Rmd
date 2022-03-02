@@ -12,7 +12,8 @@ vignette: >
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
-library(tidyverse)
+library(dplyr)
+library(ggplot2)
 library(rpmodel)
 ```
 
