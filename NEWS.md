@@ -1,9 +1,18 @@
+# 1.3
+
+(not there yet)
+
+## rpmodel 1.2.2
+
+* Changed naming of auxiliary functions (e.g., `calc_patm()` instead of `patm()`)
+* Minor commenting changes
+
 ## rpmodel 1.2.1
 
 * Some minor bugfixes handling unintended usage.
 * chi for C4 photosynthesis
 
-# rpmodel 1.2.0
+# rpmodel 1.2
 
 * Implemented tests and continuous integration. Refactoring.
 
@@ -19,7 +28,7 @@
 
 * Corrected the argument description for `kphio` in the manual of `rpmodel()`.
 
-# rpmodel 1.1.0
+# rpmodel 1.1
 
 * Corrected vectorization. This fixes wrong treatment of vector arguments and solves [issue #3](https://github.com/stineb/rpmodel/issues/3).
 

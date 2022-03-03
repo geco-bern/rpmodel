@@ -6,7 +6,7 @@ Description: Implements the P-model
   predicting acclimated parameters of the enzyme kinetics of C3 photosynthesis,
   assimilation, and dark respiration rates as a function of the environment
   (temperature, CO2, vapour pressure deficit, light, atmospheric pressure).
-Version: 1.2.1
+Version: 1.2.2
 Authors@R: c(
             person(
               family = "Stocker",

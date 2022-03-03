@@ -234,14 +234,14 @@ print(paste("ftemp_inst_rd(10):", ftemp_inst_rd(10)))
 
 ```{r}
 print(paste("From rpmodel call :", out_pmodel$gammastar))
-print(paste("gammastar(10):", gammastar(10, patm = patm(elv = 0))))
+print(paste("gammastar(10):", calc_gammastar(10, patm = calc_patm(elv = 0))))
 ```
 
 -   `kmm()` calculates the Michaelis Menten coefficient for Rubisco-limited photosynthesis as a function of temperature (argument `tc`) and atmospheric pressure (argument `patm`). As above, `kmm()` requires atmospheric pressure to be given as an argument (in addition to temperature). Corresponding to the `rpmodel()` call above, let's calculate this using the auxiliary function `patm()` with 0 metres above sea level, and assuming standard atmospheric pressure (101325 Pa at 0 m a.s.l.):
 
 ```{r}
 print(paste("From rpmodel call:", out_pmodel$kmm))
-print(paste("kmm(10)     :", kmm(10, patm = patm(elv = 0))))
+print(paste("kmm(10)     :", calc_kmm(10, patm = calc_patm(elv = 0))))
 ```
 
 ### Temperature dependence of quantum yield efficiency
@@ -278,11 +278,11 @@ print(paste("ftemp_kphio(20) =", ftemp_kphio(20)))
 The soil moisture stress function is available as a separate public function.
 ```{r}
 vec_soilm <- seq(from = 1.0, to = 0.0, by = -0.05)
-vec_soilmstress <- soilmstress( vec_soilm, meanalpha = 1.0, apar_soilm = 0.0, bpar_soilm = 0.7330 )
+vec_soilmstress <- calc_soilmstress( vec_soilm, meanalpha = 1.0, apar_soilm = 0.0, bpar_soilm = 0.7330 )
 plot(vec_soilm, vec_soilmstress)
 ```
 
-Similar to above, the soil moisture dependence of LUE (and hence GPP, and Vcmax) can be calculated directly using the function `soilmstress()` and affects several quantities returned by the `rpmodel()` call (GPP, LUE, Vcmax):
+Similar to above, the soil moisture dependence of LUE (and hence GPP, and Vcmax) can be calculated directly using the function `calc_soilmstress()` and affects several quantities returned by the `rpmodel()` call (GPP, LUE, Vcmax):
 
 ```{r}
 out_pmodel_soilmstress_OFF <- rpmodel( 
@@ -312,7 +312,7 @@ out_pmodel_soilmstress_ON <- rpmodel(
 print(paste("LUE soilmstress_ON /LUE soilmstress_OFF =", out_pmodel_soilmstress_ON$lue / out_pmodel_soilmstress_OFF$lue))
 print(paste("GPP soilmstress_ON /GPP soilmstress_OFF =", out_pmodel_soilmstress_ON$gpp / out_pmodel_soilmstress_OFF$gpp))
 print(paste("Vcmax soilmstress_ON /Vcmax soilmstress_OFF =", out_pmodel_soilmstress_ON$vcmax / out_pmodel_soilmstress_OFF$vcmax))
-print(paste("soilmstress(0.2, apar_soilm = 0.1, bpar_soilm = 0.7, meanalpha = 0.2) =", soilmstress(0.2, apar_soilm = 0.1, bpar_soilm = 0.7, meanalpha = 0.2)))
+print(paste("soilmstress(0.2, apar_soilm = 0.1, bpar_soilm = 0.7, meanalpha = 0.2) =", calc_soilmstress(0.2, apar_soilm = 0.1, bpar_soilm = 0.7, meanalpha = 0.2)))
 ```
 
 `ftemp_arrh()` Calculates the Arrhenius-type temperature response.

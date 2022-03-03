@@ -105,7 +105,7 @@ dampen_vec <- function( vec, tau ){
 #'
 #' @export
 
-soilmstress <- function(
+calc_soilmstress <- function(
   soilm,
   meanalpha = 1.0,
   apar_soilm = 0.0,
@@ -163,7 +163,7 @@ soilmstress <- function(
 #'
 #' @export
 #' 
-patm <- function( elv, patm0 = 101325 ){
+calc_patm <- function( elv, patm0 = 101325 ){
   
   # Define constants:
   kTo <- 298.15    # base temperature, K (Prentice, unpublished)
@@ -173,9 +173,9 @@ patm <- function( elv, patm0 = 101325 ){
   kMa <- 0.028963  # molecular weight of dry air, kg/mol (Tsilingiris, 2008)
   
   # Convert elevation to pressure, Pa:
-  patm <- patm0*(1.0 - kL*elv/kTo)^(kG*kMa/(kR*kL))
+  out <- patm0*(1.0 - kL*elv/kTo)^(kG*kMa/(kR*kL))
   
-  return(patm)
+  return(out)
 }
 
 #' Calculates the Michaelis Menten coefficient for Rubisco-limited photosynthesis
@@ -226,7 +226,7 @@ patm <- function( elv, patm0 = 101325 ){
 #'
 #' @export
 #'
-kmm <- function( tc, patm ) {
+calc_kmm <- function( tc, patm ) {
   
   dhac   <- 79430      # (J/mol) Activation energy, Bernacchi et al. (2001)
   dhao   <- 36380      # (J/mol) Activation energy, Bernacchi et al. (2001)
@@ -288,7 +288,7 @@ kmm <- function( tc, patm ) {
 #'
 #' @export
 #'
-gammastar <- function( tc, patm ) {
+calc_gammastar <- function( tc, patm ) {
   
   # (J/mol) Activation energy, Bernacchi et al. (2001)
   dha    <- 37830
@@ -297,7 +297,7 @@ gammastar <- function( tc, patm ) {
   # converted to Pa by T. Davis assuming elevation of 227.076 m.a.s.l.
   gs25_0 <- 4.332
   
-  gammastar <- gs25_0 * patm / patm(0.0) * ftemp_arrh( (tc + 273.15), dha=dha )
+  gammastar <- gs25_0 * patm / calc_patm(0.0) * ftemp_arrh( (tc + 273.15), dha=dha )
   
   return( gammastar )
 }
@@ -801,18 +801,6 @@ optimal_chi <- function(kmm, gammastar, ns_star, ca, vpd, beta, c4){
   xi  <- sqrt( (beta * ( kmm + gammastar ) ) / ( 1.6 * ns_star ) )
   chi <- gammastar / ca + ( 1.0 - gammastar / ca ) * xi / ( xi + sqrt(vpd) )
   
-  ## more sensible to use chi for calculating mj - equivalent to code below
-  # # Define variable substitutes:
-  # vdcg <- ca - gammastar
-  # vacg <- ca + 2.0 * gammastar
-  # vbkg <- beta * (kmm + gammastar)
-  #
-  # # Check for negatives, vectorized
-  # mj <- ifelse(ns_star>0 & vpd>0 & vbkg>0,
-  #              mj(ns_star, vpd, vacg, vbkg, vdcg, gammastar),
-  #              rep(NA, max(length(vpd), length(ca)))
-  #              )
-  
   if (c4){
     
     out <- list(
@@ -830,13 +818,13 @@ optimal_chi <- function(kmm, gammastar, ns_star, ca, vpd, beta, c4){
     kappa <- kmm / ca
     
     ## use chi for calculating mj
-    mj <- (chi - gamma) / (chi + 2 * gamma)
+    mj <- (chi - gamma) / (chi + 2.0 * gamma)
     
     ## mc
     mc <- (chi - gamma) / (chi + kappa)
     
     ## mj:mv
-    mjoc <- (chi + kappa) / (chi + 2 * gamma)
+    mjoc <- (chi + kappa) / (chi + 2.0 * gamma)
     
     # format output list
     out <- list(
@@ -867,7 +855,16 @@ lue_vcmax_wang17 <- function(out_optchi, kphio, c_molmass, soilmstress){
   
   ## Include effect of Jmax limitation
   len <- length(out_optchi[[1]])
-  mprime <- mprime( out_optchi$mj )
+
+  kc <- 0.41   # Jmax cost coefficient
+
+  # ## Following eq. 17 in Stocker et al., 2020 GMD
+  # tmp <- 1.0 - (kc / out_optchi$mj)^(2.0/3.0)
+  # mprime <- ifelse(tmp > 0, out_optchi$mj * sqrt(tmp), NA)  # avoid square root of negative number
+
+  ## original code - is equivalent to eq. 17-based formulation above
+  tmp <- out_optchi$mj^2 - kc^(2.0/3.0) * (out_optchi$mj^(4.0/3.0))
+  mprime <- ifelse(tmp > 0, sqrt(tmp), NA)  # avoid square root of negative number
   
   out <- list(
     
@@ -877,7 +874,7 @@ lue_vcmax_wang17 <- function(out_optchi, kphio, c_molmass, soilmstress){
     lue = kphio * mprime * c_molmass * soilmstress,
     
     ## Vcmax normalised per unit absorbed PPFD (assuming iabs=1), with Jmax limitation
-    vcmax_unitiabs = kphio * out_optchi$mjoc * mprime / out_optchi$mj * soilmstress,
+    vcmax_unitiabs = soilmstress * kphio * mprime / out_optchi$mc,
     
     ## complement for non-smith19
     omega      = rep(NA, len),
@@ -980,21 +977,6 @@ lue_vcmax_c4 <- function( kphio, c_molmass, soilmstress ){
   )
   
   return(out)
-}
-
-mprime <- function( mc ){
-  # Input:  mc   (unitless): factor determining LUE
-  # Output: mpi (unitless): modified m accounting for the co-limitation
-  #                         hypothesis after Prentice et al. (2014)
-  
-  kc <- 0.41          # Jmax cost coefficient
-  
-  mpi <- mc^2 - kc^(2.0/3.0) * (mc^(4.0/3.0))
-  
-  # Check for negatives:
-  mpi <- ifelse(mpi>0, sqrt(mpi), NA)
-  
-  return(mpi)
 }
 
 ## #' Larger quadratic root

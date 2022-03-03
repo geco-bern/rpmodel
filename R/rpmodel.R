@@ -270,7 +270,7 @@ rpmodel <- function(
     stop("Aborted. Provide either elevation (arugment elv) or atmospheric pressure (argument patm).")
   } else if (!identical(NA, elv) && identical(NA, patm)){
     if (verbose) warning("Atmospheric pressure (patm) not provided. Calculating it as a function of elevation (elv), assuming standard atmosphere (101325 Pa at sea level).")
-    patm <- patm(elv)
+    patm <- calc_patm(elv)
   }
 
   #---- Fixed parameters--------------------------------------------------------
@@ -300,7 +300,7 @@ rpmodel <- function(
       warning("Argument 'meanalpha' has length > 1. Only the first element is used.")
       meanalpha <- meanalpha[1]
     }
-    soilmstress <- soilmstress( soilm, meanalpha, apar_soilm, bpar_soilm )
+    soilmstress <- calc_soilmstress( soilm, meanalpha, apar_soilm, bpar_soilm )
   }
   else {
     soilmstress <- 1.0
@@ -311,10 +311,10 @@ rpmodel <- function(
   ca <- co2_to_ca( co2, patm )
 
   ## photorespiratory compensation point - Gamma-star (Pa)
-  gammastar <- gammastar( tc, patm )
+  gammastar <- calc_gammastar( tc, patm )
 
   ## Michaelis-Menten coef. (Pa)
-  kmm <- kmm( tc, patm )   ## XXX Todo: replace 'NA' here with 'patm'
+  kmm <- calc_kmm( tc, patm )
 
   ## viscosity correction factor = viscosity( temp, press )/viscosity( 25 degC, 1013.25 Pa)
   ns      <- viscosity_h2o( tc, patm )  # Pa s
@@ -324,7 +324,7 @@ rpmodel <- function(
   ##----Optimal ci -------------------------------------------------------------
   ## The heart of the P-model: calculate ci:ca ratio (chi) and additional terms
   out_optchi <- optimal_chi( kmm, gammastar, ns_star, ca, vpd, beta, c4 )
-
+  
   ## leaf-internal CO2 partial pressure (Pa)
   ci <- out_optchi$chi * ca
 
@@ -386,48 +386,41 @@ rpmodel <- function(
   rd_unitiabs  <- rd_to_vcmax * (ftemp_inst_rd / ftemp25_inst_vcmax) * out_lue_vcmax$vcmax_unitiabs
 
   #---- Quantities that scale linearly with absorbed light ---------------------
-  # len <- length(out_lue_vcmax[[1]])
   iabs <- fapar * ppfd
 
   # Gross Primary Productivity
-  # gpp <- ifelse(any(is.na(iabs)),
-  # rep(NA, len), iabs * out_lue_vcmax$lue)   # in g C m-2 s-1
   gpp <- iabs * out_lue_vcmax$lue   # in g C m-2 s-1
 
   # Vcmax per unit ground area is the product of the intrinsic quantum
   # efficiency, the absorbed PAR, and 'n'
-  # vcmax <- ifelse(any(is.na(iabs)), rep(NA, len), iabs * out_lue_vcmax$vcmax_unitiabs)
   vcmax <- iabs * out_lue_vcmax$vcmax_unitiabs
 
   ## (vcmax normalized to 25 deg C)
-  # vcmax25 <- ifelse(any(is.na(iabs)), rep(NA, len), iabs * vcmax25_unitiabs)
   vcmax25 <- iabs * vcmax25_unitiabs
 
   ## Dark respiration
-  # rd <- ifelse(!is.na(iabs), iabs * rd_unitiabs, rep(NA, len))
   rd <- iabs * rd_unitiabs
 
   # Jmax using again A_J = A_C, derive the "Jmax limitation factor" 
-  # (corresponding to L in Eq. 13, Stocker et al., 2020 GMD)
-  # fact_jmaxlim <- ifelse(!is.na(iabs),
-  #                        vcmax * (ci + 2.0 * gammastar) / (kphio * iabs * (ci + kmm)),
-  #                        rep(NA, len))
   fact_jmaxlim <- vcmax * (ci + 2.0 * gammastar) / (kphio * iabs * (ci + kmm))
-
-  # jmax <- ifelse(!is.na(iabs),
-  #                4.0 * kphio * iabs / sqrt( (1.0/fact_jmaxlim)**2 - 1.0 ),
-  #                rep(NA, len))
+  
+  # use definition of Jmax limitation factor (L in Eq. 13) and solve for Jmax.
   jmax <- 4.0 * kphio * iabs / sqrt( (1.0/fact_jmaxlim)^2 - 1.0 )
-
+  
+  # ## Alternatively, Jmax can be calculated from Eq. F10 in Stocker et al., 2020
+  # kc <- 0.41
+  # jmax_alt <- 4.0 * kphio * iabs * sqrt((out_optchi$mj / kc)^(2/3) - 1.0)
+  # fact_jmaxlim_alt <- 1.0 / sqrt(1 + (4.0 * kphio * iabs / jmax_alt)^2)
+  
   ftemp25_inst_jmax <- ftemp_inst_jmax( tc, tc, tcref = 25.0 )
   jmax25 <- jmax / ftemp25_inst_jmax
 
   ## Test: at this stage, verify if A_J = A_C
   if (c4){
     a_j = kphio * iabs * out_optchi$mj * fact_jmaxlim
-    a_c = vcmax * iabs * out_optchi$mc
+    a_c = vcmax * out_optchi$mc
   } else {
-    a_j <- kphio * iabs * (ci - gammastar)/(ci + 2 * gammastar) * fact_jmaxlim
+    a_j <- kphio * iabs * (ci - gammastar)/(ci + 2.0 * gammastar) * fact_jmaxlim
     a_c <- vcmax * (ci - gammastar) / (ci + kmm)
   }
   
