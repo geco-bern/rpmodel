@@ -99,7 +99,7 @@ dampen_vec <- function( vec, tau ){
 #' @examples
 #' ## Relative reduction (%) in GPP due to soil moisture stress at
 #' ## relative soil water content ('soilm') of 0.2:
-#' print((soilmstress(0.2)-1)*100 )
+#' print((calc_soilmstress(0.2)-1)*100 )
 #'
 #' @references  Stocker, B. et al. Geoscientific Model Development Discussions (in prep.)
 #'
@@ -155,7 +155,7 @@ calc_soilmstress <- function(
 #' @return A numeric value for \eqn{p}
 #'
 #' @examples print("Standard atmospheric pressure, in Pa, corrected for 1000 m.a.s.l.:")
-#' print(patm(1000))
+#' print(calc_patm(1000))
 #' 
 #' @references  Allen, R. G., Pereira, L. S., Raes, D., Smith, M.: 
 #'              FAO Irrigation and Drainage Paper No. 56, Food and 
@@ -222,7 +222,7 @@ calc_patm <- function( elv, patm0 = 101325 ){
 #' @return A numeric value for \eqn{K} (in Pa)
 #'
 #' @examples print("Michaelis-Menten coefficient at 20 degrees Celsius and standard atmosphere (in Pa):")
-#' print(kmm(20, 101325))
+#' print(calc_kmm(20, 101325))
 #'
 #' @export
 #'
@@ -266,7 +266,7 @@ calc_kmm <- function( tc, patm ) {
 #' \eqn{\Gamma*0} is modified by temperature following an Arrhenius-type temperature
 #' response function \eqn{f(T, \Delta Ha)} (implemented by \link{ftemp_arrh})
 #' with activation energy \eqn{\Delta Ha = 37830} J mol-1  and is corrected for
-#' atmospheric pressure \eqn{p(z)} (see \link{patm}) at elevation \eqn{z}.
+#' atmospheric pressure \eqn{p(z)} (see \link{calc_patm}) at elevation \eqn{z}.
 #' \deqn{
 #'       \Gamma* = \Gamma*0 f(T, \Delta Ha) p(z) / p_0
 #' }
@@ -284,7 +284,7 @@ calc_kmm <- function( tc, patm ) {
 #' @return A numeric value for \eqn{\Gamma*} (in Pa)
 #'
 #' @examples print("CO2 compensation point at 20 degrees Celsius and standard atmosphere (in Pa):")
-#' print(gammastar(20, 101325))
+#' print(calc_gammastar(20, 101325))
 #'
 #' @export
 #'

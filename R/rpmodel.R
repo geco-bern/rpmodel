@@ -17,11 +17,11 @@
 #' @param patm Atmospheric pressure (Pa). When provided, overrides
 #'  \code{elv}, otherwise \code{patm} is calculated using standard
 #'  atmosphere (101325 Pa), corrected for elevation (argument \code{elv}),
-#'  using the function \link{patm}.
+#'  using the function \link{calc_patm}.
 #' @param elv Elevation above sea-level (m.a.s.l.). Is used only for 
 #'  calculating atmospheric pressure (using standard atmosphere (101325 Pa),
 #'  corrected for elevation (argument \code{elv}), using the function
-#' \link{patm}), if argument \code{patm} is not provided. If argument
+#' \link{calc_patm}), if argument \code{patm} is not provided. If argument
 #' \code{patm} is provided, \code{elv} is overridden.
 #' @param kphio Apparent quantum yield efficiency (unitless). Defaults to
 #'  0.081785 for \code{method_jmaxlim="wang17", do_ftemp_kphio=TRUE, 
@@ -39,7 +39,7 @@
 #' @param soilm (Optional, used only if \code{do_soilmstress==TRUE}) Relative 
 #'  soil moisture as a fraction of field capacity (unitless). Defaults to 1.0 
 #'  (no soil moisture stress). This information is used to calculate
-#'  an empirical soil moisture stress factor (\link{soilmstress}) whereby
+#'  an empirical soil moisture stress factor (\link{calc_soilmstress}) whereby
 #'  the sensitivity is determined by average aridity, defined by the local 
 #'  annual mean ratio of actual over potential evapotranspiration, supplied by
 #'  argument \code{meanalpha}.
@@ -91,10 +91,10 @@
 #'  \item \code{ca}: Ambient CO2 expressed as partial pressure (Pa)
 #'  
 #'  \item \code{gammastar}: Photorespiratory compensation point \eqn{\Gamma*}, 
-#'   (Pa), see \link{gammastar}.
+#'   (Pa), see \link{calc_gammastar}.
 #'  
 #'  \item \code{kmm}: Michaelis-Menten coefficient \eqn{K} for photosynthesis 
-#'  (Pa), see \link{kmm}.
+#'  (Pa), see \link{calc_kmm}.
 #'  
 #'  \item \code{ns_star}: Change in the viscosity of water, relative to its 
 #'   value at 25 deg C (unitless).
@@ -112,8 +112,8 @@
 #'    \xi = \sqrt (\beta (K+ \Gamma*) / (1.6 \eta*))
 #'   }
 #'   \eqn{\beta} is given by argument \code{beta}, \eqn{K} is 
-#'   \code{kmm} (see \link{kmm}), \eqn{\Gamma*} is 
-#'   \code{gammastar} (see \link{gammastar}). \eqn{\eta*} is \code{ns_star}.
+#'   \code{kmm} (see \link{calc_kmm}), \eqn{\Gamma*} is 
+#'   \code{gammastar} (see \link{calc_gammastar}). \eqn{\eta*} is \code{ns_star}.
 #'   \eqn{D} is the vapour pressure deficit (argument \code{vpd}), \eqn{ca} is 
 #'   the ambient CO2 partial pressure in Pa (\code{ca}).
 #'   
@@ -133,17 +133,17 @@
 #'                         with \eqn{c=0.41} (Wang et al., 2017) if \code{method_jmaxlim=="wang17"}. \eqn{Mc} is
 #'                         the molecular mass of C (12.0107 g mol-1). \eqn{m} is given returned variable \code{mj}.
 #'                         If \code{do_soilmstress==TRUE}, \eqn{LUE} is multiplied with a soil moisture stress factor,
-#'                         calculated with \link{soilmstress}.
+#'                         calculated with \link{calc_soilmstress}.
 #'         \item \code{mj}: Factor in the light-limited assimilation rate function, given by
 #'                         \deqn{
 #'                             m = (ci - \Gamma*) / (ci + 2 \Gamma*)
 #'                        }
-#'                        where \eqn{\Gamma*} is given by \code{gammastar}.
+#'                        where \eqn{\Gamma*} is given by \code{calc_gammastar}.
 #'         \item \code{mc}: Factor in the Rubisco-limited assimilation rate function, given by
 #'                         \deqn{
 #'                             mc = (ci - \Gamma*) / (ci + K)
 #'                        }
-#'                        where \eqn{K} is given by \code{kmm}.
+#'                        where \eqn{K} is given by \code{calc_kmm}.
 #'         \item \code{gpp}: Gross primary production (g C m-2), calculated as
 #'                        \deqn{
 #'                            GPP = Iabs LUE
@@ -193,7 +193,7 @@
 #'   
 #'  \item \code{omega_star}: Term corresponding to \eqn{\omega^\ast}, defined by
 #'   Eq. 18 in Smith et al. (2019), and Eq. E21 in Stocker et al. (2019).
-#'  }
+#'  }patm
 #'
 #' @references  
 #'  Bernacchi, C. J., Pimentel, C., and Long, S. P.:  In vivo temperature response func-tions  of  parameters
@@ -251,7 +251,12 @@ rpmodel <- function(
   ppfd,
   patm = NA,
   elv = NA,
-  kphio = ifelse(c4, 1.0, ifelse(do_ftemp_kphio, ifelse(do_soilmstress, 0.087182, 0.081785), 0.049977)),
+  kphio = ifelse(c4, 1.0,
+                 ifelse(do_ftemp_kphio,
+                        ifelse(do_soilmstress,
+                               0.087182,
+                               0.081785),
+                        0.049977)),
   beta = ifelse(c4, 146/9, 146),
   soilm = stopifnot(!do_soilmstress),
   meanalpha = 1.0,
@@ -267,14 +272,25 @@ rpmodel <- function(
 
   # Check arguments
   if (identical(NA, elv) && identical(NA, patm)){
-    stop("Aborted. Provide either elevation (arugment elv) or atmospheric pressure (argument patm).")
+    stop(
+    "Aborted. Provide either elevation (arugment elv) or 
+     atmospheric pressure (argument patm)."
+    )
   } else if (!identical(NA, elv) && identical(NA, patm)){
-    if (verbose) warning("Atmospheric pressure (patm) not provided. Calculating it as a function of elevation (elv), assuming standard atmosphere (101325 Pa at sea level).")
+    if (verbose) {
+      warning(
+      "Atmospheric pressure (patm) not provided. Calculating it as a
+      function of elevation (elv), assuming standard atmosphere 
+      (101325 Pa at sea level)."
+      )
+    }
+    
     patm <- calc_patm(elv)
   }
 
   #---- Fixed parameters--------------------------------------------------------
   c_molmass <- 12.0107  # molecular mass of carbon (g)
+  #'
   kPo <- 101325.0       # standard atmosphere, Pa (Allen, 1973)
   kTo <- 25.0           # base temperature, deg C (Prentice, unpublished)
   rd_to_vcmax <- 0.015  # Ratio of Rdark to Vcmax25, number from Atkin et al., 2015 for C3 herbaceous
@@ -317,7 +333,7 @@ rpmodel <- function(
   kmm <- calc_kmm( tc, patm )
 
   ## viscosity correction factor = viscosity( temp, press )/viscosity( 25 degC, 1013.25 Pa)
-  ns      <- viscosity_h2o( tc, patm )  # Pa s
+  ns      <- viscosity_h2o( tc, patm )  # Pa sc4, 1.0,
   ns25    <- viscosity_h2o( kTo, kPo )  # Pa s
   ns_star <- ns / ns25  # (unitless)
 

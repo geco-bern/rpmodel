@@ -21,6 +21,7 @@ test_that("ftemp_kphio",{
   # output must be numeric
   temp <- ftemp_kphio(20)
   
+  
   # value is double (single value not numeric = multiple values)
   expect_type(temp , "double")
   
@@ -31,8 +32,7 @@ test_that("ftemp_kphio",{
 test_that("soilm",{
   skip_on_cran()
 
-  
-  moisture <- soilmstress(
+  moisture <- calc_soilmstress(
     soilm = 1,
     meanalpha = 1.0,
     apar_soilm = 0.0,

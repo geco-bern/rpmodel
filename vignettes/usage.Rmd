@@ -230,14 +230,14 @@ print(paste("ftemp_inst_rd(10):", ftemp_inst_rd(10)))
 
 ### Parameters in the FvCB model
 
--   `gammastar()` calculates the CO$_2$ compensation point ($\Gamma^\ast$) in the Farquhar-von Caemmerer-Berry model as a function of temperature (argument `tc`) and atmospheric pressure (argument `patm`). This is returned by the `rpmodel()` function and by the separate auxiliary function `gammastar()`. `gammastar()` requires atmospheric pressure (`patm`) to be given as an argument (in addition to temperature). Corresponding to the `rpmodel()` call above, let's calculate this using the auxiliary function `patm()` with 0 metres above sea level, and assuming standard atmospheric pressure (101325 Pa at 0 m a.s.l.):
+-   `calc_gammastar()` calculates the CO$_2$ compensation point ($\Gamma^\ast$) in the Farquhar-von Caemmerer-Berry model as a function of temperature (argument `tc`) and atmospheric pressure (argument `patm`). This is returned by the `rpmodel()` function and by the separate auxiliary function `calc_gammastar()`. `calc_gammastar()` requires atmospheric pressure (`patm`) to be given as an argument (in addition to temperature). Corresponding to the `rpmodel()` call above, let's calculate this using the auxiliary function `calc_patm()` with 0 metres above sea level, and assuming standard atmospheric pressure (101325 Pa at 0 m a.s.l.):
 
 ```{r}
 print(paste("From rpmodel call :", out_pmodel$gammastar))
 print(paste("gammastar(10):", calc_gammastar(10, patm = calc_patm(elv = 0))))
 ```
 
--   `kmm()` calculates the Michaelis Menten coefficient for Rubisco-limited photosynthesis as a function of temperature (argument `tc`) and atmospheric pressure (argument `patm`). As above, `kmm()` requires atmospheric pressure to be given as an argument (in addition to temperature). Corresponding to the `rpmodel()` call above, let's calculate this using the auxiliary function `patm()` with 0 metres above sea level, and assuming standard atmospheric pressure (101325 Pa at 0 m a.s.l.):
+-   `calc_kmm()` calculates the Michaelis Menten coefficient for Rubisco-limited photosynthesis as a function of temperature (argument `tc`) and atmospheric pressure (argument `patm`). As above, `calc_kmm()` requires atmospheric pressure to be given as an argument (in addition to temperature). Corresponding to the `rpmodel()` call above, let's calculate this using the auxiliary function `calc_patm()` with 0 metres above sea level, and assuming standard atmospheric pressure (101325 Pa at 0 m a.s.l.):
 
 ```{r}
 print(paste("From rpmodel call:", out_pmodel$kmm))
