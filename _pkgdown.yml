@@ -1,3 +1,8 @@
+template:
+  package: cestemplate
+  params:
+    mathjax: true
+
 reference:
   - title: "Main function: P-model implementation."
     desc: >
@@ -8,3 +13,5 @@ reference:
     desc: "Public functions used inside rpmodel(). Made public for documentation, visibility, and other applications by the user."
     contents:
       - -matches("rpmodel")
+
+
