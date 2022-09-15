@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,300;0,400;0,700;1,300;1,400&amp;display=swap" rel="stylesheet">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><!-- ropensci --><link href="ceslabs.css" rel="stylesheet">
+<script src="pkgdown.js"></script><!-- geco --><link href="geco.css" rel="stylesheet">
 <meta property="og:title" content="P-Model">
 <meta property="og:description" content="Implements the P-model 
   (Stocker et al., 2020 &lt;doi:10.5194/gmd-13-1545-2020&gt;),
@@ -46,9 +46,9 @@
 
       <div class="navbar-brand-container">
         <a class="external-link hidden-sm hidden-xs" href="https://computationales.ethz.ch/">
-          <img src="https://raw.githubusercontent.com/computationales/CES_template/main/ces_logo.png" id="hexlogo" alt="bluegreen labs"></a>
+          <img src="https://raw.githubusercontent.com/computationales/GECO_template/main/geco_logo_small.png" id="hexlogo" alt="GECO"></a>
         <a class="external-link hidden-md hidden-lg" href="https://computationales.ethz.ch/">
-          <img src="https://raw.githubusercontent.com/computationales/CES_template/main/ces_logo.png" id="hexlogo" alt="bluegreen labs"></a>
+          <img src="https://raw.githubusercontent.com/computationales/GECO_template/main/geco_logo_small.png" id="hexlogo" alt="GECO"></a>
         <a class="navbar-brand" href="index.html">
            <i>rpmodel <small>v1.2.2</small></i>
         </a>
@@ -101,55 +101,32 @@
 <div class="section level2">
 <h2 id="purpose">Purpose<a class="anchor" aria-label="anchor" href="#purpose"></a>
 </h2>
-<p><code>rpmodel</code> provides an implementation of the P-model
-(Prentice et al., 2014; Wang et al., 2017; Stocker et al., 2020) for
-predicting acclimated photosynthetic parameters, assimilation, and dark
-respiration rates as a function of the environment. The main function is
-<code><a href="reference/rpmodel.html">rpmodel()</a></code> which returns a list of variables that are
-mutually consistent within the theory of the P-model (see <a href="./articles/usage.html">Usage</a> ). Further functions used within
-<code><a href="reference/rpmodel.html">rpmodel()</a></code> are also provided through the package.</p>
+<p><code>rpmodel</code> provides an implementation of the P-model (Prentice et al., 2014; Wang et al., 2017; Stocker et al., 2020) for predicting acclimated photosynthetic parameters, assimilation, and dark respiration rates as a function of the environment. The main function is <code><a href="reference/rpmodel.html">rpmodel()</a></code> which returns a list of variables that are mutually consistent within the theory of the P-model (see <a href="./articles/usage.html">Usage</a> ). Further functions used within <code><a href="reference/rpmodel.html">rpmodel()</a></code> are also provided through the package.</p>
 <p><strong>Important note:</strong></p>
-<p>The P-model predicts how photosynthesis acclimates to a changing
-environment, coordinating stomatal conductance, Vcmax and Jmax. This
-yields a model that has the form of a light use efficiency model, where
-gross primary production scales linearly with absorbed light, as
-described in <a href="https://doi.org/10.5194/gmd-13-1545-2020" class="external-link">Stocker
-et al. 2020</a>. It is important to note that this implies that the
-P-model is valid only for simulating responses to the environment that
-evolve over the time scale at which the photosynthetic machinery (e.g.,
-Rubisco) can be assumed to acclimate. Sensible choices are on the order
-of a couple of weeks to a month. In other words, the arguments (climatic
-forcing), provided to <code><a href="reference/rpmodel.html">rpmodel()</a></code> should represent typical
-daytime mean values, averaged across a couple of weeks. The output is
-then representative also for average values across the same time
-scale.</p>
+<p>The P-model predicts how photosynthesis acclimates to a changing environment, coordinating stomatal conductance, Vcmax and Jmax. This yields a model that has the form of a light use efficiency model, where gross primary production scales linearly with absorbed light, as described in <a href="https://doi.org/10.5194/gmd-13-1545-2020" class="external-link">Stocker et al. 2020</a>. It is important to note that this implies that the P-model is valid only for simulating responses to the environment that evolve over the time scale at which the photosynthetic machinery (e.g., Rubisco) can be assumed to acclimate. Sensible choices are on the order of a couple of weeks to a month. In other words, the arguments (climatic forcing), provided to <code><a href="reference/rpmodel.html">rpmodel()</a></code> should represent typical daytime mean values, averaged across a couple of weeks. The output is then representative also for average values across the same time scale.</p>
 </div>
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
-<p>This loads the <code>rpmodel</code> package and executes the
-<code><a href="reference/rpmodel.html">rpmodel()</a></code> function without <span class="math inline"><em>J</em><sub>max</sub></span> limitation (argument
-<code>method_jmaxlim = "none"</code>), and with a
-temperature-independent quantum yield efficiency (argument
-<code>do_ftemp_kphio = FALSE</code>):</p>
+<p>This loads the <code>rpmodel</code> package and executes the <code><a href="reference/rpmodel.html">rpmodel()</a></code> function without <span class="math inline"><em>J</em><sub>max</sub></span> limitation (argument <code>method_jmaxlim = "none"</code>), and with a temperature-independent quantum yield efficiency (argument <code>do_ftemp_kphio = FALSE</code>):</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/computationales/rpmodel" class="external-link">rpmodel</a></span><span class="op">)</span>
-<span class="va">out_pmodel</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/rpmodel.html">rpmodel</a></span><span class="op">(</span> 
-  tc             <span class="op">=</span> <span class="fl">20</span>,           <span class="co"># temperature, deg C</span>
-  vpd            <span class="op">=</span> <span class="fl">1000</span>,         <span class="co"># Pa,</span>
-  co2            <span class="op">=</span> <span class="fl">400</span>,          <span class="co"># ppm,</span>
-  fapar          <span class="op">=</span> <span class="fl">1</span>,            <span class="co"># fraction  ,</span>
-  ppfd           <span class="op">=</span> <span class="fl">300</span>,          <span class="co"># mol/m2/d,</span>
-  elv            <span class="op">=</span> <span class="fl">0</span>,            <span class="co"># m.a.s.l.,</span>
-  kphio          <span class="op">=</span> <span class="fl">0.049977</span>,     <span class="co"># quantum yield efficiency as calibrated for setup ORG by Stocker et al. 2020 GMD,</span>
-  beta           <span class="op">=</span> <span class="fl">146</span>,          <span class="co"># unit cost ratio a/b,</span>
-  c4             <span class="op">=</span> <span class="cn">FALSE</span>,
-  method_optci   <span class="op">=</span> <span class="st">"prentice14"</span>,
-  method_jmaxlim <span class="op">=</span> <span class="st">"none"</span>,
-  do_ftemp_kphio <span class="op">=</span> <span class="cn">FALSE</span>,        <span class="co"># corresponding to setup ORG</span>
-  do_soilmstress <span class="op">=</span> <span class="cn">FALSE</span>,        <span class="co"># corresponding to setup ORG</span>
-  verbose        <span class="op">=</span> <span class="cn">TRUE</span>
-  <span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/computationales/rpmodel" class="external-link">rpmodel</a></span><span class="op">)</span></span>
+<span><span class="va">out_pmodel</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/rpmodel.html">rpmodel</a></span><span class="op">(</span> </span>
+<span>  tc             <span class="op">=</span> <span class="fl">20</span>,           <span class="co"># temperature, deg C</span></span>
+<span>  vpd            <span class="op">=</span> <span class="fl">1000</span>,         <span class="co"># Pa,</span></span>
+<span>  co2            <span class="op">=</span> <span class="fl">400</span>,          <span class="co"># ppm,</span></span>
+<span>  fapar          <span class="op">=</span> <span class="fl">1</span>,            <span class="co"># fraction  ,</span></span>
+<span>  ppfd           <span class="op">=</span> <span class="fl">300</span>,          <span class="co"># mol/m2/d,</span></span>
+<span>  elv            <span class="op">=</span> <span class="fl">0</span>,            <span class="co"># m.a.s.l.,</span></span>
+<span>  kphio          <span class="op">=</span> <span class="fl">0.049977</span>,     <span class="co"># quantum yield efficiency as calibrated for setup ORG by Stocker et al. 2020 GMD,</span></span>
+<span>  beta           <span class="op">=</span> <span class="fl">146</span>,          <span class="co"># unit cost ratio a/b,</span></span>
+<span>  c4             <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  method_optci   <span class="op">=</span> <span class="st">"prentice14"</span>,</span>
+<span>  method_jmaxlim <span class="op">=</span> <span class="st">"none"</span>,</span>
+<span>  do_ftemp_kphio <span class="op">=</span> <span class="cn">FALSE</span>,        <span class="co"># corresponding to setup ORG</span></span>
+<span>  do_soilmstress <span class="op">=</span> <span class="cn">FALSE</span>,        <span class="co"># corresponding to setup ORG</span></span>
+<span>  verbose        <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
 <p>For more information and examples see <a href="articles/usage.html">Usage</a>.</p>
 </div>
 <div class="section level2">
@@ -158,22 +135,19 @@ temperature-independent quantum yield efficiency (argument
 <div class="section level3">
 <h3 id="stable-release">Stable release<a class="anchor" aria-label="anchor" href="#stable-release"></a>
 </h3>
-<p><code>rpmodel</code> is available on CRAN <a href="https://CRAN.R-project.org/package=rpmodel" class="external-link">here</a>. To install
-and load, run the following commands in your R terminal:</p>
+<p><code>rpmodel</code> is available on CRAN <a href="https://CRAN.R-project.org/package=rpmodel" class="external-link">here</a>. To install and load, run the following commands in your R terminal:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"rpmodel"</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/computationales/rpmodel" class="external-link">rpmodel</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"rpmodel"</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/computationales/rpmodel" class="external-link">rpmodel</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="development-release">Development release<a class="anchor" aria-label="anchor" href="#development-release"></a>
 </h3>
-<p>To install and load the latest version of the rpmodel package
-(development release, not yet on CRAN) run the following command in your
-R terminal:</p>
+<p>To install and load the latest version of the rpmodel package (development release, not yet on CRAN) run the following command in your R terminal:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span><span class="op">)</span><span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="va">devtools</span><span class="op">)</span><span class="op">}</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span> <span class="st">"stineb/rpmodel"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span> <span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/computationales/rpmodel" class="external-link">rpmodel</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span><span class="op">)</span><span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="va">devtools</span><span class="op">)</span><span class="op">}</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span> <span class="st">"stineb/rpmodel"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span> <span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/computationales/rpmodel" class="external-link">rpmodel</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -184,24 +158,14 @@ R terminal:</p>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<p>Stocker, B. D., Wang, H., Smith, N. G., Harrison, S. P., Keenan, T.
-F., Sandoval, D., Davis, T., and Prentice, I. C.: P-model v1.0: an
-optimality-based light use efficiency model for simulating ecosystem
-gross primary production, Geosci. Model Dev., 13, 1545–1581, <a href="https://doi.org/10.5194/gmd-13-1545-2020" class="external-link uri">https://doi.org/10.5194/gmd-13-1545-2020</a>, 2020.</p>
-<p>Wang, H., Prentice, I. C., Keenan, T. F., Davis, T. W., Wright, I.
-J., Cornwell, W. K.,Evans, B. J., and Peng, C.: Towards a universal
-model for carbon dioxide uptake by plants, Nat Plants, 3, 734–741,
-2017.</p>
-<p>Prentice, I. C., Dong, N., Gleason, S. M., Maire, V., and Wright, I.
-J.: Balancingthe costs of carbon gain and water transport: testing a new
-theoretical frameworkfor plant functional ecology, Ecology Letters, 17,
-82–91, 10.1111/ele.12211, 2014.</p>
+<p>Stocker, B. D., Wang, H., Smith, N. G., Harrison, S. P., Keenan, T. F., Sandoval, D., Davis, T., and Prentice, I. C.: P-model v1.0: an optimality-based light use efficiency model for simulating ecosystem gross primary production, Geosci. Model Dev., 13, 1545–1581, <a href="https://doi.org/10.5194/gmd-13-1545-2020" class="external-link uri">https://doi.org/10.5194/gmd-13-1545-2020</a>, 2020.</p>
+<p>Wang, H., Prentice, I. C., Keenan, T. F., Davis, T. W., Wright, I. J., Cornwell, W. K.,Evans, B. J., and Peng, C.: Towards a universal model for carbon dioxide uptake by plants, Nat Plants, 3, 734–741, 2017.</p>
+<p>Prentice, I. C., Dong, N., Gleason, S. M., Maire, V., and Wright, I. J.: Balancingthe costs of carbon gain and water transport: testing a new theoretical frameworkfor plant functional ecology, Ecology Letters, 17, 82–91, 10.1111/ele.12211, 2014.</p>
 </div>
 <div class="section level2">
 <h2 id="acknowledgement">Acknowledgement<a class="anchor" aria-label="anchor" href="#acknowledgement"></a>
 </h2>
-<p>This project was funded by Marie Sklodowska-Curie fellowship
-H2020-MSCA-IF-2015, project FIBER, grant number 701329.</p>
+<p>This project was funded by Marie Sklodowska-Curie fellowship H2020-MSCA-IF-2015, project FIBER, grant number 701329.</p>
 </div>
 
   </div>
@@ -261,7 +225,7 @@ H2020-MSCA-IF-2015, project FIBER, grant number 701329.</p>
                           <div class="icon fab fa-github"></div></a>
                         <a href="https://computationales.ethz.ch/" target="_blank" class="external-link">
                           <div class="icon fa fa-flask"></div></a>
-                        <a href="http://twitter.com/stineb/" target="_blank" class="external-link">
+                        <a href="http://twitter.com/SteniBocker/" target="_blank" class="external-link">
                           <div class="icon fab fa-twitter"></div></a>
                     </div>
                 </div>

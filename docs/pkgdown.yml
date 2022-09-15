@@ -1,8 +1,8 @@
-pandoc: 2.17.1.1
-pkgdown: 2.0.2
+pandoc: '2.18'
+pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
   functional_dependencies: functional_dependencies.html
   usage: usage.html
-last_built: 2022-04-07T13:07Z
+last_built: 2022-09-15T12:26Z
 
