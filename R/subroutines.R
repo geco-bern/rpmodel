@@ -892,7 +892,7 @@ lue_vcmax_smith19 <- function(out_optchi, kphio, c_molmass, soilmstress){
   
   # Adopted from Nick Smith's code:
   # Calculate omega, see Smith et al., 2019 Ecology Letters
-  omega <- function( theta, c_cost, m ){
+  calc_omega <- function( theta, c_cost, m ){
     
     cm <- 4 * c_cost / m                        # simplification term for omega calculation
     v  <- 1/(cm * (1 - theta * cm)) - 4 * theta # simplification term for omega calculation
@@ -904,11 +904,11 @@ lue_vcmax_smith19 <- function(out_optchi, kphio, c_molmass, soilmstress){
     cquad <- -(capP * theta)
     m_star <- (4 * c_cost) / polyroot(c(aquad, bquad, cquad))
     
-    omega <- ifelse(  m < Re(m_star[1]),
+    out_omega <- ifelse(  m < Re(m_star[1]),
                       -( 1 - (2 * theta) ) - sqrt( (1 - theta) * v),
                       -( 1 - (2 * theta))  + sqrt( (1 - theta) * v)
     )
-    return(omega)
+    return(out_omega)
   }
   
   ## constants
@@ -917,7 +917,7 @@ lue_vcmax_smith19 <- function(out_optchi, kphio, c_molmass, soilmstress){
   
   
   ## factors derived as in Smith et al., 2019
-  omega <- omega( theta = theta, c_cost = c_cost, m = out_optchi$mj )          # Eq. S4
+  omega <- calc_omega( theta = theta, c_cost = c_cost, m = out_optchi$mj )          # Eq. S4
   omega_star <- 1.0 + omega - sqrt( (1.0 + omega)^2 - (4.0 * theta * omega) )       # Eq. 18
   
   ## Effect of Jmax limitation

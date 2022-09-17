@@ -290,7 +290,6 @@ rpmodel <- function(
 
   #---- Fixed parameters--------------------------------------------------------
   c_molmass <- 12.0107  # molecular mass of carbon (g)
-  #'
   kPo <- 101325.0       # standard atmosphere, Pa (Allen, 1973)
   kTo <- 25.0           # base temperature, deg C (Prentice, unpublished)
   rd_to_vcmax <- 0.015  # Ratio of Rdark to Vcmax25, number from Atkin et al., 2015 for C3 herbaceous
