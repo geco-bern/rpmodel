@@ -1,7 +1,3 @@
-# 1.3
-
-(not there yet)
-
 ## rpmodel 1.2.2
 
 * Changed naming of auxiliary functions (e.g., `calc_patm()` instead of `patm()`)
