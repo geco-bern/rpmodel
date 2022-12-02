@@ -1,5 +1,6 @@
 [![R-CMD-check](https://github.com/computationales/rpmodel/workflows/R-CMD-check/badge.svg)](https://github.com/computationales/rpmodel/actions)
 [![codecov](https://codecov.io/gh/bluegreen-labs/rpmodel/branch/master/graph/badge.svg?token=7bImDR3uCT)](https://codecov.io/gh/bluegreen-labs/rpmodel)
+![](https://cranlogs.r-pkg.org/badges/grand-total/rpmodel) 
 
 ## Purpose
 
