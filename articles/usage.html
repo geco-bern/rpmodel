@@ -75,7 +75,7 @@
   <a href="../news/index.html">Changelog</a>
 </li>
         <li>
-  <a href="https://github.com/computationales/rpmodel/" class="external-link">
+  <a href="https://github.com/geco-bern/rpmodel/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -98,7 +98,7 @@
 Stocker</h4>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/computationales/rpmodel/blob/HEAD/vignettes/usage.Rmd" class="external-link"><code>vignettes/usage.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/geco-bern/rpmodel/blob/HEAD/vignettes/usage.Rmd" class="external-link"><code>vignettes/usage.Rmd</code></a></small>
       <div class="hidden name"><code>usage.Rmd</code></div>
 
     </div>
@@ -150,7 +150,7 @@ included. The unit cost ratio (<span class="math inline">\(\beta\)</span> in Sto
 by argument <code>beta</code>.</p>
 <p>To run the <code><a href="../reference/rpmodel.html">rpmodel()</a></code> function we can do:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/computationales/rpmodel" class="external-link">rpmodel</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/geco-bern/rpmodel" class="external-link">rpmodel</a></span><span class="op">)</span></span>
 <span><span class="va">out_pmodel</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rpmodel.html">rpmodel</a></span><span class="op">(</span> </span>
 <span>  tc             <span class="op">=</span> <span class="fl">20</span>,           <span class="co"># temperature, deg C</span></span>
 <span>  vpd            <span class="op">=</span> <span class="fl">1000</span>,         <span class="co"># Pa,</span></span>
@@ -415,12 +415,11 @@ corresponding to <code>kphio * ftemp_kphio()</code>, using parameters as
 in Stocker et al., 2020 for C3 vegetation (their ‘BRC’ setup, black line
 in the plot below), and as in Cai &amp; Prentice (2020) for C4
 vegetation (blue solid line).</p>
-<p>Addendum: As of <a href="https://github.com/computationales/rpmodel/issues/19" class="external-link">issue
-#19</a> (raised by David Orme), the values provided in Cai &amp;
-Prentice (2020) are erroneous. And instead, the temperature response
-function for C4 should be
-<code>ftemp = -0.064 + 0.03 * tc - 0.000464 * tc^2</code>. This is now
-also implemented in rpmodel.</p>
+<p>Addendum: As of <a href="https://github.com/geco-bern/rpmodel/issues/19" class="external-link">issue #19</a>
+(raised by David Orme), the values provided in Cai &amp; Prentice (2020)
+are erroneous. And instead, the temperature response function for C4
+should be <code>ftemp = -0.064 + 0.03 * tc - 0.000464 * tc^2</code>.
+This is now also implemented in rpmodel.</p>
 </div>
 </div>
 <div class="section level2">

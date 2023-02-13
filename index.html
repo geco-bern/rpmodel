@@ -79,7 +79,7 @@
   <a href="news/index.html">Changelog</a>
 </li>
         <li>
-  <a href="https://github.com/computationales/rpmodel/" class="external-link">
+  <a href="https://github.com/geco-bern/rpmodel/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -110,7 +110,7 @@
 </h2>
 <p>This loads the <code>rpmodel</code> package and executes the <code><a href="reference/rpmodel.html">rpmodel()</a></code> function without <span class="math inline"><em>J</em><sub>max</sub></span> limitation (argument <code>method_jmaxlim = "none"</code>), and with a temperature-independent quantum yield efficiency (argument <code>do_ftemp_kphio = FALSE</code>):</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/computationales/rpmodel" class="external-link">rpmodel</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/geco-bern/rpmodel" class="external-link">rpmodel</a></span><span class="op">)</span></span>
 <span><span class="va">out_pmodel</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/rpmodel.html">rpmodel</a></span><span class="op">(</span> </span>
 <span>  tc             <span class="op">=</span> <span class="fl">20</span>,           <span class="co"># temperature, deg C</span></span>
 <span>  vpd            <span class="op">=</span> <span class="fl">1000</span>,         <span class="co"># Pa,</span></span>
@@ -138,7 +138,7 @@
 <p><code>rpmodel</code> is available on CRAN <a href="https://CRAN.R-project.org/package=rpmodel" class="external-link">here</a>. To install and load, run the following commands in your R terminal:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"rpmodel"</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/computationales/rpmodel" class="external-link">rpmodel</a></span><span class="op">)</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/geco-bern/rpmodel" class="external-link">rpmodel</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="development-release">Development release<a class="anchor" aria-label="anchor" href="#development-release"></a>
@@ -147,7 +147,7 @@
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span><span class="op">)</span><span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="va">devtools</span><span class="op">)</span><span class="op">}</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span> <span class="st">"stineb/rpmodel"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span> <span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/computationales/rpmodel" class="external-link">rpmodel</a></span><span class="op">)</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/geco-bern/rpmodel" class="external-link">rpmodel</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -175,8 +175,8 @@
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
 <li><a href="https://cloud.r-project.org/package=rpmodel" class="external-link">View on CRAN</a></li>
-<li><a href="https://github.com/computationales/rpmodel/" class="external-link">Browse source code</a></li>
-<li><a href="https://github.com/computationales/rpmodel/issues" class="external-link">Report a bug</a></li>
+<li><a href="https://github.com/geco-bern/rpmodel/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/geco-bern/rpmodel/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
 
@@ -206,7 +206,7 @@
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/computationales/rpmodel/actions" class="external-link"><img src="https://github.com/computationales/rpmodel/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://github.com/geco-bern/rpmodel/actions" class="external-link"><img src="https://github.com/geco-bern/rpmodel/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
 <li><a href="https://codecov.io/gh/bluegreen-labs/rpmodel" class="external-link"><img src="https://codecov.io/gh/bluegreen-labs/rpmodel/branch/master/graph/badge.svg?token=7bImDR3uCT" alt="codecov"></a></li>
 </ul>
 </div>
