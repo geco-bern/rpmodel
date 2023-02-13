@@ -253,7 +253,6 @@ corollary predictions (Prentice et al., 2014; Han et al., 2017).
   elv = 0)
 }
 
-
 }
 \references{
 Bernacchi, C. J., Pimentel, C., and Long, S. P.:  In vivo temperature response func-tions  of  parameters

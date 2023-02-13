@@ -23,7 +23,7 @@ Authors@R: c(
            )
 License: GPL-3
 Encoding: UTF-8
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.1
 Depends:
     R (>= 3.6)
 Suggests:
@@ -36,5 +36,5 @@ Suggests:
     covr,
     markdown
 VignetteBuilder: knitr
-URL: https://github.com/computationales/rpmodel
-BugReports: https://github.com/computationales/rpmodel/issues
+URL: https://github.com/geco-bern/rpmodel
+BugReports: https://github.com/geco-bern/rpmodel/issues
