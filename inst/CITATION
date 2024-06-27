@@ -2,7 +2,7 @@ citHeader("To cite rpmodel in publications use:")
 
 citEntry(entry = "Article",
   title        = "P-model v1.0: An optimality-based light use efficiency model for simulating ecosystem gross primary production",
-  author       = personList(as.person("Benjamin Stocker"),
+  author       = c(as.person("Benjamin Stocker"),
                    as.person("Han Wang"),
                    as.person("Nicholas Smith"),
                    as.person("Sandy Harrison"),
