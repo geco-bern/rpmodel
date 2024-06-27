@@ -14,6 +14,7 @@ rpmodel(
   elv = NA,
   kphio = ifelse(do_ftemp_kphio, ifelse(do_soilmstress, 0.087182, 0.081785), 0.049977),
   beta = 146,
+  c_cost = 0.41,
   soilm = 1,
   meanalpha = 1,
   apar_soilm = 0,
@@ -59,6 +60,8 @@ fitted value as presented in Stocker et al. (2019) Geosci. Model Dev. for model 
 respectively.}
 
 \item{beta}{Unit cost ratio. Defaults to 146.0 (see Stocker et al., 2019).}
+
+\item{c_cost}{Jmax cost parameter. Defaults to 0.41 (see Wang et al, 2017).}
 
 \item{soilm}{(Optional, used only if \code{do_soilmstress==TRUE}) Relative soil moisture as a fraction
 of field capacity (unitless). Defaults to 1.0 (no soil moisture stress). This information is used to calculate
@@ -174,10 +177,7 @@ photosynthesis model, P-model predictions, including all its corollary). This in
                       \deqn{
                            Vcmax = \phi(T) \phi0 Iabs n
                       }
-                      where \eqn{n} is given by \eqn{n=m/mc}, or
-                      \deqn{
-                          n = (ci + K) / (ci + 2 \Gamma*)
-                      }
+                      where \eqn{n} is given by \eqn{n=m'/mc}.
         \item \code{vcmax25}: Maximum carboxylation capacity \eqn{Vcmax} (mol C m-2) normalised to 25 deg C
                      following a modified Arrhenius equation, calculated as \eqn{Vcmax25 = Vcmax / fv},
                      where \eqn{fv} is the instantaneous temperature response by Vcmax and is implemented

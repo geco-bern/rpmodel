@@ -4,7 +4,7 @@
 \alias{calc_ftemp_inst_vcmax}
 \title{Calculates the instantaneous temperature response of Vcmax}
 \usage{
-calc_ftemp_inst_vcmax(tcleaf, tcgrowth = tcleaf, tcref = 25)
+calc_ftemp_inst_vcmax(tcleaf, tcgrowth = tcleaf, tcref = 25, kuma_par = T)
 }
 \arguments{
 \item{tcleaf}{Leaf temperature, or in general the temperature relevant for photosynthesis
