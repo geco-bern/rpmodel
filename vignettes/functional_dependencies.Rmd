@@ -6,7 +6,7 @@ output:
     md_extensions: ["-autolink_bare_uris"]
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
-  %\usepackage[utf8]{inputenc}
+  %\VignetteEncoding{UTF-8}
   %\VignetteIndexEntry{Summary of functional dependencies}
 ---
 

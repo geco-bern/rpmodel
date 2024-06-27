@@ -32,6 +32,7 @@ Suggests:
     purrr,
     tidyr,
     knitr,
+    rmarkdown,
     testthat,
     covr
 VignetteBuilder: knitr
