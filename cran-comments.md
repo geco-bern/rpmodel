@@ -1,14 +1,15 @@
 I have read and agree to the the CRAN policies at
 http://cran.r-project.org/web/packages/policies.html
 
-## test environments, local, CI and r-hub
+## test environments: local
 
-- local OSX on R 3.6 / Ubuntu 16.04 on R 4.1
-- Ubuntu 20.04 on Github Actions (devel / release)
-- Windows / MacOS on Github Actions (release)
-- noLD on rhub
-- codecove.io code coverage at ~98%
+── R CMD check results ─────────────────────── rpmodel 1.2.3 ────
+Duration: 11.5s
 
-## local / Travis CI R CMD check results
+0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 
-0 errors | 0 warnings | 0 notes
+R CMD check succeeded
+
+- rhub::rhub_check() did not work.
+- codecove.io code coverage at ~97%
+

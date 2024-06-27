@@ -1,3 +1,7 @@
+# rpmodel 1.2.3
+
+* Corrected ORCID in DESCRIPTION
+
 # rpmodel 1.2.2
 
 * Changed naming of auxiliary functions (e.g., `calc_patm()` instead of `patm()`)
@@ -14,7 +18,7 @@
 
 # rpmodel 1.1.3
 
-* Corrected vectorization. This solves issue [#6](https://github.com/stineb/rpmodel/issues/6)
+* Corrected vectorization. This solves issue [#6](https://github.com/geco-bern/rpmodel/issues/6)
 
 # rpmodel 1.1.2
 
@@ -26,11 +30,11 @@
 
 # rpmodel 1.1
 
-* Corrected vectorization. This fixes wrong treatment of vector arguments and solves [issue #3](https://github.com/stineb/rpmodel/issues/3).
+* Corrected vectorization. This fixes wrong treatment of vector arguments and solves [issue #3](https://github.com/geco-bern/rpmodel/issues/3).
 
 # rpmodel 1.0.6
 
-* Set negative VPD values to zero. Resolves issue [issue #2](https://github.com/stineb/rpmodel/issues/2).
+* Set negative VPD values to zero. Resolves issue [issue #2](https://github.com/geco-bern/rpmodel/issues/2).
 
 # rpmodel 1.0.5
 
