@@ -245,6 +245,88 @@ out_ts %>%
   labs(x = "P (Pa)", y = "Vcmax (g m-2 d-1)")
 ```
 
+### CO2
+
+At constant conditions (T = 20 deg C, VPD = 300 Pa, fAPAR = 1, PPFD = 30 mol m-2 d-1, elevation = 0 m a.s.l.)
+
+```{r}
+out_co2 <- rpmodel::rpmodel( 
+  tc             = 20,
+  vpd            = 300,
+  co2            = seq(200, 600, by = 10),
+  fapar          = 1,
+  ppfd           = 30,
+  elv            = 0,         
+  c4             = FALSE,
+  do_ftemp_kphio = FALSE,
+  do_soilmstress = FALSE
+  ) %>% 
+  as_tibble() %>% 
+  mutate(
+    co2 = seq(200, 600, by = 10)
+    )
+
+out_co2 %>% 
+  ggplot(aes(x = co2, y = gpp)) +
+  geom_line() +
+  labs(x = "CO2 (ppm)", y = "GPP (g m-2 d-1)")
+
+out_co2 %>% 
+  ggplot(aes(x = co2, y = chi)) +
+  geom_line() +
+  labs(x = "CO2 (ppm)", y = "chi")
+
+out_co2 %>% 
+  ggplot(aes(x = co2, y = vcmax)) +
+  geom_line() +
+  labs(x = "CO2 (ppm)", y = "Vcmax (g m-2 d-1)")
+
+df_amb_ele <- out_co2 |> 
+  filter(co2 == 400) |> 
+  tidyr::pivot_longer(where(is.numeric)) |> 
+  rename(value_amb = value) |> 
+  left_join(
+    out_co2 |> 
+      filter(co2 == 600) |> 
+      tidyr::pivot_longer(where(is.numeric)) |> 
+      rename(value_ele = value),
+    by = "name"
+  ) |> 
+  mutate(
+    response_logrr = log(value_ele/value_amb),
+    response_perc = 100*(value_ele/value_amb - 1)
+  )
+
+# For comparison to Ainsworth & Long, 2005
+df_amb_ele |> 
+  filter(name %in% c("chi", "iwue", "gs")) |> 
+  mutate(name = factor(name, levels = rev(c("gs", "chi", "iwue")))) |> 
+  ggplot(aes(x = response_perc, y = name)) +
+  geom_point(size = 3, color = "royalblue") +
+  theme_classic() +
+  geom_vline(xintercept = 0, linetype = "dotted") +
+  scale_y_discrete(
+    "", 
+    labels = rev(c(
+      expression(italic(g)[s]), 
+      expression(italic(c)[i]:italic(c)[a]), 
+      "iWUE"))
+    ) +
+  labs(
+    title = "P-model",
+    x = expression(paste("Percentage change in elevated CO"[2]))
+  )
+
+ggsave(
+  here::here("vignettes/fig/perc_change_co2_ainsworthlong05.pdf"),
+  width = 4,
+  height = 2.5
+)
+```
+
+
+
+
 ## C4 Photosynthesis
 
 ### Temperature
