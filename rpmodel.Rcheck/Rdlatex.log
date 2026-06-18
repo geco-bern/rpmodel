@@ -1,0 +1,512 @@
+Hmm ... looks like a package
+Converting parsed Rd's to LaTeX .
+Creating pdf output from LaTeX ...
+
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+LaTeX2e <2021-11-15> patch level 1
+L3 programming layer <2022-02-24> (./Rd2.tex
+(/usr/local/texlive/2022/texmf-dist/tex/latex/base/book.cls
+Document Class: book 2021/10/04 v1.4n Standard LaTeX document class
+(/usr/local/texlive/2022/texmf-dist/tex/latex/base/bk10.clo))
+(/Library/Frameworks/R.framework/Resources/share/texmf/tex/latex/Rd.sty
+(/usr/local/texlive/2022/texmf-dist/tex/latex/base/ifthen.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/iftex/iftex.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/tools/longtable.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/tools/bm.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/base/alltt.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/tools/verbatim.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/url/url.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/base/textcomp.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsmath/amsmath.sty
+For additional information on amsmath, use the `?' option.
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsmath/amstext.sty
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsmath/amsgen.sty))
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsmath/amsbsy.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsmath/amsopn.sty))
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/amsfonts.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/amssymb.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/jknapltx/mathrsfs.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/base/fontenc.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/psnfss/times.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/inconsolata/zi4.sty
+`inconsolata-zi4' v1.12, 2019/05/17 Text macros for Inconsolata (msharpe)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/xkeyval/xkeyval.sty
+(/usr/local/texlive/2022/texmf-dist/tex/generic/xkeyval/xkeyval.tex
+(/usr/local/texlive/2022/texmf-dist/tex/generic/xkeyval/xkvutils.tex
+(/usr/local/texlive/2022/texmf-dist/tex/generic/xkeyval/keyval.tex)))))
+(/usr/local/texlive/2022/texmf-dist/tex/latex/graphics/color.sty
+(/usr/local/texlive/2022/texmf-dist/tex/latex/graphics-cfg/color.cfg)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/graphics-def/pdftex.def))
+(/usr/local/texlive/2022/texmf-dist/tex/latex/hyperref/hyperref.sty
+(/usr/local/texlive/2022/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+(/usr/local/texlive/2022/texmf-dist/tex/generic/infwarerr/infwarerr.sty))
+(/usr/local/texlive/2022/texmf-dist/tex/generic/kvsetkeys/kvsetkeys.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pdfescape/pdfescape.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/hycolor/hycolor.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/letltxmacro/letltxmacro.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/auxhook/auxhook.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/kvoptions/kvoptions.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/hyperref/pd1enc.def)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/intcalc/intcalc.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/etexcmds/etexcmds.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/hyperref/puenc.def)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/bitset/bitset.sty
+(/usr/local/texlive/2022/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty))
+(/usr/local/texlive/2022/texmf-dist/tex/latex/base/atbegshi-ltx.sty))
+(/usr/local/texlive/2022/texmf-dist/tex/latex/hyperref/hpdftex.def
+(/usr/local/texlive/2022/texmf-dist/tex/latex/base/atveryend-ltx.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
+
+(/usr/local/texlive/2022/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
+)))) (/usr/local/texlive/2022/texmf-dist/tex/latex/base/makeidx.sty)
+Writing index file Rd2.idx
+(/usr/local/texlive/2022/texmf-dist/tex/latex/psnfss/t1ptm.fd)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def)
+No file Rd2.aux.
+(/usr/local/texlive/2022/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+) (/usr/local/texlive/2022/texmf-dist/tex/latex/hyperref/nameref.sty
+(/usr/local/texlive/2022/texmf-dist/tex/latex/refcount/refcount.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/gettitlestring/gettitlestring.s
+ty)) (/usr/local/texlive/2022/texmf-dist/tex/latex/inconsolata/t1zi4.fd)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsa.fd)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsb.fd)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/jknapltx/ursfs.fd) [1{/usr/local/
+texlive/2022/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2]
+Overfull \hbox (10.15439pt too wide) in paragraph at lines 123--128
+[]\T1/ptm/m/n/10 The Michaelis-Menten co-ef-fi-cient $\OML/cmm/m/it/10 K$ \T1/p
+tm/m/n/10 of Rubisco-limited pho-to-syn-the-sis is de-ter-mined by the Michalis
+-
+
+Overfull \hbox (3.75021pt too wide) in paragraph at lines 165--165
+ []\T1/zi4/m/n/9 print("Michaelis-Menten coefficient at 20 degrees Celsius and 
+standard atmosphere (in Pa):") 
+[3]
+Overfull \hbox (5.74863pt too wide) in paragraph at lines 245--250
+\T1/ptm/m/n/10 model setup 'FULL' (cor-re-spond-ing to a setup with []\T1/zi4/m
+/n/10 method_jmaxlim="wang17",
+[4]
+Overfull \hbox (119.30856pt too wide) in paragraph at lines 251--256
+\T1/ptm/m/n/10 for model setup 'FULL' (cor-re-spond-ing to a setup with []\T1/z
+i4/m/n/10 method_jmaxlim="wang17",do_ftemp_kphio=TRUE,
+(/usr/local/texlive/2022/texmf-dist/tex/latex/inconsolata/ts1zi4.fd) [5]
+[6]
+Overfull \hbox (15.67628pt too wide) in paragraph at lines 406--409
+[]\T1/ptm/m/n/10 Given a ki-netic rate at a ref-er-ence tem-per-a-ture (ar-gu-m
+ent []\T1/zi4/m/n/10 tkref[]\T1/ptm/m/n/10 ) this func-tion cal-cu-lates its te
+mperature-
+[7] [8] [9] [10] [11]
+Overfull \hbox (3.21747pt too wide) in paragraph at lines 695--701
+\T1/ptm/m/n/10 mod-elling at flux-site and global scales, En-v-i-ron. Res. Lett
+. 15 124050 https://doi.org/10.1088/1748-
+[12]
+Overfull \hbox (81.82848pt too wide) in paragraph at lines 774--785
+[]\T1/ptm/m/n/10 Apparent quan-tum yield ef-fi-ciency (unit-less). De-faults to
+ 0.081785 for []\T1/zi4/m/n/10 method_jmaxlim="wang17",
+
+Overfull \hbox (159.41086pt too wide) in paragraph at lines 774--785
+\T1/zi4/m/n/10 do_ftemp_kphio=TRUE,do_soilmstress=FALSE[]\T1/ptm/m/n/10 , 0.087
+182 for []\T1/zi4/m/n/10 method_jmaxlim="wang17",do_ftemp_kphio=TRUE,
+
+Overfull \hbox (78.25082pt too wide) in paragraph at lines 774--785
+\T1/zi4/m/n/10 do_soilmstress=TRUE[]\T1/ptm/m/n/10 , and 0.049977 for []\T1/zi4
+/m/n/10 method_jmaxlim="wang17", do_ftemp_kphio=FALSE,
+
+Overfull \hbox (0.32616pt too wide) in paragraph at lines 774--785
+\T1/ptm/m/n/10 'FULL', and 'ORG' re-spec-tively, cor-re-spond-ing to $\OT1/cmr/
+m/n/10 (\OML/cmm/m/it/10 a[]b[]\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 =\OT1/cmr/m/n/
+10 4$ \T1/ptm/m/n/10 in Eq.20 in Stocker
+[13]
+Overfull \hbox (105.74863pt too wide) in paragraph at lines 802--808
+\T1/ptm/m/n/10 model setup 'FULL' (cor-re-spond-ing to a setup with []\T1/zi4/m
+/n/10 method_jmaxlim="wang17",do_ftemp_kphio=TRUE,
+
+Overfull \hbox (119.30856pt too wide) in paragraph at lines 809--815
+\T1/ptm/m/n/10 for model setup 'FULL' (cor-re-spond-ing to a setup with []\T1/z
+i4/m/n/10 method_jmaxlim="wang17",do_ftemp_kphio=TRUE,
+(/usr/local/texlive/2022/texmf-dist/tex/latex/psnfss/ts1ptm.fd)
+Overfull \hbox (4.5306pt too wide) in paragraph at lines 876--882
+$\OML/cmm/m/it/10 ^^L$ \T1/ptm/m/n/10 is given by ar-gu-ment []\T1/zi4/m/n/10 b
+eta[]\T1/ptm/m/n/10 , $\OML/cmm/m/it/10 K$ \T1/ptm/m/n/10 is []\T1/zi4/m/n/10 k
+mm []\T1/ptm/m/n/10 (see [][]calc_kmm[][][]), $\OT1/cmr/m/n/10 ^^@\OMS/cmsy/m/n
+/10 ^^C$ \T1/ptm/m/n/10 is []\T1/zi4/m/n/10 gammastar []\T1/ptm/m/n/10 (see [][
+]calc_gammastar[][][]).
+[14] [15] [16]
+No file Rd2.ind.
+[17]
+(/private/var/folders/4y/1pv_77w16nv_sp7hbk_r83lm0000gn/T/RtmpZ3Brvi/Rd2pdff0fd
+43d35606/Rd2.aux)
+
+Package rerunfilecheck Warning: File `Rd2.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+ )
+(see the transcript file for additional information){/usr/local/texlive/2022/te
+xmf-dist/fonts/enc/dvips/inconsolata/i4-ts1.enc}{/usr/local/texlive/2022/texmf-
+dist/fonts/enc/dvips/base/8r.enc}{/usr/local/texlive/2022/texmf-dist/fonts/enc/
+dvips/inconsolata/i4-t1-0.enc}</usr/local/texlive/2022/texmf-dist/fonts/type1/p
+ublic/inconsolata/Inconsolata-zi4r.pfb></usr/local/texlive/2022/texmf-dist/font
+s/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2022/texmf-dist/fonts
+/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2022/texmf-dist/fonts/
+type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2022/texmf-dist/fonts/ty
+pe1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type
+1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/p
+ublic/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/urw/
+times/utmb8a.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/urw/times/utmr
+8a.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></u
+sr/local/texlive/2022/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on Rd2.pdf (17 pages, 194685 bytes).
+Transcript written on Rd2.log.
+This is makeindex, version 2.16 [TeX Live 2022] (kpathsea + Thai support).
+Scanning input file Rd2.idx....done (34 entries accepted, 0 rejected).
+Sorting entries....done (193 comparisons).
+Generating output file Rd2.ind....done (41 lines written, 1 warning).
+Output written in Rd2.ind.
+Transcript written in Rd2.ilg.
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+LaTeX2e <2021-11-15> patch level 1
+L3 programming layer <2022-02-24> (./Rd2.tex
+(/usr/local/texlive/2022/texmf-dist/tex/latex/base/book.cls
+Document Class: book 2021/10/04 v1.4n Standard LaTeX document class
+(/usr/local/texlive/2022/texmf-dist/tex/latex/base/bk10.clo))
+(/Library/Frameworks/R.framework/Resources/share/texmf/tex/latex/Rd.sty
+(/usr/local/texlive/2022/texmf-dist/tex/latex/base/ifthen.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/iftex/iftex.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/tools/longtable.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/tools/bm.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/base/alltt.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/tools/verbatim.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/url/url.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/base/textcomp.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsmath/amsmath.sty
+For additional information on amsmath, use the `?' option.
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsmath/amstext.sty
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsmath/amsgen.sty))
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsmath/amsbsy.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsmath/amsopn.sty))
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/amsfonts.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/amssymb.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/jknapltx/mathrsfs.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/base/fontenc.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/psnfss/times.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/inconsolata/zi4.sty
+`inconsolata-zi4' v1.12, 2019/05/17 Text macros for Inconsolata (msharpe)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/xkeyval/xkeyval.sty
+(/usr/local/texlive/2022/texmf-dist/tex/generic/xkeyval/xkeyval.tex
+(/usr/local/texlive/2022/texmf-dist/tex/generic/xkeyval/xkvutils.tex
+(/usr/local/texlive/2022/texmf-dist/tex/generic/xkeyval/keyval.tex)))))
+(/usr/local/texlive/2022/texmf-dist/tex/latex/graphics/color.sty
+(/usr/local/texlive/2022/texmf-dist/tex/latex/graphics-cfg/color.cfg)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/graphics-def/pdftex.def))
+(/usr/local/texlive/2022/texmf-dist/tex/latex/hyperref/hyperref.sty
+(/usr/local/texlive/2022/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+(/usr/local/texlive/2022/texmf-dist/tex/generic/infwarerr/infwarerr.sty))
+(/usr/local/texlive/2022/texmf-dist/tex/generic/kvsetkeys/kvsetkeys.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pdfescape/pdfescape.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/hycolor/hycolor.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/letltxmacro/letltxmacro.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/auxhook/auxhook.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/kvoptions/kvoptions.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/hyperref/pd1enc.def)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/intcalc/intcalc.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/etexcmds/etexcmds.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/hyperref/puenc.def)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/bitset/bitset.sty
+(/usr/local/texlive/2022/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty))
+(/usr/local/texlive/2022/texmf-dist/tex/latex/base/atbegshi-ltx.sty))
+(/usr/local/texlive/2022/texmf-dist/tex/latex/hyperref/hpdftex.def
+(/usr/local/texlive/2022/texmf-dist/tex/latex/base/atveryend-ltx.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
+
+(/usr/local/texlive/2022/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
+)))) (/usr/local/texlive/2022/texmf-dist/tex/latex/base/makeidx.sty)
+Writing index file Rd2.idx
+(/usr/local/texlive/2022/texmf-dist/tex/latex/psnfss/t1ptm.fd)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def)
+(/private/var/folders/4y/1pv_77w16nv_sp7hbk_r83lm0000gn/T/RtmpZ3Brvi/Rd2pdff0fd
+43d35606/Rd2.aux)
+(/usr/local/texlive/2022/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+) (/usr/local/texlive/2022/texmf-dist/tex/latex/hyperref/nameref.sty
+(/usr/local/texlive/2022/texmf-dist/tex/latex/refcount/refcount.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/gettitlestring/gettitlestring.s
+ty))
+(/private/var/folders/4y/1pv_77w16nv_sp7hbk_r83lm0000gn/T/RtmpZ3Brvi/Rd2pdff0fd
+43d35606/Rd2.out)
+(/private/var/folders/4y/1pv_77w16nv_sp7hbk_r83lm0000gn/T/RtmpZ3Brvi/Rd2pdff0fd
+43d35606/Rd2.out)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/inconsolata/t1zi4.fd)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsa.fd)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsb.fd)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/jknapltx/ursfs.fd)
+(/private/var/folders/4y/1pv_77w16nv_sp7hbk_r83lm0000gn/T/RtmpZ3Brvi/Rd2pdff0fd
+43d35606/Rd2.toc [1{/usr/local/texlive/2022/texmf-var/fonts/map/pdftex/updmap/p
+dftex.map}]) [2]
+Overfull \hbox (10.15439pt too wide) in paragraph at lines 123--128
+[]\T1/ptm/m/n/10 The Michaelis-Menten co-ef-fi-cient $\OML/cmm/m/it/10 K$ \T1/p
+tm/m/n/10 of Rubisco-limited pho-to-syn-the-sis is de-ter-mined by the Michalis
+-
+
+Overfull \hbox (3.75021pt too wide) in paragraph at lines 165--165
+ []\T1/zi4/m/n/9 print("Michaelis-Menten coefficient at 20 degrees Celsius and 
+standard atmosphere (in Pa):") 
+[3] [4]
+Overfull \hbox (5.74863pt too wide) in paragraph at lines 245--250
+\T1/ptm/m/n/10 model setup 'FULL' (cor-re-spond-ing to a setup with []\T1/zi4/m
+/n/10 method_jmaxlim="wang17",
+
+Overfull \hbox (119.30856pt too wide) in paragraph at lines 251--256
+\T1/ptm/m/n/10 for model setup 'FULL' (cor-re-spond-ing to a setup with []\T1/z
+i4/m/n/10 method_jmaxlim="wang17",do_ftemp_kphio=TRUE,
+[5] (/usr/local/texlive/2022/texmf-dist/tex/latex/inconsolata/ts1zi4.fd)
+[6]
+Overfull \hbox (15.67628pt too wide) in paragraph at lines 406--409
+[]\T1/ptm/m/n/10 Given a ki-netic rate at a ref-er-ence tem-per-a-ture (ar-gu-m
+ent []\T1/zi4/m/n/10 tkref[]\T1/ptm/m/n/10 ) this func-tion cal-cu-lates its te
+mperature-
+[7] [8] [9] [10] [11]
+Overfull \hbox (3.21747pt too wide) in paragraph at lines 695--701
+\T1/ptm/m/n/10 mod-elling at flux-site and global scales, En-v-i-ron. Res. Lett
+. 15 124050 https://doi.org/10.1088/1748-
+[12] [13]
+Overfull \hbox (81.82848pt too wide) in paragraph at lines 774--785
+[]\T1/ptm/m/n/10 Apparent quan-tum yield ef-fi-ciency (unit-less). De-faults to
+ 0.081785 for []\T1/zi4/m/n/10 method_jmaxlim="wang17",
+
+Overfull \hbox (159.41086pt too wide) in paragraph at lines 774--785
+\T1/zi4/m/n/10 do_ftemp_kphio=TRUE,do_soilmstress=FALSE[]\T1/ptm/m/n/10 , 0.087
+182 for []\T1/zi4/m/n/10 method_jmaxlim="wang17",do_ftemp_kphio=TRUE,
+
+Overfull \hbox (78.25082pt too wide) in paragraph at lines 774--785
+\T1/zi4/m/n/10 do_soilmstress=TRUE[]\T1/ptm/m/n/10 , and 0.049977 for []\T1/zi4
+/m/n/10 method_jmaxlim="wang17", do_ftemp_kphio=FALSE,
+
+Overfull \hbox (0.32616pt too wide) in paragraph at lines 774--785
+\T1/ptm/m/n/10 'FULL', and 'ORG' re-spec-tively, cor-re-spond-ing to $\OT1/cmr/
+m/n/10 (\OML/cmm/m/it/10 a[]b[]\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 =\OT1/cmr/m/n/
+10 4$ \T1/ptm/m/n/10 in Eq.20 in Stocker
+
+Overfull \hbox (105.74863pt too wide) in paragraph at lines 802--808
+\T1/ptm/m/n/10 model setup 'FULL' (cor-re-spond-ing to a setup with []\T1/zi4/m
+/n/10 method_jmaxlim="wang17",do_ftemp_kphio=TRUE,
+
+Overfull \hbox (119.30856pt too wide) in paragraph at lines 809--815
+\T1/ptm/m/n/10 for model setup 'FULL' (cor-re-spond-ing to a setup with []\T1/z
+i4/m/n/10 method_jmaxlim="wang17",do_ftemp_kphio=TRUE,
+[14] (/usr/local/texlive/2022/texmf-dist/tex/latex/psnfss/ts1ptm.fd)
+Overfull \hbox (4.5306pt too wide) in paragraph at lines 876--882
+$\OML/cmm/m/it/10 ^^L$ \T1/ptm/m/n/10 is given by ar-gu-ment []\T1/zi4/m/n/10 b
+eta[]\T1/ptm/m/n/10 , $\OML/cmm/m/it/10 K$ \T1/ptm/m/n/10 is []\T1/zi4/m/n/10 k
+mm []\T1/ptm/m/n/10 (see [][]calc_kmm[][][]), $\OT1/cmr/m/n/10 ^^@\OMS/cmsy/m/n
+/10 ^^C$ \T1/ptm/m/n/10 is []\T1/zi4/m/n/10 gammastar []\T1/ptm/m/n/10 (see [][
+]calc_gammastar[][][]).
+[15] [16] [17]
+(/private/var/folders/4y/1pv_77w16nv_sp7hbk_r83lm0000gn/T/RtmpZ3Brvi/Rd2pdff0fd
+43d35606/Rd2.ind [18] [19])
+(/private/var/folders/4y/1pv_77w16nv_sp7hbk_r83lm0000gn/T/RtmpZ3Brvi/Rd2pdff0fd
+43d35606/Rd2.aux)
+
+Package rerunfilecheck Warning: File `Rd2.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+ )
+(see the transcript file for additional information){/usr/local/texlive/2022/te
+xmf-dist/fonts/enc/dvips/inconsolata/i4-ts1.enc}{/usr/local/texlive/2022/texmf-
+dist/fonts/enc/dvips/base/8r.enc}{/usr/local/texlive/2022/texmf-dist/fonts/enc/
+dvips/inconsolata/i4-t1-0.enc}</usr/local/texlive/2022/texmf-dist/fonts/type1/p
+ublic/inconsolata/Inconsolata-zi4r.pfb></usr/local/texlive/2022/texmf-dist/font
+s/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2022/texmf-dist/fonts
+/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2022/texmf-dist/fonts/
+type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2022/texmf-dist/fonts/ty
+pe1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type
+1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/p
+ublic/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/urw/
+times/utmb8a.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/urw/times/utmr
+8a.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></u
+sr/local/texlive/2022/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on Rd2.pdf (19 pages, 200004 bytes).
+Transcript written on Rd2.log.
+This is makeindex, version 2.16 [TeX Live 2022] (kpathsea + Thai support).
+Scanning input file Rd2.idx....done (34 entries accepted, 0 rejected).
+Sorting entries....done (192 comparisons).
+Generating output file Rd2.ind....done (40 lines written, 0 warnings).
+Output written in Rd2.ind.
+Transcript written in Rd2.ilg.
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+LaTeX2e <2021-11-15> patch level 1
+L3 programming layer <2022-02-24> (./Rd2.tex
+(/usr/local/texlive/2022/texmf-dist/tex/latex/base/book.cls
+Document Class: book 2021/10/04 v1.4n Standard LaTeX document class
+(/usr/local/texlive/2022/texmf-dist/tex/latex/base/bk10.clo))
+(/Library/Frameworks/R.framework/Resources/share/texmf/tex/latex/Rd.sty
+(/usr/local/texlive/2022/texmf-dist/tex/latex/base/ifthen.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/iftex/iftex.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/tools/longtable.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/tools/bm.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/base/alltt.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/tools/verbatim.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/url/url.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/base/textcomp.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsmath/amsmath.sty
+For additional information on amsmath, use the `?' option.
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsmath/amstext.sty
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsmath/amsgen.sty))
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsmath/amsbsy.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsmath/amsopn.sty))
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/amsfonts.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/amssymb.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/jknapltx/mathrsfs.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/base/fontenc.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/psnfss/times.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/inconsolata/zi4.sty
+`inconsolata-zi4' v1.12, 2019/05/17 Text macros for Inconsolata (msharpe)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/xkeyval/xkeyval.sty
+(/usr/local/texlive/2022/texmf-dist/tex/generic/xkeyval/xkeyval.tex
+(/usr/local/texlive/2022/texmf-dist/tex/generic/xkeyval/xkvutils.tex
+(/usr/local/texlive/2022/texmf-dist/tex/generic/xkeyval/keyval.tex)))))
+(/usr/local/texlive/2022/texmf-dist/tex/latex/graphics/color.sty
+(/usr/local/texlive/2022/texmf-dist/tex/latex/graphics-cfg/color.cfg)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/graphics-def/pdftex.def))
+(/usr/local/texlive/2022/texmf-dist/tex/latex/hyperref/hyperref.sty
+(/usr/local/texlive/2022/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+(/usr/local/texlive/2022/texmf-dist/tex/generic/infwarerr/infwarerr.sty))
+(/usr/local/texlive/2022/texmf-dist/tex/generic/kvsetkeys/kvsetkeys.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/pdfescape/pdfescape.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/hycolor/hycolor.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/letltxmacro/letltxmacro.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/auxhook/auxhook.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/kvoptions/kvoptions.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/hyperref/pd1enc.def)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/intcalc/intcalc.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/etexcmds/etexcmds.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/hyperref/puenc.def)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/bitset/bitset.sty
+(/usr/local/texlive/2022/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty))
+(/usr/local/texlive/2022/texmf-dist/tex/latex/base/atbegshi-ltx.sty))
+(/usr/local/texlive/2022/texmf-dist/tex/latex/hyperref/hpdftex.def
+(/usr/local/texlive/2022/texmf-dist/tex/latex/base/atveryend-ltx.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
+
+(/usr/local/texlive/2022/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
+)))) (/usr/local/texlive/2022/texmf-dist/tex/latex/base/makeidx.sty)
+Writing index file Rd2.idx
+(/usr/local/texlive/2022/texmf-dist/tex/latex/psnfss/t1ptm.fd)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def)
+(/private/var/folders/4y/1pv_77w16nv_sp7hbk_r83lm0000gn/T/RtmpZ3Brvi/Rd2pdff0fd
+43d35606/Rd2.aux)
+(/usr/local/texlive/2022/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+) (/usr/local/texlive/2022/texmf-dist/tex/latex/hyperref/nameref.sty
+(/usr/local/texlive/2022/texmf-dist/tex/latex/refcount/refcount.sty)
+(/usr/local/texlive/2022/texmf-dist/tex/generic/gettitlestring/gettitlestring.s
+ty))
+(/private/var/folders/4y/1pv_77w16nv_sp7hbk_r83lm0000gn/T/RtmpZ3Brvi/Rd2pdff0fd
+43d35606/Rd2.out)
+(/private/var/folders/4y/1pv_77w16nv_sp7hbk_r83lm0000gn/T/RtmpZ3Brvi/Rd2pdff0fd
+43d35606/Rd2.out)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/inconsolata/t1zi4.fd)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsa.fd)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsb.fd)
+(/usr/local/texlive/2022/texmf-dist/tex/latex/jknapltx/ursfs.fd)
+(/private/var/folders/4y/1pv_77w16nv_sp7hbk_r83lm0000gn/T/RtmpZ3Brvi/Rd2pdff0fd
+43d35606/Rd2.toc [1{/usr/local/texlive/2022/texmf-var/fonts/map/pdftex/updmap/p
+dftex.map}]) [2]
+Overfull \hbox (10.15439pt too wide) in paragraph at lines 123--128
+[]\T1/ptm/m/n/10 The Michaelis-Menten co-ef-fi-cient $\OML/cmm/m/it/10 K$ \T1/p
+tm/m/n/10 of Rubisco-limited pho-to-syn-the-sis is de-ter-mined by the Michalis
+-
+
+Overfull \hbox (3.75021pt too wide) in paragraph at lines 165--165
+ []\T1/zi4/m/n/9 print("Michaelis-Menten coefficient at 20 degrees Celsius and 
+standard atmosphere (in Pa):") 
+[3] [4]
+Overfull \hbox (5.74863pt too wide) in paragraph at lines 245--250
+\T1/ptm/m/n/10 model setup 'FULL' (cor-re-spond-ing to a setup with []\T1/zi4/m
+/n/10 method_jmaxlim="wang17",
+
+Overfull \hbox (119.30856pt too wide) in paragraph at lines 251--256
+\T1/ptm/m/n/10 for model setup 'FULL' (cor-re-spond-ing to a setup with []\T1/z
+i4/m/n/10 method_jmaxlim="wang17",do_ftemp_kphio=TRUE,
+[5] (/usr/local/texlive/2022/texmf-dist/tex/latex/inconsolata/ts1zi4.fd)
+[6]
+Overfull \hbox (15.67628pt too wide) in paragraph at lines 406--409
+[]\T1/ptm/m/n/10 Given a ki-netic rate at a ref-er-ence tem-per-a-ture (ar-gu-m
+ent []\T1/zi4/m/n/10 tkref[]\T1/ptm/m/n/10 ) this func-tion cal-cu-lates its te
+mperature-
+[7] [8] [9] [10] [11]
+Overfull \hbox (3.21747pt too wide) in paragraph at lines 695--701
+\T1/ptm/m/n/10 mod-elling at flux-site and global scales, En-v-i-ron. Res. Lett
+. 15 124050 https://doi.org/10.1088/1748-
+[12] [13]
+Overfull \hbox (81.82848pt too wide) in paragraph at lines 774--785
+[]\T1/ptm/m/n/10 Apparent quan-tum yield ef-fi-ciency (unit-less). De-faults to
+ 0.081785 for []\T1/zi4/m/n/10 method_jmaxlim="wang17",
+
+Overfull \hbox (159.41086pt too wide) in paragraph at lines 774--785
+\T1/zi4/m/n/10 do_ftemp_kphio=TRUE,do_soilmstress=FALSE[]\T1/ptm/m/n/10 , 0.087
+182 for []\T1/zi4/m/n/10 method_jmaxlim="wang17",do_ftemp_kphio=TRUE,
+
+Overfull \hbox (78.25082pt too wide) in paragraph at lines 774--785
+\T1/zi4/m/n/10 do_soilmstress=TRUE[]\T1/ptm/m/n/10 , and 0.049977 for []\T1/zi4
+/m/n/10 method_jmaxlim="wang17", do_ftemp_kphio=FALSE,
+
+Overfull \hbox (0.32616pt too wide) in paragraph at lines 774--785
+\T1/ptm/m/n/10 'FULL', and 'ORG' re-spec-tively, cor-re-spond-ing to $\OT1/cmr/
+m/n/10 (\OML/cmm/m/it/10 a[]b[]\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 =\OT1/cmr/m/n/
+10 4$ \T1/ptm/m/n/10 in Eq.20 in Stocker
+
+Overfull \hbox (105.74863pt too wide) in paragraph at lines 802--808
+\T1/ptm/m/n/10 model setup 'FULL' (cor-re-spond-ing to a setup with []\T1/zi4/m
+/n/10 method_jmaxlim="wang17",do_ftemp_kphio=TRUE,
+
+Overfull \hbox (119.30856pt too wide) in paragraph at lines 809--815
+\T1/ptm/m/n/10 for model setup 'FULL' (cor-re-spond-ing to a setup with []\T1/z
+i4/m/n/10 method_jmaxlim="wang17",do_ftemp_kphio=TRUE,
+[14] (/usr/local/texlive/2022/texmf-dist/tex/latex/psnfss/ts1ptm.fd)
+Overfull \hbox (4.5306pt too wide) in paragraph at lines 876--882
+$\OML/cmm/m/it/10 ^^L$ \T1/ptm/m/n/10 is given by ar-gu-ment []\T1/zi4/m/n/10 b
+eta[]\T1/ptm/m/n/10 , $\OML/cmm/m/it/10 K$ \T1/ptm/m/n/10 is []\T1/zi4/m/n/10 k
+mm []\T1/ptm/m/n/10 (see [][]calc_kmm[][][]), $\OT1/cmr/m/n/10 ^^@\OMS/cmsy/m/n
+/10 ^^C$ \T1/ptm/m/n/10 is []\T1/zi4/m/n/10 gammastar []\T1/ptm/m/n/10 (see [][
+]calc_gammastar[][][]).
+[15] [16] [17]
+(/private/var/folders/4y/1pv_77w16nv_sp7hbk_r83lm0000gn/T/RtmpZ3Brvi/Rd2pdff0fd
+43d35606/Rd2.ind [18] [19])
+(/private/var/folders/4y/1pv_77w16nv_sp7hbk_r83lm0000gn/T/RtmpZ3Brvi/Rd2pdff0fd
+43d35606/Rd2.aux) )
+(see the transcript file for additional information){/usr/local/texlive/2022/te
+xmf-dist/fonts/enc/dvips/inconsolata/i4-ts1.enc}{/usr/local/texlive/2022/texmf-
+dist/fonts/enc/dvips/base/8r.enc}{/usr/local/texlive/2022/texmf-dist/fonts/enc/
+dvips/inconsolata/i4-t1-0.enc}</usr/local/texlive/2022/texmf-dist/fonts/type1/p
+ublic/inconsolata/Inconsolata-zi4r.pfb></usr/local/texlive/2022/texmf-dist/font
+s/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2022/texmf-dist/fonts
+/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2022/texmf-dist/fonts/
+type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2022/texmf-dist/fonts/ty
+pe1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type
+1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/p
+ublic/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/urw/
+times/utmb8a.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/urw/times/utmr
+8a.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></u
+sr/local/texlive/2022/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on Rd2.pdf (19 pages, 200300 bytes).
+Transcript written on Rd2.log.
+Saving output to ‘rpmodel-manual.pdf’ ...
+Done
+You may want to clean up by 'rm -Rf /var/folders/4y/1pv_77w16nv_sp7hbk_r83lm0000gn/T//RtmpZ3Brvi/Rd2pdff0fd43d35606'

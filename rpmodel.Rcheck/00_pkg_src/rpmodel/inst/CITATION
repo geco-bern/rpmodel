@@ -1,0 +1,26 @@
+citHeader("To cite rpmodel in publications use:")
+
+bibentry(
+  bibtype      = "Article",
+  title        = "P-model v1.0: An optimality-based light use efficiency model for simulating ecosystem gross primary production",
+  author       = c(as.person("Benjamin Stocker"),
+                   as.person("Han Wang"),
+                   as.person("Nicholas Smith"),
+                   as.person("Sandy Harrison"),
+                   as.person("Trevor Keenan"),
+                   as.person("David Sandoval"),
+                   as.person("Tyler Davis"),
+                   as.person("Colin Prentice")),
+  journal      = "Geoscientific Model Development",
+  year         = "2020",
+  volume       = "13",
+  number       = "",
+  pages        = "1545–1581",
+  url          = "https://doi.org/10.5194/gmd-13-1545-2020",
+  doi          = "10.5194/gmd-13-1545-2020",
+  textVersion  =
+  paste("Stocker et al. (2020).",
+        "P-model v1.0: An optimality-based light use efficiency model for simulating ecosystem gross primary production",
+        "Geosci. Model Dev. 13, 1545–1581, 2020",
+        "URL https://doi.org/10.5194/gmd-13-1545-2020")
+)

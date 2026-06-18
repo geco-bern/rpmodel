@@ -1,0 +1,37 @@
+Package: rpmodel
+Type: Package
+Title: P-Model
+Description: Implements the P-model 
+  (Stocker et al., 2020 <doi:10.5194/gmd-13-1545-2020>),
+  predicting acclimated parameters of the enzyme kinetics of C3 photosynthesis,
+  assimilation, and dark respiration rates as a function of the environment
+  (temperature, CO2, vapour pressure deficit, light, atmospheric pressure).
+Version: 1.2.3
+Authors@R: c(
+            person(
+              family = "Stocker",
+              given = "Benjamin",
+              email = "benjamin.stocker@gmail.com",
+              comment = c(ORCID = "0000-0003-2697-9096"),
+              role = c("aut", "cre")),
+            person(
+               family = "Hufkens",
+               given = "Koen",
+               email = "koen.hufkens@gmail.com",
+               role = c("ctb"),
+               comment = c(ORCID = "0000-0002-5070-8109"))
+           )
+License: GPL-3
+Encoding: UTF-8
+RoxygenNote: 7.3.1
+Depends: R (>= 3.6)
+Suggests: ggplot2, dplyr, purrr, tidyr, knitr, rmarkdown, testthat,
+        covr
+VignetteBuilder: knitr
+URL: https://github.com/geco-bern/rpmodel
+BugReports: https://github.com/geco-bern/rpmodel/issues
+NeedsCompilation: no
+Packaged: 2024-06-27 20:23:50 UTC; benjaminstocker
+Author: Benjamin Stocker [aut, cre] (<https://orcid.org/0000-0003-2697-9096>),
+  Koen Hufkens [ctb] (<https://orcid.org/0000-0002-5070-8109>)
+Maintainer: Benjamin Stocker <benjamin.stocker@gmail.com>

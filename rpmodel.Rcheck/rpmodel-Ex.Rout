@@ -1,0 +1,357 @@
+
+R version 4.4.0 (2024-04-24) -- "Puppy Cup"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: aarch64-apple-darwin20
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> pkgname <- "rpmodel"
+> source(file.path(R.home("share"), "R", "examples-header.R"))
+> options(warn = 1)
+> base::assign(".ExTimings", "rpmodel-Ex.timings", pos = 'CheckExEnv')
+> base::cat("name\tuser\tsystem\telapsed\n", file=base::get(".ExTimings", pos = 'CheckExEnv'))
+> base::assign(".format_ptime",
++ function(x) {
++   if(!is.na(x[4L])) x[1L] <- x[1L] + x[4L]
++   if(!is.na(x[5L])) x[2L] <- x[2L] + x[5L]
++   options(OutDec = '.')
++   format(x[1L:3L], digits = 7L)
++ },
++ pos = 'CheckExEnv')
+> 
+> ### * </HEADER>
+> library('rpmodel')
+> 
+> base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+> base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
+> cleanEx()
+> nameEx("calc_gammastar")
+> ### * calc_gammastar
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: calc_gammastar
+> ### Title: Calculates the CO2 compensation point
+> ### Aliases: calc_gammastar
+> 
+> ### ** Examples
+> 
+> print("CO2 compensation point at 20 degrees Celsius and standard atmosphere (in Pa):")
+[1] "CO2 compensation point at 20 degrees Celsius and standard atmosphere (in Pa):"
+> print(calc_gammastar(20, 101325))
+[1] 3.339251
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("calc_gammastar", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("calc_kmm")
+> ### * calc_kmm
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: calc_kmm
+> ### Title: Calculates the Michaelis Menten coefficient for Rubisco-limited
+> ###   photosynthesis
+> ### Aliases: calc_kmm
+> 
+> ### ** Examples
+> 
+> print("Michaelis-Menten coefficient at 20 degrees Celsius and standard atmosphere (in Pa):")
+[1] "Michaelis-Menten coefficient at 20 degrees Celsius and standard atmosphere (in Pa):"
+> print(calc_kmm(20, 101325))
+[1] 46.09928
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("calc_kmm", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("calc_patm")
+> ### * calc_patm
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: calc_patm
+> ### Title: Calculates atmospheric pressure
+> ### Aliases: calc_patm
+> 
+> ### ** Examples
+> 
+> print("Standard atmospheric pressure, in Pa, corrected for 1000 m.a.s.l.:")
+[1] "Standard atmospheric pressure, in Pa, corrected for 1000 m.a.s.l.:"
+> print(calc_patm(1000))
+[1] 90241.54
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("calc_patm", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("calc_soilmstress")
+> ### * calc_soilmstress
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: calc_soilmstress
+> ### Title: Calculates an empirical soil moisture stress factor
+> ### Aliases: calc_soilmstress
+> 
+> ### ** Examples
+> 
+> ## Relative reduction (%) in GPP due to soil moisture stress at
+> ## relative soil water content ('soilm') of 0.2:
+> print((calc_soilmstress(0.2)-1)*100 )
+[1] -14
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("calc_soilmstress", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("dampen_vec")
+> ### * dampen_vec
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: dampen_vec
+> ### Title: Dampen inputs of rpmodel
+> ### Aliases: dampen_vec
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D dampen_vec(
+> ##D  vec = 20 * (sin(doy*pi/(365)))^2 + rnorm(365, mean = 0, sd = 5),
+> ##D  tau = 40 
+> ##D  )
+> ## End(Not run)
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("dampen_vec", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("density_h2o")
+> ### * density_h2o
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: density_h2o
+> ### Title: Density of water
+> ### Aliases: density_h2o
+> 
+> ### ** Examples
+> 
+>  # Density of water at 20 degrees C and standard atmospheric pressure
+>  print(density_h2o(20, 101325))
+[1] 998.2056
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("density_h2o", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("ftemp_arrh")
+> ### * ftemp_arrh
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: ftemp_arrh
+> ### Title: Calculates the Arrhenius-type temperature response
+> ### Aliases: ftemp_arrh
+> 
+> ### ** Examples
+> 
+> # Relative rate change from 25 to 10 degrees Celsius (percent change)
+> print( (1.0-ftemp_arrh( 283.15, 100000, tkref = 298.15))*100 )
+[1] 88.19912
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("ftemp_arrh", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("ftemp_inst_jmax")
+> ### * ftemp_inst_jmax
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: ftemp_inst_jmax
+> ### Title: Calculates the instantaneous temperature response of Jmax
+> ### Aliases: ftemp_inst_jmax
+> 
+> ### ** Examples
+> 
+> # Relative change in Jmax going (instantaneously, i.e.
+> # not acclimatedly) from 10 to 25 degrees (percent change):
+> print((ftemp_inst_jmax(25)/ftemp_inst_jmax(10)-1)*100 )
+[1] 162.7662
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("ftemp_inst_jmax", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("ftemp_inst_rd")
+> ### * ftemp_inst_rd
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: ftemp_inst_rd
+> ### Title: Calculates the temperature response of dark respiration
+> ### Aliases: ftemp_inst_rd
+> 
+> ### ** Examples
+> 
+> ## Relative change in Rd going (instantaneously, i.e. not 
+> ## acclimatedly) from 10 to 25 degrees (percent change):
+> print( (ftemp_inst_rd(25)/ftemp_inst_rd(10)-1)*100 )
+[1] 250.9593
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("ftemp_inst_rd", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("ftemp_inst_vcmax")
+> ### * ftemp_inst_vcmax
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: ftemp_inst_vcmax
+> ### Title: Calculates the instantaneous temperature response of Vcmax
+> ### Aliases: ftemp_inst_vcmax
+> 
+> ### ** Examples
+> 
+> ## Relative change in Vcmax going (instantaneously, i.e. 
+> ## not acclimatedly) from 10 to 25 degrees (percent change):
+> print((ftemp_inst_vcmax(25)/ftemp_inst_vcmax(10)-1)*100 )
+[1] 283.1775
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("ftemp_inst_vcmax", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("ftemp_kphio")
+> ### * ftemp_kphio
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: ftemp_kphio
+> ### Title: Calculates the temperature dependence of the quantum yield
+> ###   efficiency
+> ### Aliases: ftemp_kphio
+> 
+> ### ** Examples
+> 
+> ## Relative change in the quantum yield efficiency
+> ## between 5 and 25 degrees celsius (percent change):
+> print(paste((ftemp_kphio(25.0)/ftemp_kphio(5.0)-1)*100 ))
+[1] "52.0396912899669"
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("ftemp_kphio", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("rpmodel")
+> ### * rpmodel
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: rpmodel
+> ### Title: Invokes a P-model function call
+> ### Aliases: rpmodel
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D  rpmodel(
+> ##D   tc = 20,
+> ##D   vpd = 1000,
+> ##D   co2 = 400,
+> ##D   ppfd = 30,
+> ##D   elv = 0)
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("rpmodel", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("viscosity_h2o")
+> ### * viscosity_h2o
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: viscosity_h2o
+> ### Title: Viscosity of water
+> ### Aliases: viscosity_h2o
+> 
+> ### ** Examples
+> 
+> print("Density of water at 20 degrees C and standard atmospheric pressure:")
+[1] "Density of water at 20 degrees C and standard atmospheric pressure:"
+> print(density_h2o(20, 101325))
+[1] 998.2056
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("viscosity_h2o", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> ### * <FOOTER>
+> ###
+> cleanEx()
+> options(digits = 7L)
+> base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
+Time elapsed:  0.16 0.007 0.169 0 0 
+> grDevices::dev.off()
+null device 
+          1 
+> ###
+> ### Local variables: ***
+> ### mode: outline-minor ***
+> ### outline-regexp: "\\(> \\)?### [*]+" ***
+> ### End: ***
+> quit('no')

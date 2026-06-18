@@ -1,0 +1,21 @@
+calc_gammastar          Calculates the CO2 compensation point
+calc_kmm                Calculates the Michaelis Menten coefficient for
+                        Rubisco-limited photosynthesis
+calc_patm               Calculates atmospheric pressure
+calc_soilmstress        Calculates an empirical soil moisture stress
+                        factor
+co2_to_ca               CO2 partial pressure
+dampen_vec              Dampen inputs of rpmodel
+density_h2o             Density of water
+ftemp_arrh              Calculates the Arrhenius-type temperature
+                        response
+ftemp_inst_jmax         Calculates the instantaneous temperature
+                        response of Jmax
+ftemp_inst_rd           Calculates the temperature response of dark
+                        respiration
+ftemp_inst_vcmax        Calculates the instantaneous temperature
+                        response of Vcmax
+ftemp_kphio             Calculates the temperature dependence of the
+                        quantum yield efficiency
+rpmodel                 Invokes a P-model function call
+viscosity_h2o           Viscosity of water

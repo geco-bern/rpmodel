@@ -245,7 +245,6 @@ gg_none$ppfd
 gg_none$patm
 ```
 
-
 ## Numerical solution with Jmax cost
 
 The method described by Wang et al. (2017) to account for $J_{\mathrm{max}}$ limitation of the assimilation rate is to first calculate the optimal $\chi$ as described above, and multiply the "unlimited" rate with a term $L$ following Smith et al. (1937) to limit $A_J$:
@@ -300,11 +299,13 @@ calc_optimal_jmax_num <- function( kmm, gammastar, ns_star, ca, vpd, chi = NULL,
   
   if (is.null(chi)){
     ## first get optimal chi independent of jmax
-    out_optim_chi <- optimr::optimr(
+    out_optim_chi <- optim(
       par       = 0.7,
       lower     = 0.1,
       upper     = 0.99,
-      fn        = maximise_this_chi,
+      fn        = function(chi, ...){
+        -maximise_this_chi(chi, ...)
+      },,
       kmm       = kmm,
       gammastar = gammastar,
       ns_star   = ns_star,
@@ -312,9 +313,10 @@ calc_optimal_jmax_num <- function( kmm, gammastar, ns_star, ca, vpd, chi = NULL,
       vpd       = vpd,
       beta      = beta,
       method    = "L-BFGS-B",
-      control   = list( maxit = 100, maximize = TRUE )
+      control   = list(maxit = 100)
       )
-    chi <- out_optim_chi$par
+    # chi <- out_optim_chi$par
+    out_optim_chi$value <- -out_optim_chi$value
   }
     
   ## Get optimal jmax given optimal chi

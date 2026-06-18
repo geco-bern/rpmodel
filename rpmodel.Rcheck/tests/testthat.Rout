@@ -1,0 +1,35 @@
+
+R version 4.4.0 (2024-04-24) -- "Puppy Cup"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: aarch64-apple-darwin20
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> # This is a wrapper around all the tests specified
+> # in the tests/testthat directory. These tests are visible
+> # to users and serve as small examples as well.
+> testthat::test_check("rpmodel")
+Loading required package: rpmodel
+[ FAIL 0 | WARN 0 | SKIP 7 | PASS 0 ]
+
+══ Skipped tests (7) ═══════════════════════════════════════════════════════════
+• On CRAN (7): 'test_model_runs.R:4:3', 'test_model_runs.R:110:3',
+  'test_model_runs.R:135:3', 'test_support_functions.R:4:3',
+  'test_support_functions.R:19:3', 'test_support_functions.R:33:3',
+  'test_support_functions.R:46:3'
+
+[ FAIL 0 | WARN 0 | SKIP 7 | PASS 0 ]
+> 
+> proc.time()
+   user  system elapsed 
+  0.272   0.034   0.314 

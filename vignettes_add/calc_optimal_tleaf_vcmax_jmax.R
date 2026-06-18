@@ -132,7 +132,7 @@ calc_optimal_tcleaf_vcmax_jmax <- function(tc_leaf = 25,
     }
   }
   
-  out_optim <- optimr::optimr(
+  out_optim <- optim(
     par        = c( vcmax_start, gs_start, jmax_start ), # starting values
     lower      = c( vcmax_start*0.001, gs_start*0.001, jmax_start*0.001 ),
     upper      = c( vcmax_start*1000, gs_start*1000, jmax_start*1000 ),
@@ -281,7 +281,7 @@ LeafEnergyBalance <- function(Tleaf = 21.5,  # Input in degC
   
   # Difference between input Tleaf and calculated, this will be minimized.
   # EnergyBal <- (Tleaf - Tleaf2)           # OLD, needed to work with uniroot()
-  EnergyBal <- (Tleaf - Tleaf2)^2         # NEW, needed to work with optimr()
+  EnergyBal <- (Tleaf - Tleaf2)^2         # NEW, needed to work with optim()
   # EnergyBal <- abs(Tleaf - Tleaf2)        # NEW, needs more iterations than ()^2
   
   if(returnwhat == "balance"){
@@ -313,8 +313,8 @@ calc_tc_leaf_from_tc_air <- function(tc_air   = 25,   # input in degC
   
   
   # LeafEnergyBalance is equivalent to "maximize_this_tc_leaf" with its Tleaf getting optimized
-  
-    sol_optimr <-	optimr::optimr(
+
+    sol_optim <- optim(
     # Parameter boundaries to optimize within:
     par       = 15,
     lower     = 15 - tc_air, # OLD: 0 
@@ -332,16 +332,16 @@ calc_tc_leaf_from_tc_air <- function(tc_air   = 25,   # input in degC
     StomatalRatio = stoma_r,        # 2 for amphistomatous
     LeafAbs   = leaf_abs,
     
-    # Optimr settings:
+    # optim settings:
     method    = "L-BFGS-B",
-    control   = list( maxit = 100, maximize = TRUE )
+    control   = list( maxit = 100 )
     )
     
-    return(sol_optimr$par)
+    return(sol_optim$par)
 }
 
 
-maximize_this_tc_leaf <- function(tc_leaf   = 25, # This gets optimized in optimr()
+maximize_this_tc_leaf <- function(tc_leaf   = 25, # This gets optimized in optimize()
                                   tc_air    = 25,
                                   tc_growth = 25,
                                   tc_home   = 25,
